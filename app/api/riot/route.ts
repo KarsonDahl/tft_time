@@ -1,10 +1,26 @@
 import { NextResponse } from 'next/server';
 import { getCache, setCache, type CachedMatch } from '@/lib/matchCache';
 
+type RiotTrait = {
+  name?: string;
+  num_units?: number;
+  style?: number;
+  tier_current?: number;
+};
+
+type RiotUnit = {
+  character_id?: string;
+  name?: string;
+  traits?: string[];
+  tier?: number;
+  rarity?: number;
+};
+
 type RiotParticipant = {
   puuid: string;
   placement: number;
-  units?: Array<{ character_id?: string }>;
+  units?: RiotUnit[];
+  traits?: RiotTrait[];
 };
 
 type RiotMatch = {
@@ -237,7 +253,11 @@ export async function GET(request: Request) {
     const newCached: CachedMatch[] = newRiotMatches.map((match) => {
       const participant = match.info.participants.find((p) => p.puuid === puuid)!;
       const champions = (participant?.units ?? [])
-        .map((u) => ({ id: u.character_id ?? '', name: formatChampionName(u.character_id) }))
+        .map((u) => ({
+          id: u.character_id ?? '',
+          name: formatChampionName(u.character_id),
+          traits: Array.isArray(u.traits) ? u.traits : [],
+        }))
         .filter((c) => c.id && c.name !== 'Unknown');
       return {
         id: match.metadata.match_id,
@@ -246,6 +266,7 @@ export async function GET(request: Request) {
         queue: queueLabel(match.info.queue_id),
         patch: match.info.tft_set_core_name ?? 'Unknown set',
         champions,
+        traits: participant?.traits ?? [],
         playedAt: match.info.game_datetime ?? 0,
       };
     });

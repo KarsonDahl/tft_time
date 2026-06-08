@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 type MatchSummary = {
   id: string;
@@ -8,7 +8,8 @@ type MatchSummary = {
   placement: number;
   queue: string;
   patch: string;
-  champions: Array<{ id: string; name: string }>;
+  champions: Array<{ id: string; name: string; traits?: string[] }>;
+  traits?: Array<{ name?: string; num_units?: number; style?: number }>;
   playedAt: number;
 };
 
@@ -57,6 +58,10 @@ function formatDuration(minutes: number): string {
   return `${m}m ${s.toString().padStart(2, '0')}s`;
 }
 
+function championIconId(characterId: string): string {
+  return characterId.replace(/^TFT\d+_/i, '').toLowerCase();
+}
+
 function formatPlayedAt(timestamp: number): string {
   if (!timestamp) return 'Date unavailable';
   return new Date(timestamp).toLocaleString(undefined, {
@@ -73,8 +78,13 @@ export default function Home() {
   const [statusMessage, setStatusMessage] = useState('Ready to load your TFT stats.');
   const [error, setError] = useState('');
   const [data, setData] = useState<ApiResponse | null>(null);
+  const retryTimerRef = useRef<number | null>(null);
 
   async function loadStats() {
+    if (retryTimerRef.current) {
+      window.clearTimeout(retryTimerRef.current);
+      retryTimerRef.current = null;
+    }
     setLoading(true);
     setError('');
     setStatusMessage('Resolving player account…');
@@ -129,12 +139,46 @@ export default function Home() {
       return;
     }
 
-    const timer = window.setTimeout(() => {
-      void loadStats();
-    }, data.cooldownMs ?? 2100);
+    if (retryTimerRef.current) return;
 
-    return () => window.clearTimeout(timer);
-  }, [data, loading, region, summoner]);
+    const delay = Math.max(data.cooldownMs ?? 2100, 2100);
+    retryTimerRef.current = window.setTimeout(() => {
+      retryTimerRef.current = null;
+      void loadStats();
+    }, delay);
+
+    return () => {
+      if (retryTimerRef.current) {
+        window.clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = null;
+      }
+    };
+  }, [data, loading]);
+
+  const setSummaries = useMemo(() => {
+    if (!data?.matches?.length) return [];
+
+    const grouped = new Map<string, { patch: string; totalGames: number; totalMinutes: number; topChampion: string; counts: Map<string, number> }>();
+
+    for (const match of data.matches) {
+      const patch = match.patch || 'Unknown set';
+      const bucket = grouped.get(patch) ?? { patch, totalGames: 0, totalMinutes: 0, topChampion: 'Unknown', counts: new Map<string, number>() };
+      bucket.totalGames += 1;
+      bucket.totalMinutes += match.durationMinutes;
+      for (const champ of match.champions) {
+        bucket.counts.set(champ.name, (bucket.counts.get(champ.name) ?? 0) + 1);
+      }
+      bucket.topChampion = [...bucket.counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'Unknown';
+      grouped.set(patch, bucket);
+    }
+
+    return [...grouped.values()].map((entry) => ({
+      patch: entry.patch,
+      totalGames: entry.totalGames,
+      totalHours: entry.totalMinutes / 60,
+      topChampion: entry.topChampion,
+    }));
+  }, [data]);
 
   const summaryCards = useMemo(
     () => [
@@ -222,6 +266,21 @@ export default function Home() {
               <p className="font-semibold">Top champion</p>
               <p className="mt-1 text-base-content/80">{data?.summary.topChampion ?? 'Waiting for a search result…'}</p>
             </div>
+            {setSummaries.length > 0 && (
+              <div className="mt-6 space-y-3">
+                <p className="text-sm font-semibold">Set breakdown</p>
+                {setSummaries.map((entry) => (
+                  <article key={entry.patch} className="rounded-2xl border border-base-300 bg-base-200 p-4 text-sm">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="font-semibold">{entry.patch}</span>
+                      <span className="text-base-content/60">{entry.totalGames} games</span>
+                    </div>
+                    <p className="mt-1 text-base-content/70">{entry.totalHours.toFixed(1)} hours tracked</p>
+                    <p className="mt-1 text-base-content/70">Top champ: {entry.topChampion}</p>
+                  </article>
+                ))}
+              </div>
+            )}
           </article>
 
           <article className="rounded-3xl bg-base-100 p-6 shadow-xl">
@@ -251,9 +310,10 @@ export default function Home() {
                         <span key={champ.id || champ.name} className="flex items-center gap-1 rounded-md bg-base-200 px-1.5 py-0.5 text-xs text-base-content/80">
                           {champ.id && (
                             <img
-                              src={`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/${champ.id.toLowerCase()}/hud/${champ.id.toLowerCase()}_square.png`}
+                              src={`https://cdn.communitydragon.org/latest/champion/${championIconId(champ.id)}/square.png`}
                               alt={champ.name}
                               className="h-4 w-4 rounded-sm object-cover"
+                              referrerPolicy="no-referrer"
                               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                             />
                           )}
