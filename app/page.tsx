@@ -55,17 +55,21 @@ export default function Home() {
   const [summoner, setSummoner] = useState('SamplePlayer');
   const [region, setRegion] = useState('na1');
   const [loading, setLoading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('Ready to load your TFT stats.');
   const [error, setError] = useState('');
   const [data, setData] = useState<ApiResponse | null>(null);
 
   async function loadStats() {
     setLoading(true);
     setError('');
+    setStatusMessage('Resolving player account…');
 
     try {
       const response = await fetch(`/api/riot?summoner=${encodeURIComponent(summoner)}&region=${encodeURIComponent(region)}`, {
         cache: 'no-store',
       });
+
+      setStatusMessage('Loading match history…');
       const json = (await response.json()) as ApiResponse & { error?: string };
       if (!response.ok || json.error) {
         const message = json.error ?? 'Unable to load Riot stats right now.';
@@ -76,9 +80,13 @@ export default function Home() {
             : message,
         );
       }
+
+      setStatusMessage('Compiling your TFT stats…');
       setData(json);
+      setStatusMessage('Stats ready.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
+      setStatusMessage('Unable to finish the request.');
     } finally {
       setLoading(false);
     }
@@ -149,6 +157,7 @@ export default function Home() {
             </div>
           </div>
           {error ? <p className="mt-4 text-sm text-error">{error}</p> : null}
+          <p className="mt-3 text-sm text-base-content/70">{loading ? 'Status: ' + statusMessage : statusMessage}</p>
         </article>
 
         <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
