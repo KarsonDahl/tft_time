@@ -25,6 +25,10 @@ type ApiResponse = {
     topChampion: string;
   };
   matches: MatchSummary[];
+  isCaughtUp?: boolean;
+  cachedGames?: number;
+  fetchedNewGames?: number;
+  uncachedRemaining?: number;
 };
 
 function placementLabel(n: number): string {
@@ -104,6 +108,19 @@ export default function Home() {
 
   function formatSummonerLabel(value: string) {
     return value.replace(/#/, ' #');
+  }
+
+  function cacheStatusMessage(data: ApiResponse | null) {
+    if (!data) return 'No stats loaded yet.';
+
+    if (data.isCaughtUp) {
+      return 'History is caught up — all currently available games are cached.';
+    }
+
+    const remaining = data.uncachedRemaining ?? 0;
+    return remaining > 0
+      ? `More games are still being fetched from Riot (${remaining} unseen match${remaining === 1 ? '' : 'es'} remaining).`
+      : 'Checking for newly available games…';
   }
 
   const summaryCards = useMemo(
@@ -202,6 +219,7 @@ export default function Home() {
             <p className="mt-2 text-sm text-base-content/70">
               {data ? `${formatSummonerLabel(data.summoner)} • ${data.region.toUpperCase()}` : 'No stats loaded yet.'}
             </p>
+            <p className="mt-2 text-xs text-base-content/60">{cacheStatusMessage(data)}</p>
             <div className="mt-6 space-y-2">
               {(data?.matches ?? []).map((match) => (
                 <div key={match.id} className="flex items-start gap-4 rounded-2xl border border-base-300 p-4">

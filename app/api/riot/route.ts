@@ -246,7 +246,7 @@ export async function GET(request: Request) {
       lastFetchedAt: Date.now(),
     });
 
-    const uncachedRemaining = 0;
+    const uncachedRemaining = Math.max(0, newIds.length - toFetch.length);
     const { summary, matches: playerMatches } = summarizeMatches(mergedMatches);
 
     console.info('[riot-route] success', {
@@ -266,6 +266,8 @@ export async function GET(request: Request) {
       totalKnownGames: allMatchIds.length,
       cachedGames: mergedMatches.length,
       uncachedRemaining,
+      isCaughtUp: uncachedRemaining === 0,
+      fetchedNewGames: newCached.length,
       lastFetchedAt: cached?.lastFetchedAt ?? null,
       summary,
       matches: playerMatches,
