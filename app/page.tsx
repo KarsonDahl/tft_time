@@ -80,6 +80,7 @@ export default function Home() {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [selectedSets, setSelectedSets] = useState<string[]>([]);
   const [trackingMore, setTrackingMore] = useState(false);
+  const [cooldownSeconds, setCooldownSeconds] = useState(0);
   const retryTimerRef = useRef<number | null>(null);
 
   async function loadStats(mode: 'auto' | 'fetch-missing' = 'auto') {
@@ -140,12 +141,15 @@ export default function Home() {
 
   useEffect(() => {
     if (!data || !data.uncachedRemaining || data.uncachedRemaining <= 0 || loading) {
+      setCooldownSeconds(0);
       return;
     }
 
+    const delay = Math.max(data.cooldownMs ?? 2100, 2100);
+    setCooldownSeconds(Math.ceil(delay / 1000));
+
     if (retryTimerRef.current) return;
 
-    const delay = Math.max(data.cooldownMs ?? 2100, 2100);
     retryTimerRef.current = window.setTimeout(() => {
       retryTimerRef.current = null;
       void loadStats();
@@ -199,10 +203,33 @@ export default function Home() {
 
   const filteredMatches = useMemo(() => {
     if (!data?.matches?.length) return [];
+    if (!selectedSets.length) return [];
+    return data.matches.filter((match) => selectedSets.includes(match.patch || 'Unknown set'));
+  }, [data, selectedSets]);
 
-    const activeSets = selectedSets.length ? selectedSets : setSummaries.map((entry) => entry.patch);
-    return data.matches.filter((match) => activeSets.includes(match.patch || 'Unknown set'));
-  }, [data, selectedSets, setSummaries]);
+  const filteredSummary = useMemo(() => {
+    if (!filteredMatches.length) return null;
+
+    const totalMinutes = filteredMatches.reduce((sum, match) => sum + match.durationMinutes, 0);
+    const totalPlacement = filteredMatches.reduce((sum, match) => sum + match.placement, 0);
+    const wins = filteredMatches.filter((match) => match.placement === 1).length;
+
+    return {
+      totalGames: filteredMatches.length,
+      totalHours: totalMinutes / 60,
+      averagePlacement: totalPlacement / filteredMatches.length,
+      winRate: (wins / filteredMatches.length) * 100,
+      topChampion: (() => {
+        const counts = new Map<string, number>();
+        for (const match of filteredMatches) {
+          for (const champ of match.champions) {
+            counts.set(champ.name, (counts.get(champ.name) ?? 0) + 1);
+          }
+        }
+        return [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'Unknown';
+      })(),
+    };
+  }, [filteredMatches]);
 
   const summaryCards = useMemo(
     () => [
@@ -297,6 +324,18 @@ export default function Home() {
               <p className="font-semibold">Top champion</p>
               <p className="mt-1 text-base-content/80">{data?.summary.topChampion ?? 'Waiting for a search result…'}</p>
             </div>
+            {filteredSummary && (
+              <div className="mt-6 rounded-2xl border border-base-300 bg-base-200 p-4 text-sm">
+                <p className="font-semibold">Selected set summary</p>
+                <ul className="mt-2 space-y-1 text-base-content/80">
+                  <li>Games: {filteredSummary.totalGames}</li>
+                  <li>Hours: {filteredSummary.totalHours.toFixed(1)}</li>
+                  <li>Avg placement: {filteredSummary.averagePlacement.toFixed(2)}</li>
+                  <li>Win rate: {filteredSummary.winRate.toFixed(1)}%</li>
+                  <li>Top champion: {filteredSummary.topChampion}</li>
+                </ul>
+              </div>
+            )}
             {setSummaries.length > 0 && (
               <div className="mt-6 space-y-3">
                 <div className="flex items-center justify-between gap-3">
@@ -345,12 +384,18 @@ export default function Home() {
               {data ? `${formatSummonerLabel(data.summoner)} • ${data.region.toUpperCase()}` : 'No stats loaded yet.'}
             </p>
             <p className="mt-2 text-xs text-base-content/60">{cacheStatusMessage(data)}</p>
+            {cooldownSeconds > 0 ? (
+              <p className="mt-2 text-xs text-base-content/60">Cooldown: next backfill in {cooldownSeconds} second{cooldownSeconds === 1 ? '' : 's'}.</p>
+            ) : null}
             <p className="mt-2 text-xs text-base-content/60">
-              Showing {filteredMatches.length} of {data?.matches?.length ?? 0} games{selectedSets.length ? ` for ${selectedSets.join(', ')}` : ''}.
+              {selectedSets.length
+                ? `Showing ${filteredMatches.length} of ${data?.matches?.length ?? 0} games for ${selectedSets.join(', ')}.`
+                : 'Select one or more sets to view recent matches.'}
             </p>
             <div className="mt-6 space-y-2">
-              {filteredMatches.map((match) => (
-                <div key={match.id} className="flex items-start gap-4 rounded-2xl border border-base-300 p-4">
+              {selectedSets.length ? (
+                filteredMatches.map((match) => (
+                  <div key={match.id} className="flex items-start gap-4 rounded-2xl border border-base-300 p-4">
                   <div className={`flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl text-sm font-black ${placementBadgeClass(match.placement)}`}>
                     <span className="text-lg leading-none">{match.placement}</span>
                     <span className="text-xs font-semibold opacity-80">{placementLabel(match.placement).slice(1)}</span>
@@ -379,7 +424,8 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-              ))}
+                ))
+              ) : null}
             </div>
           </article>
 
