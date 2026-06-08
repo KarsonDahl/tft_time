@@ -159,7 +159,21 @@ export default function Home() {
             </article>
           ))}
         </section>
-        <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+
+        <section className="flex flex-col gap-6">
+          <article className="rounded-3xl bg-base-100 p-6 shadow-xl">
+            <h2 className="text-xl font-semibold">Time Tracking Focus</h2>
+            <ul className="mt-4 space-y-3 text-sm text-base-content/80">
+              <li>• Total hours played</li>
+              <li>• Daily, weekly, and monthly time summaries</li>
+              <li>• Placement trends and win rate</li>
+              <li>• Champion and queue breakdowns</li>
+            </ul>
+            <div className="mt-6 rounded-2xl border border-base-300 bg-base-200 p-4 text-sm">
+              <p className="font-semibold">Top champion</p>
+              <p className="mt-1 text-base-content/80">{data?.summary.topChampion ?? 'Waiting for a search result…'}</p>
+            </div>
+          </article>
 
           <article className="rounded-3xl bg-base-100 p-6 shadow-xl">
             <div className="flex items-center justify-between gap-3">
@@ -201,6 +215,7 @@ export default function Home() {
               ))}
             </div>
           </article>
+
         </section>
       </section>
     </main>
