@@ -78,6 +78,7 @@ export default function Home() {
   const [statusMessage, setStatusMessage] = useState('Ready to load your TFT stats.');
   const [error, setError] = useState('');
   const [data, setData] = useState<ApiResponse | null>(null);
+  const [selectedSets, setSelectedSets] = useState<string[]>([]);
   const retryTimerRef = useRef<number | null>(null);
 
   async function loadStats() {
@@ -180,6 +181,26 @@ export default function Home() {
     }));
   }, [data]);
 
+  useEffect(() => {
+    if (!setSummaries.length) {
+      setSelectedSets([]);
+      return;
+    }
+
+    setSelectedSets((current) => {
+      const available = setSummaries.map((entry) => entry.patch);
+      const valid = current.filter((patch) => available.includes(patch));
+      return valid.length ? valid : available;
+    });
+  }, [setSummaries]);
+
+  const filteredMatches = useMemo(() => {
+    if (!data?.matches?.length) return [];
+
+    const activeSets = selectedSets.length ? selectedSets : setSummaries.map((entry) => entry.patch);
+    return data.matches.filter((match) => activeSets.includes(match.patch || 'Unknown set'));
+  }, [data, selectedSets, setSummaries]);
+
   const summaryCards = useMemo(
     () => [
       ['Total Hours', data?.summary.totalHours.toFixed(1) ?? '0.0'],
@@ -268,17 +289,39 @@ export default function Home() {
             </div>
             {setSummaries.length > 0 && (
               <div className="mt-6 space-y-3">
-                <p className="text-sm font-semibold">Set breakdown</p>
-                {setSummaries.map((entry) => (
-                  <article key={entry.patch} className="rounded-2xl border border-base-300 bg-base-200 p-4 text-sm">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="font-semibold">{entry.patch}</span>
-                      <span className="text-base-content/60">{entry.totalGames} games</span>
-                    </div>
-                    <p className="mt-1 text-base-content/70">{entry.totalHours.toFixed(1)} hours tracked</p>
-                    <p className="mt-1 text-base-content/70">Top champ: {entry.topChampion}</p>
-                  </article>
-                ))}
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-semibold">Set breakdown</p>
+                  <button
+                    type="button"
+                    className="btn btn-xs btn-ghost"
+                    onClick={() => setSelectedSets(setSummaries.map((entry) => entry.patch))}
+                  >
+                    All sets
+                  </button>
+                </div>
+                <p className="text-xs text-base-content/60">Choose one or more sets to filter the session list below.</p>
+                <div className="flex flex-wrap gap-2">
+                  {setSummaries.map((entry) => {
+                    const checked = selectedSets.includes(entry.patch);
+                    return (
+                      <label key={entry.patch} className="flex cursor-pointer items-center gap-2 rounded-full border border-base-300 bg-base-200 px-3 py-2 text-xs font-medium text-base-content/80">
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-xs"
+                          checked={checked}
+                          onChange={() =>
+                            setSelectedSets((current) =>
+                              current.includes(entry.patch)
+                                ? current.filter((patch) => patch !== entry.patch)
+                                : [...current, entry.patch],
+                            )
+                          }
+                        />
+                        {entry.patch} ({entry.totalGames})
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </article>
@@ -292,8 +335,11 @@ export default function Home() {
               {data ? `${formatSummonerLabel(data.summoner)} • ${data.region.toUpperCase()}` : 'No stats loaded yet.'}
             </p>
             <p className="mt-2 text-xs text-base-content/60">{cacheStatusMessage(data)}</p>
+            <p className="mt-2 text-xs text-base-content/60">
+              Showing {filteredMatches.length} of {data?.matches?.length ?? 0} games{selectedSets.length ? ` for ${selectedSets.join(', ')}` : ''}.
+            </p>
             <div className="mt-6 space-y-2">
-              {(data?.matches ?? []).map((match) => (
+              {filteredMatches.map((match) => (
                 <div key={match.id} className="flex items-start gap-4 rounded-2xl border border-base-300 p-4">
                   <div className={`flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl text-sm font-black ${placementBadgeClass(match.placement)}`}>
                     <span className="text-lg leading-none">{match.placement}</span>
