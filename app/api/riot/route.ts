@@ -181,6 +181,7 @@ export async function GET(request: Request) {
     const allMatchIds: string[] = [];
     const PAGE_SIZE = 200;
     const DETAIL_LIMIT = 90;
+    const MAX_PAGES_PER_RUN = 4;
     const RIOT_RATE_LIMIT_DELAY_MS = 1100;
     const BACKFILL_COOLDOWN_BUFFER_MS = 1000;
     const BACKFILL_COOLDOWN_MS = RIOT_RATE_LIMIT_DELAY_MS + BACKFILL_COOLDOWN_BUFFER_MS;
@@ -203,7 +204,8 @@ export async function GET(request: Request) {
 
       if (
         page.length < PAGE_SIZE ||
-        collectedNewIds >= DETAIL_LIMIT
+        collectedNewIds >= DETAIL_LIMIT ||
+        pageStart >= (MAX_PAGES_PER_RUN - 1) * PAGE_SIZE
       ) {
         break;
       }
@@ -282,6 +284,7 @@ export async function GET(request: Request) {
     });
 
     const uncachedRemaining = Math.max(0, newIds.length - toFetch.length);
+    const uncachedCount = newIds.length;
     const { summary, matches: playerMatches } = summarizeMatches(mergedMatches);
 
     console.info('[riot-route] success', {
@@ -301,6 +304,7 @@ export async function GET(request: Request) {
       totalKnownGames: allMatchIds.length,
       cachedGames: mergedMatches.length,
       uncachedRemaining,
+      uncachedCount,
       isCaughtUp: uncachedRemaining === 0,
       fetchedNewGames: newCached.length,
       cooldownMs: BACKFILL_COOLDOWN_MS,
