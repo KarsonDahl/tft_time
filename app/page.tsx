@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 type MatchSummary = {
   id: string;
@@ -29,6 +29,7 @@ type ApiResponse = {
   cachedGames?: number;
   fetchedNewGames?: number;
   uncachedRemaining?: number;
+  cooldownMs?: number;
 };
 
 function placementLabel(n: number): string {
@@ -122,6 +123,18 @@ export default function Home() {
       ? `More games are still being fetched from Riot (${remaining} unseen match${remaining === 1 ? '' : 'es'} remaining).`
       : 'Checking for newly available games…';
   }
+
+  useEffect(() => {
+    if (!data || !data.uncachedRemaining || data.uncachedRemaining <= 0 || loading) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      void loadStats();
+    }, data.cooldownMs ?? 2100);
+
+    return () => window.clearTimeout(timer);
+  }, [data, loading, region, summoner]);
 
   const summaryCards = useMemo(
     () => [

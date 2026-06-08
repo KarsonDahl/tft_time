@@ -164,7 +164,13 @@ export async function GET(request: Request) {
     // ── Fetch fresh match ID list (most-recent-first, paginated) ─────────────
     const allMatchIds: string[] = [];
     const PAGE_SIZE = 200;
+    const DETAIL_LIMIT = 90;
+    const RIOT_RATE_LIMIT_DELAY_MS = 1100;
+    const BACKFILL_COOLDOWN_BUFFER_MS = 1000;
+    const BACKFILL_COOLDOWN_MS = RIOT_RATE_LIMIT_DELAY_MS + BACKFILL_COOLDOWN_BUFFER_MS;
     let pageStart = 0;
+    let collectedNewIds = 0;
+
     while (true) {
       const matchIdsResponse = await fetch(
         `https://${routing}.api.riotgames.com/tft/match/v1/matches/by-puuid/${puuid}/ids?start=${pageStart}&count=${PAGE_SIZE}`,
@@ -176,8 +182,17 @@ export async function GET(request: Request) {
       }
       const page = (await matchIdsResponse.json()) as string[];
       allMatchIds.push(...page);
-      // Stop paginating as soon as we hit IDs we already have cached
-      if (page.length < PAGE_SIZE || page.some((id) => cachedIdSet.has(id))) break;
+      const pageNewIds = page.filter((id) => !cachedIdSet.has(id));
+      collectedNewIds += pageNewIds.length;
+
+      if (
+        page.length < PAGE_SIZE ||
+        page.every((id) => cachedIdSet.has(id)) ||
+        collectedNewIds >= DETAIL_LIMIT
+      ) {
+        break;
+      }
+
       pageStart += PAGE_SIZE;
       await new Promise<void>((resolve) => setTimeout(resolve, 300));
     }
@@ -194,7 +209,7 @@ export async function GET(request: Request) {
     // This keeps the history incremental and cache-friendly even when the
     // player has a long match history.
     const BATCH_SIZE = 10;
-    const BATCH_DELAY_MS = 1100;
+    const BATCH_DELAY_MS = BACKFILL_COOLDOWN_MS;
 
     const fetchMatchDetail = (matchId: string): Promise<RiotMatch> =>
       fetch(`https://${routing}.api.riotgames.com/tft/match/v1/matches/${matchId}`, {
@@ -208,7 +223,7 @@ export async function GET(request: Request) {
         return r.json() as Promise<RiotMatch>;
       });
 
-    const toFetch = newIds;
+    const toFetch = newIds.slice(0, DETAIL_LIMIT);
     const newRiotMatches: RiotMatch[] = [];
     for (let i = 0; i < toFetch.length; i += BATCH_SIZE) {
       const batch = toFetch.slice(i, i + BATCH_SIZE);
@@ -268,6 +283,7 @@ export async function GET(request: Request) {
       uncachedRemaining,
       isCaughtUp: uncachedRemaining === 0,
       fetchedNewGames: newCached.length,
+      cooldownMs: BACKFILL_COOLDOWN_MS,
       lastFetchedAt: cached?.lastFetchedAt ?? null,
       summary,
       matches: playerMatches,
