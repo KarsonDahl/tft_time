@@ -210,12 +210,12 @@ export default function Home() {
               <li>• Placement trends and win rate</li>
               <li>• Champion and queue breakdowns</li>
             </ul>
+          </article>
+        </section>
             <div className="mt-6 rounded-2xl border border-base-300 bg-base-200 p-4 text-sm">
               <p className="font-semibold">Top champion</p>
               <p className="mt-1 text-base-content/80">{data?.summary.topChampion ?? 'Waiting for a search result…'}</p>
             </div>
-          </article>
-        </section>
       </section>
     </main>
   );
