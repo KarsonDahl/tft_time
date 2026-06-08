@@ -98,6 +98,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const summoner = searchParams.get('summoner') ?? 'SamplePlayer';
   const region = searchParams.get('region') ?? 'na1';
+  const mode = searchParams.get('mode') ?? 'auto';
   const apiKey = process.env.RIOT_API_KEY;
 
   console.info('[riot-route] start', { summoner, region, hasKey: Boolean(apiKey), url: request.url });
@@ -176,6 +177,92 @@ export async function GET(request: Request) {
     // ── Load cache ───────────────────────────────────────────────────────────
     const cached = await getCache(puuid);
     const cachedIdSet = new Set(cached?.cachedMatchIds ?? []);
+    const cachedMatchIds = cached?.cachedMatchIds ?? [];
+    const detailMatchIds = new Set((cached?.matches ?? []).map((match) => match.id));
+    const missingDetailIds = cachedMatchIds.filter((id) => !detailMatchIds.has(id));
+
+    if (mode === 'fetch-missing') {
+      const BATCH_SIZE = 10;
+      const BATCH_DELAY_MS = 1100;
+      const toFetch = missingDetailIds.slice(0, 90);
+
+      if (!toFetch.length) {
+        const { summary, matches: playerMatches } = summarizeMatches(cached?.matches ?? []);
+        return NextResponse.json({
+          summoner: displayName,
+          region,
+          source: 'riot',
+          totalKnownGames: cachedMatchIds.length,
+          cachedGames: (cached?.matches ?? []).length,
+          missingDetailIds: 0,
+          isCaughtUp: true,
+          fetchedNewGames: 0,
+          summary,
+          matches: playerMatches,
+        });
+      }
+
+      const fetchMatchDetail = (matchId: string): Promise<RiotMatch> =>
+        fetch(`https://${routing}.api.riotgames.com/tft/match/v1/matches/${matchId}`, {
+          headers: { 'X-Riot-Token': apiKey, Accept: 'application/json' },
+          cache: 'no-store',
+        }).then(async (r) => {
+          if (!r.ok) {
+            const body = await r.text();
+            throw new Error(`Match detail lookup failed (${r.status} ${r.statusText}): ${body}`);
+          }
+          return r.json() as Promise<RiotMatch>;
+        });
+
+      const newRiotMatches: RiotMatch[] = [];
+      for (let i = 0; i < toFetch.length; i += BATCH_SIZE) {
+        const batch = toFetch.slice(i, i + BATCH_SIZE);
+        const results = await Promise.all(batch.map(fetchMatchDetail));
+        newRiotMatches.push(...results);
+        if (i + BATCH_SIZE < toFetch.length) {
+          await new Promise<void>((resolve) => setTimeout(resolve, BATCH_DELAY_MS));
+        }
+      }
+
+      const newCached: CachedMatch[] = newRiotMatches.map((match) => {
+        const participant = match.info.participants.find((p) => p.puuid === puuid)!;
+        const champions = (participant?.units ?? [])
+          .map((u) => ({ id: u.character_id ?? '', name: formatChampionName(u.character_id), traits: Array.isArray(u.traits) ? u.traits : [] }))
+          .filter((c) => c.id && c.name !== 'Unknown');
+        return {
+          id: match.metadata.match_id,
+          durationMinutes: match.info.game_length / 60,
+          placement: participant?.placement ?? 0,
+          queue: queueLabel(match.info.queue_id),
+          patch: match.info.tft_set_core_name ?? 'Unknown set',
+          champions,
+          traits: participant?.traits ?? [],
+          playedAt: match.info.game_datetime ?? 0,
+        };
+      });
+
+      const mergedMatches = [...newCached, ...(cached?.matches ?? [])];
+      await setCache(puuid, {
+        displayName,
+        cachedMatchIds: cachedMatchIds,
+        matches: mergedMatches,
+        lastFetchedAt: Date.now(),
+      });
+
+      const { summary, matches: playerMatches } = summarizeMatches(mergedMatches);
+      return NextResponse.json({
+        summoner: displayName,
+        region,
+        source: 'riot',
+        totalKnownGames: cachedMatchIds.length,
+        cachedGames: mergedMatches.length,
+        missingDetailIds: Math.max(0, missingDetailIds.length - toFetch.length),
+        fetchedNewGames: newCached.length,
+        isCaughtUp: missingDetailIds.length <= toFetch.length,
+        summary,
+        matches: playerMatches,
+      });
+    }
 
     // ── Fetch fresh match ID list (most-recent-first, paginated) ─────────────
     const allMatchIds: string[] = [];

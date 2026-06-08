@@ -79,9 +79,10 @@ export default function Home() {
   const [error, setError] = useState('');
   const [data, setData] = useState<ApiResponse | null>(null);
   const [selectedSets, setSelectedSets] = useState<string[]>([]);
+  const [trackingMore, setTrackingMore] = useState(false);
   const retryTimerRef = useRef<number | null>(null);
 
-  async function loadStats() {
+  async function loadStats(mode: 'auto' | 'fetch-missing' = 'auto') {
     if (retryTimerRef.current) {
       window.clearTimeout(retryTimerRef.current);
       retryTimerRef.current = null;
@@ -91,7 +92,8 @@ export default function Home() {
     setStatusMessage('Resolving player account…');
 
     try {
-      const response = await fetch(`/api/riot?summoner=${encodeURIComponent(summoner)}&region=${encodeURIComponent(region)}`, {
+      setTrackingMore(mode === 'fetch-missing');
+      const response = await fetch(`/api/riot?summoner=${encodeURIComponent(summoner)}&region=${encodeURIComponent(region)}&mode=${mode}`, {
         cache: 'no-store',
       });
 
@@ -115,6 +117,7 @@ export default function Home() {
       setStatusMessage('Unable to finish the request.');
     } finally {
       setLoading(false);
+      setTrackingMore(false);
     }
   }
 
@@ -256,8 +259,15 @@ export default function Home() {
                 <option value="tr1">TR</option>
                 <option value="ru">RU</option>
               </select>
-              <button className="btn btn-primary" onClick={loadStats} disabled={loading}>
+              <button className="btn btn-primary" onClick={() => void loadStats('auto')} disabled={loading}>
                 {loading ? 'Loading…' : 'Load stats'}
+              </button>
+              <button
+                className="btn btn-outline btn-secondary"
+                onClick={() => void loadStats('fetch-missing')}
+                disabled={loading || !data || (data.totalKnownGames ?? 0) <= (data.summary?.totalGames ?? 0)}
+              >
+                {trackingMore ? 'Tracking more…' : 'Track more matches'}
               </button>
             </div>
           </div>
