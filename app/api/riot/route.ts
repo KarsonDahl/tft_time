@@ -190,8 +190,9 @@ export async function GET(request: Request) {
       newToFetch: newIds.length,
     });
 
-    // ── Fetch only new match details (max 90 per call) ────────────────────────
-    const DETAIL_LIMIT = 90;
+    // ── Fetch only the newly discovered match details, in batches.
+    // This keeps the history incremental and cache-friendly even when the
+    // player has a long match history.
     const BATCH_SIZE = 10;
     const BATCH_DELAY_MS = 1100;
 
@@ -207,7 +208,7 @@ export async function GET(request: Request) {
         return r.json() as Promise<RiotMatch>;
       });
 
-    const toFetch = newIds.slice(0, DETAIL_LIMIT);
+    const toFetch = newIds;
     const newRiotMatches: RiotMatch[] = [];
     for (let i = 0; i < toFetch.length; i += BATCH_SIZE) {
       const batch = toFetch.slice(i, i + BATCH_SIZE);
@@ -237,7 +238,7 @@ export async function GET(request: Request) {
 
     // ── Merge + persist ───────────────────────────────────────────────────────
     const mergedMatches: CachedMatch[] = [...newCached, ...(cached?.matches ?? [])];
-    const mergedIds = [...new Set([...toFetch, ...Array.from(cachedIdSet)])];
+    const mergedIds = [...new Set([...allMatchIds, ...Array.from(cachedIdSet)])];
     await setCache(puuid, {
       displayName,
       cachedMatchIds: mergedIds,
@@ -245,7 +246,7 @@ export async function GET(request: Request) {
       lastFetchedAt: Date.now(),
     });
 
-    const uncachedRemaining = newIds.length - toFetch.length;
+    const uncachedRemaining = 0;
     const { summary, matches: playerMatches } = summarizeMatches(mergedMatches);
 
     console.info('[riot-route] success', {

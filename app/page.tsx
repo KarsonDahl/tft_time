@@ -9,6 +9,7 @@ type MatchSummary = {
   queue: string;
   patch: string;
   champions: Array<{ id: string; name: string }>;
+  playedAt: number;
 };
 
 type ApiResponse = {
@@ -49,6 +50,15 @@ function formatDuration(minutes: number): string {
   const m = Math.floor(totalSeconds / 60);
   const s = totalSeconds % 60;
   return `${m}m ${s.toString().padStart(2, '0')}s`;
+}
+
+function formatPlayedAt(timestamp: number): string {
+  if (!timestamp) return 'Date unavailable';
+  return new Date(timestamp).toLocaleString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
 }
 
 export default function Home() {
@@ -204,6 +214,7 @@ export default function Home() {
                       <span className="text-sm font-semibold">{match.queue} · {match.patch}</span>
                       <span className="shrink-0 text-sm tabular-nums text-base-content/60">{formatDuration(match.durationMinutes)}</span>
                     </div>
+                    <p className="mt-1 text-xs text-base-content/60">Played {formatPlayedAt(match.playedAt)}</p>
                     <div className="mt-2 flex flex-wrap gap-1">
                       {match.champions.map((champ) => (
                         <span key={champ.id || champ.name} className="flex items-center gap-1 rounded-md bg-base-200 px-1.5 py-0.5 text-xs text-base-content/80">
