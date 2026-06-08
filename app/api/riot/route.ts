@@ -187,7 +187,6 @@ export async function GET(request: Request) {
 
       if (
         page.length < PAGE_SIZE ||
-        page.every((id) => cachedIdSet.has(id)) ||
         collectedNewIds >= DETAIL_LIMIT
       ) {
         break;
