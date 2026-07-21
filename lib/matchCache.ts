@@ -29,6 +29,11 @@ export type PlayerCache = {
   lastFetchedAt: number;
 };
 
+export type PuuidMapping = {
+  puuid: string;
+  displayName: string;
+};
+
 // ── Persistent cache clients (lazy, only when env vars exist) ───────────────
 
 let _kvClient: any = null;
@@ -65,7 +70,12 @@ const memoryStore = new Map<string, PlayerCache>();
 // ── Public API ────────────────────────────────────────────────────────────────
 
 const KEY_PREFIX = 'tft:matches:';
+const NAME_KEY_PREFIX = 'tft:puuid:';
 const TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
+// PUUIDs don't change, so this mapping can outlive the match cache and lets us
+// resolve a player without hitting the Riot API (useful when the daily API
+// key has expired but Redis still has the player's data).
+const NAME_TTL_SECONDS = 60 * 60 * 24 * 365; // 1 year
 
 export async function getCache(puuid: string): Promise<PlayerCache | null> {
   const kv = getVercelKvClient();
@@ -97,4 +107,42 @@ export async function setCache(puuid: string, data: PlayerCache): Promise<void> 
   }
 
   memoryStore.set(puuid, data);
+}
+
+// ── Riot ID → PUUID lookup ──────────────────────────────────────────────────
+// Lets the route resolve a player's cached data straight from Redis, without
+// depending on the (frequently rotated) Riot API key being valid.
+
+const nameStore = new Map<string, PuuidMapping>();
+
+export async function getPuuidMapping(nameKey: string): Promise<PuuidMapping | null> {
+  const kv = getVercelKvClient();
+  if (kv) {
+    const raw = await kv.get(`${NAME_KEY_PREFIX}${nameKey}`);
+    return (raw ?? null) as PuuidMapping | null;
+  }
+
+  const redis = getRedis();
+  if (redis) {
+    const raw = await redis.get<PuuidMapping>(`${NAME_KEY_PREFIX}${nameKey}`);
+    return raw ?? null;
+  }
+
+  return nameStore.get(nameKey) ?? null;
+}
+
+export async function setPuuidMapping(nameKey: string, data: PuuidMapping): Promise<void> {
+  const kv = getVercelKvClient();
+  if (kv) {
+    await kv.set(`${NAME_KEY_PREFIX}${nameKey}`, data, { ex: NAME_TTL_SECONDS });
+    return;
+  }
+
+  const redis = getRedis();
+  if (redis) {
+    await redis.set(`${NAME_KEY_PREFIX}${nameKey}`, data, { ex: NAME_TTL_SECONDS });
+    return;
+  }
+
+  nameStore.set(nameKey, data);
 }

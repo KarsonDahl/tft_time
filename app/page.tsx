@@ -16,7 +16,8 @@ type MatchSummary = {
 type ApiResponse = {
   summoner: string;
   region: string;
-  source: 'demo' | 'riot';
+  source: 'demo' | 'riot' | 'cache';
+  warning?: string;
   totalKnownGames?: number;
   summary: {
     totalGames: number;
@@ -236,8 +237,8 @@ export default function Home() {
       ['Total Hours', data?.summary.totalHours.toFixed(1) ?? '0.0'],
       ['Games Tracked', data
         ? (data.totalKnownGames && data.totalKnownGames > data.summary.totalGames
-            ? `${data.summary.totalGames} / ${data.totalKnownGames}`
-            : String(data.summary.totalGames))
+          ? `${data.summary.totalGames} / ${data.totalKnownGames}`
+          : String(data.summary.totalGames))
         : '0'],
       ['Average Placement', data ? data.summary.averagePlacement.toFixed(2) : '—'],
       ['Win Rate', data ? `${data.summary.winRate.toFixed(1)}%` : '—'],
@@ -383,6 +384,9 @@ export default function Home() {
             <p className="mt-2 text-sm text-base-content/70">
               {data ? `${formatSummonerLabel(data.summoner)} • ${data.region.toUpperCase()}` : 'No stats loaded yet.'}
             </p>
+            {data?.warning ? (
+              <p className="mt-2 text-xs text-warning">{data.warning}</p>
+            ) : null}
             <p className="mt-2 text-xs text-base-content/60">{cacheStatusMessage(data)}</p>
             {cooldownSeconds > 0 ? (
               <p className="mt-2 text-xs text-base-content/60">Cooldown: next backfill in {cooldownSeconds} second{cooldownSeconds === 1 ? '' : 's'}.</p>
@@ -396,34 +400,34 @@ export default function Home() {
               {selectedSets.length ? (
                 filteredMatches.map((match) => (
                   <div key={match.id} className="flex items-start gap-4 rounded-2xl border border-base-300 p-4">
-                  <div className={`flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl text-sm font-black ${placementBadgeClass(match.placement)}`}>
-                    <span className="text-lg leading-none">{match.placement}</span>
-                    <span className="text-xs font-semibold opacity-80">{placementLabel(match.placement).slice(1)}</span>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-sm font-semibold">{match.queue} · {match.patch}</span>
-                      <span className="shrink-0 text-sm tabular-nums text-base-content/60">{formatDuration(match.durationMinutes)}</span>
+                    <div className={`flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl text-sm font-black ${placementBadgeClass(match.placement)}`}>
+                      <span className="text-lg leading-none">{match.placement}</span>
+                      <span className="text-xs font-semibold opacity-80">{placementLabel(match.placement).slice(1)}</span>
                     </div>
-                    <p className="mt-1 text-xs text-base-content/60">Played {formatPlayedAt(match.playedAt)}</p>
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {match.champions.map((champ) => (
-                        <span key={champ.id || champ.name} className="flex items-center gap-1 rounded-md bg-base-200 px-1.5 py-0.5 text-xs text-base-content/80">
-                          {champ.id && (
-                            <img
-                              src={`https://cdn.communitydragon.org/latest/champion/${championIconId(champ.id)}/square.png`}
-                              alt={champ.name}
-                              className="h-4 w-4 rounded-sm object-cover"
-                              referrerPolicy="no-referrer"
-                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                            />
-                          )}
-                          {champ.name}
-                        </span>
-                      ))}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-sm font-semibold">{match.queue} · {match.patch}</span>
+                        <span className="shrink-0 text-sm tabular-nums text-base-content/60">{formatDuration(match.durationMinutes)}</span>
+                      </div>
+                      <p className="mt-1 text-xs text-base-content/60">Played {formatPlayedAt(match.playedAt)}</p>
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {match.champions.map((champ) => (
+                          <span key={champ.id || champ.name} className="flex items-center gap-1 rounded-md bg-base-200 px-1.5 py-0.5 text-xs text-base-content/80">
+                            {champ.id && (
+                              <img
+                                src={`https://cdn.communitydragon.org/latest/champion/${championIconId(champ.id)}/square.png`}
+                                alt={champ.name}
+                                className="h-4 w-4 rounded-sm object-cover"
+                                referrerPolicy="no-referrer"
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                              />
+                            )}
+                            {champ.name}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
                 ))
               ) : null}
             </div>

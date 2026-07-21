@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getCache, setCache, type CachedMatch } from '@/lib/matchCache';
+import { getCache, setCache, getPuuidMapping, setPuuidMapping, type CachedMatch, type PlayerCache } from '@/lib/matchCache';
 
 type RiotTrait = {
   name?: string;
@@ -64,6 +64,25 @@ function queueLabel(queueId?: number) {
   return 'TFT Match';
 }
 
+// Stable key for the Riot ID → PUUID mapping, independent of the (rotating) API key.
+function buildNameKey(region: string, summoner: string) {
+  return `${region.toLowerCase()}:${summoner.toLowerCase()}`;
+}
+
+function cacheFallbackResponse(region: string, cache: PlayerCache, warning: string) {
+  const { summary, matches } = summarizeMatches(cache.matches);
+  return NextResponse.json({
+    summoner: cache.displayName,
+    region,
+    source: 'cache',
+    warning,
+    cachedGames: cache.matches.length,
+    lastFetchedAt: cache.lastFetchedAt,
+    summary,
+    matches,
+  });
+}
+
 function summarizeMatches(matches: CachedMatch[]) {
   const sorted = [...matches].sort((a, b) => b.playedAt - a.playedAt);
 
@@ -103,7 +122,17 @@ export async function GET(request: Request) {
 
   console.info('[riot-route] start', { summoner, region, hasKey: Boolean(apiKey), url: request.url });
 
+  // ── DB-first: resolve the PUUID from Redis (no API call needed) so a demo
+  // still works with cached data even when the daily-rotated API key is expired.
+  const nameKey = buildNameKey(region, summoner);
+  const mapping = await getPuuidMapping(nameKey);
+  const fallbackCache = mapping ? await getCache(mapping.puuid) : null;
+
   if (!apiKey) {
+    if (fallbackCache) {
+      console.warn('[riot-route] no API key, serving cached data', { summoner, region });
+      return cacheFallbackResponse(region, fallbackCache, 'RIOT_API_KEY is not configured on the server — showing cached data from Redis.');
+    }
     return NextResponse.json({
       summoner,
       region,
@@ -173,6 +202,10 @@ export async function GET(request: Request) {
       puuid = summonerData.puuid;
       displayName = summonerData.name ?? summoner;
     }
+
+    // Persist the Riot ID → PUUID mapping so future requests can serve cached
+    // data straight from Redis even if the API key has since expired.
+    await setPuuidMapping(nameKey, { puuid, displayName });
 
     // ── Load cache ───────────────────────────────────────────────────────────
     const cached = await getCache(puuid);
@@ -402,6 +435,12 @@ export async function GET(request: Request) {
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown Riot API error';
     console.error('[riot-route] failure', { summoner, region, message, durationMs: Date.now() - startedAt });
+
+    if (fallbackCache) {
+      console.warn('[riot-route] API call failed, falling back to cached data', { summoner, region, message });
+      return cacheFallbackResponse(region, fallbackCache, `Riot API is unavailable (${message}) — showing cached data from Redis.`);
+    }
+
     return NextResponse.json({
       summoner,
       region,
