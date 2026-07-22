@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
-import { getCache, setCache, getPuuidMapping, setPuuidMapping, type CachedMatch, type PlayerCache } from '@/lib/matchCache';
-import { getTftNameMaps, lookupDisplayName, lookupIconUrl, type TftNameMaps } from '@/lib/tftData';
+import { getCache, setCache, getPuuidMapping, setPuuidMapping, getRankHistory, appendRankSnapshot, type CachedMatch, type PlayerCache, type RankSnapshot } from '@/lib/matchCache';
+import { getTftNameMaps, lookupDisplayName, lookupIconUrl, lookupAugmentTier, type TftNameMaps } from '@/lib/tftData';
 import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from '@/lib/tftFormat';
+
+type RiotLeagueEntry = {
+  queueType?: string;
+  tier?: string;
+  rank?: string;
+  leaguePoints?: number;
+  wins?: number;
+  losses?: number;
+};
 
 type RiotTrait = {
   name?: string;
@@ -63,6 +72,41 @@ function getRouting(region: string) {
   return 'americas';
 }
 
+// League-v1 (by-puuid) is platform-routed (na1/euw1/etc, same as the `region`
+// query param) rather than the account-routing (americas/europe/asia) used
+// for match/account lookups. Riot's public match-v1 API has no per-match LP
+// delta at all, so this snapshot of current standing is the only ranked data
+// available — history/gain-loss tracking is built by diffing snapshots over
+// time (see appendRankSnapshot in lib/matchCache.ts).
+async function fetchRankedSnapshot(region: string, puuid: string, apiKey: string): Promise<RankSnapshot | null> {
+  try {
+    const host = getRegionHost(region);
+    const response = await fetch(
+      `https://${host}.api.riotgames.com/tft/league/v1/by-puuid/${puuid}`,
+      { headers: { 'X-Riot-Token': apiKey, Accept: 'application/json' }, cache: 'no-store' },
+    );
+    if (!response.ok) {
+      console.warn('[riot-route] league lookup failed', { region, status: response.status });
+      return null;
+    }
+    const entries = (await response.json()) as RiotLeagueEntry[];
+    const ranked = entries.find((entry) => entry.queueType === 'RANKED_TFT');
+    if (!ranked || !ranked.tier || !ranked.rank) return null;
+
+    return {
+      tier: ranked.tier,
+      rank: ranked.rank,
+      leaguePoints: ranked.leaguePoints ?? 0,
+      wins: ranked.wins ?? 0,
+      losses: ranked.losses ?? 0,
+      capturedAt: Date.now(),
+    };
+  } catch (err) {
+    console.warn('[riot-route] league lookup threw', err);
+    return null;
+  }
+}
+
 // Shared mapping from a raw Riot match + the tracked player's puuid into the
 // CachedMatch shape we persist. Pulls in everything the public match-v1
 // response actually exposes: itemization, augments picked, traits (with
@@ -121,6 +165,8 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
     champions,
     traits,
     augments: (participant?.augments ?? []).map((a) => lookupDisplayName(nameMaps, 'items', a, formatAugmentName(a))),
+    augmentIcons: (participant?.augments ?? []).map((a) => lookupIconUrl(nameMaps, 'items', a) ?? null),
+    augmentTiers: (participant?.augments ?? []).map((a) => lookupAugmentTier(nameMaps, a)),
     level: participant?.level,
     goldLeft: participant?.gold_left,
     lastRound: participant?.last_round,
@@ -142,8 +188,9 @@ function buildNameKey(region: string, summoner: string) {
   return `${region.toLowerCase()}:${summoner.toLowerCase()}`;
 }
 
-function cacheFallbackResponse(region: string, cache: PlayerCache, warning?: string) {
+async function cacheFallbackResponse(region: string, puuid: string, cache: PlayerCache, warning?: string) {
   const { summary, matches } = summarizeMatches(cache.matches);
+  const rankHistory = await getRankHistory(puuid).catch(() => []);
   return NextResponse.json({
     summoner: cache.displayName,
     region,
@@ -155,6 +202,8 @@ function cacheFallbackResponse(region: string, cache: PlayerCache, warning?: str
     lastFetchedAt: cache.lastFetchedAt,
     summary,
     matches,
+    rank: rankHistory[rankHistory.length - 1] ?? null,
+    rankHistory,
   });
 }
 
@@ -211,13 +260,13 @@ export async function GET(request: Request) {
   // Use mode=refresh to explicitly ask Riot for brand-new games.
   if (mode === 'auto' && fallbackCache && hasCachedData) {
     console.info('[riot-route] auto mode: serving cached data, skipping Riot API', { summoner, region });
-    return cacheFallbackResponse(region, fallbackCache);
+    return cacheFallbackResponse(region, mapping!.puuid, fallbackCache);
   }
 
   if (!apiKey) {
     if (fallbackCache) {
       console.warn('[riot-route] no API key, serving cached data', { summoner, region });
-      return cacheFallbackResponse(region, fallbackCache, 'RIOT_API_KEY is not configured on the server — showing cached data from Redis.');
+      return cacheFallbackResponse(region, mapping!.puuid, fallbackCache, 'RIOT_API_KEY is not configured on the server — showing cached data from Redis.');
     }
     return NextResponse.json({
       summoner,
@@ -302,6 +351,14 @@ export async function GET(request: Request) {
       await setPuuidMapping(nameKey, { puuid, displayName });
     }
 
+    // ── Ranked snapshot ────────────────────────────────────────────────────
+    // Every time we actually talk to Riot, also grab the current League
+    // standing and append it to history (a no-op write if unchanged from the
+    // last snapshot) so the frontend can chart LP gain/loss over time.
+    const rankSnapshot = await fetchRankedSnapshot(region, puuid, apiKey);
+    const rankHistory = rankSnapshot ? await appendRankSnapshot(puuid, rankSnapshot) : await getRankHistory(puuid);
+    const rank = rankHistory[rankHistory.length - 1] ?? null;
+
     // ── Load cache ───────────────────────────────────────────────────────────
     const cached = await getCache(puuid);
     const cachedIdSet = new Set(cached?.cachedMatchIds ?? []);
@@ -327,6 +384,8 @@ export async function GET(request: Request) {
           fetchedNewGames: 0,
           summary,
           matches: playerMatches,
+          rank,
+          rankHistory,
         });
       }
 
@@ -375,6 +434,8 @@ export async function GET(request: Request) {
         isCaughtUp: missingDetailIds.length <= toFetch.length,
         summary,
         matches: playerMatches,
+        rank,
+        rankHistory,
       });
     }
 
@@ -494,6 +555,8 @@ export async function GET(request: Request) {
       lastFetchedAt: cached?.lastFetchedAt ?? null,
       summary,
       matches: playerMatches,
+      rank,
+      rankHistory,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown Riot API error';
@@ -501,7 +564,7 @@ export async function GET(request: Request) {
 
     if (fallbackCache) {
       console.warn('[riot-route] API call failed, falling back to cached data', { summoner, region, message });
-      return cacheFallbackResponse(region, fallbackCache, `Riot API is unavailable (${message}) — showing cached data from Redis.`);
+      return cacheFallbackResponse(region, mapping!.puuid, fallbackCache, `Riot API is unavailable (${message}) — showing cached data from Redis.`);
     }
 
     return NextResponse.json({

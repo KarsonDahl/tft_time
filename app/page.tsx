@@ -22,6 +22,8 @@ type MatchSummary = {
   }>;
   traits?: Array<{ name?: string; num_units?: number; style?: number; tier_current?: number; tier_total?: number }>;
   augments?: string[];
+  augmentIcons?: (string | null)[];
+  augmentTiers?: number[];
   level?: number;
   goldLeft?: number;
   lastRound?: number;
@@ -50,6 +52,17 @@ type ApiResponse = {
   fetchedNewGames?: number;
   uncachedRemaining?: number;
   cooldownMs?: number;
+  rank?: RankSnapshot | null;
+  rankHistory?: RankSnapshot[];
+};
+
+type RankSnapshot = {
+  tier: string;
+  rank: string;
+  leaguePoints: number;
+  wins: number;
+  losses: number;
+  capturedAt: number;
 };
 
 function placementLabel(n: number): string {
@@ -98,6 +111,38 @@ function traitStyleClass(style?: number): string {
   return 'bg-base-200 text-base-content/70';
 }
 
+function tierBadgeClass(tier?: string): string {
+  const normalized = (tier ?? '').toUpperCase();
+  if (normalized === 'IRON') return 'bg-stone-500 text-stone-50';
+  if (normalized === 'BRONZE') return 'bg-amber-800 text-amber-100';
+  if (normalized === 'SILVER') return 'bg-slate-300 text-slate-800';
+  if (normalized === 'GOLD') return 'bg-amber-400 text-amber-950';
+  if (normalized === 'PLATINUM') return 'bg-teal-400 text-teal-950';
+  if (normalized === 'EMERALD') return 'bg-emerald-500 text-emerald-950';
+  if (normalized === 'DIAMOND') return 'bg-sky-400 text-sky-950';
+  if (normalized === 'MASTER') return 'bg-purple-500 text-purple-50';
+  if (normalized === 'GRANDMASTER') return 'bg-red-600 text-red-50';
+  if (normalized === 'CHALLENGER') return 'bg-cyan-300 text-cyan-950';
+  return 'bg-base-300 text-base-content/70';
+}
+
+function formatRankLabel(snapshot?: RankSnapshot | null): string {
+  if (!snapshot) return 'Unranked';
+  const tier = snapshot.tier.charAt(0).toUpperCase() + snapshot.tier.slice(1).toLowerCase();
+  const noRankTiers = ['MASTER', 'GRANDMASTER', 'CHALLENGER'];
+  const rankPart = noRankTiers.includes(snapshot.tier.toUpperCase()) ? '' : ` ${snapshot.rank}`;
+  return `${tier}${rankPart} - ${snapshot.leaguePoints} LP`;
+}
+
+// Only meaningful when tier+rank are unchanged between snapshots — a
+// promotion/demotion resets LP onto a different scale, so a raw LP diff
+// across a tier/rank change would be misleading.
+function lpDelta(current: RankSnapshot, previous?: RankSnapshot): number | null {
+  if (!previous) return null;
+  if (previous.tier !== current.tier || previous.rank !== current.rank) return null;
+  return current.leaguePoints - previous.leaguePoints;
+}
+
 function getChampionValueScore(champion: MatchSummary['champions'][number]): number {
   return (champion.rarity ?? 1) * (champion.tier ?? 1);
 }
@@ -119,6 +164,10 @@ export default function Home() {
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
   const [nameFixMap, setNameFixMap] = useState<NameFixMap | null>(null);
   const retryTimerRef = useRef<number | null>(null);
+  // Tracks which account (region+summoner) the set filter was last defaulted
+  // for, so switching to the current set only happens once per fresh account
+  // load — not every time the same account's data is refreshed.
+  const initializedAccountRef = useRef<string | null>(null);
 
   // Older cached matches stored regex-guessed names (e.g. "Shield Tank")
   // instead of the real CommunityDragon display name ("Vanguard"). This map
@@ -269,17 +318,31 @@ export default function Home() {
   }, [data]);
 
   useEffect(() => {
-    if (!setSummaries.length) {
+    if (!setSummaries.length || !data) {
       setSelectedSets([]);
+      initializedAccountRef.current = null;
+      return;
+    }
+
+    const accountKey = `${data.region}:${data.summoner}`.toLowerCase();
+    const available = setSummaries.map((entry) => entry.patch);
+
+    if (initializedAccountRef.current !== accountKey) {
+      // First time loading this account's data — default to only the current
+      // set (the one the most recently played match belongs to) instead of
+      // showing every set the player has ever played.
+      initializedAccountRef.current = accountKey;
+      const latestMatch = [...data.matches].sort((a, b) => b.playedAt - a.playedAt)[0];
+      const currentSetPatch = latestMatch?.patch || available[0];
+      setSelectedSets(currentSetPatch ? [currentSetPatch] : available);
       return;
     }
 
     setSelectedSets((current) => {
-      const available = setSummaries.map((entry) => entry.patch);
       const valid = current.filter((patch) => available.includes(patch));
       return valid.length ? valid : available;
     });
-  }, [setSummaries]);
+  }, [setSummaries, data]);
 
   const filteredMatches = useMemo(() => {
     if (!data?.matches?.length) return [];
@@ -403,6 +466,51 @@ export default function Home() {
             </article>
           ))}
         </section>
+
+        {data?.rank !== undefined ? (
+          <article className="rounded-3xl bg-base-100 p-6 shadow-xl">
+            <h2 className="text-xl font-semibold">Ranked Progress</h2>
+            {data.rank ? (
+              <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3">
+                  <span className={`rounded-full px-4 py-2 text-sm font-bold ${tierBadgeClass(data.rank.tier)}`}>
+                    {formatRankLabel(data.rank)}
+                  </span>
+                  <span className="text-sm text-base-content/60">
+                    {data.rank.wins}W {data.rank.losses}L
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-4 text-sm text-base-content/60">No ranked TFT standing found for this account yet.</p>
+            )}
+            {data.rankHistory && data.rankHistory.length > 1 ? (
+              <div className="mt-6 max-h-64 space-y-2 overflow-y-auto pr-1">
+                {[...data.rankHistory]
+                  .reverse()
+                  .map((snapshot, idx, reversed) => {
+                    const previous = reversed[idx + 1];
+                    const delta = lpDelta(snapshot, previous);
+                    return (
+                      <div key={snapshot.capturedAt} className="flex items-center justify-between rounded-xl border border-base-300 bg-base-200 px-3 py-2 text-sm">
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${tierBadgeClass(snapshot.tier)}`}>
+                          {formatRankLabel(snapshot)}
+                        </span>
+                        <span className="text-xs text-base-content/60">{formatPlayedAt(snapshot.capturedAt)}</span>
+                        {delta === null ? (
+                          <span className="text-xs font-semibold text-base-content/60">—</span>
+                        ) : (
+                          <span className={`text-xs font-semibold ${delta > 0 ? 'text-emerald-500' : delta < 0 ? 'text-red-500' : 'text-base-content/60'}`}>
+                            {delta > 0 ? `+${delta}` : delta} LP
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+              </div>
+            ) : null}
+          </article>
+        ) : null}
 
         <section className="flex flex-col gap-6">
           <article className="rounded-3xl bg-base-100 p-6 shadow-xl">
@@ -556,11 +664,32 @@ export default function Home() {
                       </div>
                       {match.augments && match.augments.length > 0 ? (
                         <div className="mt-2 flex flex-wrap gap-1">
-                          {match.augments.map((augment) => (
-                            <span key={augment} className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                              {fixName('augments', augment)}
-                            </span>
-                          ))}
+                          {match.augments.map((augment, idx) => {
+                            const iconSrc = match.augmentIcons?.[idx];
+                            const tier = match.augmentTiers?.[idx];
+                            if (iconSrc) {
+                              return (
+                                <span
+                                  key={`${augment}-${idx}`}
+                                  title={fixName('augments', augment)}
+                                  className={`flex h-6 w-6 items-center justify-center rounded-full p-0.5 ${traitStyleClass(tier)}`}
+                                >
+                                  <img
+                                    src={iconSrc}
+                                    alt={fixName('augments', augment)}
+                                    className="h-full w-full rounded-full object-cover"
+                                    referrerPolicy="no-referrer"
+                                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                  />
+                                </span>
+                              );
+                            }
+                            return (
+                              <span key={`${augment}-${idx}`} className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${traitStyleClass(tier)}`}>
+                                {fixName('augments', augment)}
+                              </span>
+                            );
+                          })}
                         </div>
                       ) : null}
                       {match.traits && match.traits.some((t) => (t.tier_current ?? 0) > 0) ? (

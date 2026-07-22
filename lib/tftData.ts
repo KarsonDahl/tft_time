@@ -18,7 +18,7 @@ import { getRawCache, setRawCache } from './matchCache';
 import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from './tftFormat';
 
 const CDRAGON_URL = 'https://raw.communitydragon.org/latest/cdragon/tft/en_us.json';
-const CACHE_KEY = 'tft:cdragon:namemaps:v2';
+const CACHE_KEY = 'tft:cdragon:namemaps:v3';
 const CACHE_TTL_SECONDS = 60 * 60 * 24; // 24h — the dump only changes when a patch ships
 const FETCH_TIMEOUT_MS = 10_000;
 
@@ -38,6 +38,12 @@ export type TftNameMaps = {
     // show the art matching the set they were played in, not whatever the
     // live base-game splash currently is.
     championIcons: Record<string, string>;
+    // apiName -> trait-style number (2=silver, 4=gold, 3=prismatic/chromatic,
+    // 0=unknown) derived from the augment icon filename's trailing Roman
+    // numeral (I/II/III), which corresponds to the augment's actual in-game
+    // tier. Reuses the same style numbers as trait styling so augments render
+    // with the identical bronze/silver/gold/chromatic color scheme.
+    augmentTiers: Record<string, number>;
     builtAt: number;
 };
 
@@ -81,6 +87,28 @@ function addIconEntries(target: Record<string, string>, entries?: RawApiNameEntr
     }
 }
 
+// Augment icon filenames end with a Roman numeral matching their actual
+// in-game tier, e.g. "AcademicCitation_II.tex" (Gold), "Crown_Bruiser_III.tex"
+// (Prismatic — "Crown" augments are always Prismatic tier). This must run on
+// the RAW (non-lowercased) icon path since the numeral casing matters.
+function extractAugmentTier(rawIconPath?: string): number {
+    if (!rawIconPath) return 0;
+    const fileName = rawIconPath.split('/').pop() ?? '';
+    const base = fileName.split('.')[0] ?? '';
+    const match = base.match(/_(I{1,3})$/);
+    if (!match) return 0;
+    if (match[1] === 'III') return 3; // prismatic/chromatic
+    if (match[1] === 'II') return 4; // gold
+    return 2; // silver
+}
+
+function addAugmentTierEntries(target: Record<string, number>, entries?: RawApiNameEntry[]) {
+    for (const entry of entries ?? []) {
+        const tier = extractAugmentTier(entry.icon);
+        if (entry.apiName && tier > 0) target[entry.apiName] = tier;
+    }
+}
+
 export function normalizeLookupKey(value?: string): string {
     return (value ?? '')
         .toLowerCase()
@@ -117,6 +145,8 @@ async function fetchRemoteMaps(): Promise<TftNameMaps> {
         addEntries(items, data.items);
         const itemIcons: Record<string, string> = {};
         addIconEntries(itemIcons, data.items);
+        const augmentTiers: Record<string, number> = {};
+        addAugmentTierEntries(augmentTiers, data.items);
 
         const traits: Record<string, string> = {};
         const champions: Record<string, string> = {};
@@ -130,7 +160,7 @@ async function fetchRemoteMaps(): Promise<TftNameMaps> {
             }
         }
 
-        return { traits, items, champions, itemIcons, championIcons, builtAt: Date.now() };
+        return { traits, items, champions, itemIcons, championIcons, augmentTiers, builtAt: Date.now() };
     } finally {
         clearTimeout(timeout);
     }
@@ -235,4 +265,29 @@ export function lookupIconUrl(
     }
 
     return undefined;
+}
+
+// Resolves an augment apiName to its trait-style tier number (see
+// TftNameMaps.augmentTiers). Returns 0 (unstyled) when unknown.
+export function lookupAugmentTier(maps: TftNameMaps | null, apiName: string | undefined): number {
+    if (!apiName || !maps) return 0;
+
+    const entries = maps.augmentTiers;
+    const direct = entries[apiName];
+    if (direct) return direct;
+
+    const normalizedInput = normalizeLookupKey(apiName);
+    const guess = guessDisplayName('items', apiName);
+    const normalizedGuess = normalizeLookupKey(guess);
+
+    for (const [key, resolved] of Object.entries(entries)) {
+        if (key === apiName || key === guess) return resolved;
+
+        const normalizedKey = normalizeLookupKey(key);
+        if (normalizedKey && (normalizedKey === normalizedInput || normalizedKey === normalizedGuess)) {
+            return resolved;
+        }
+    }
+
+    return 0;
 }

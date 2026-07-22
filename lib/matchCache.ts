@@ -30,6 +30,12 @@ export type CachedMatch = {
   }>;
   traits?: Array<{ name?: string; style?: number; num_units?: number; tier_current?: number; tier_total?: number }>;
   augments?: string[];
+  // Parallel arrays to `augments`, matched by index (same pattern as
+  // champions[].itemIcons) — icon URL (or null if unresolved) and trait-style
+  // tier number (2=silver, 4=gold, 3=prismatic, 0=unknown) so augments render
+  // as images with the same bronze/silver/gold/chromatic color scheme traits use.
+  augmentIcons?: (string | null)[];
+  augmentTiers?: number[];
   level?: number;
   goldLeft?: number;
   lastRound?: number;
@@ -198,4 +204,71 @@ export async function setPuuidMapping(nameKey: string, data: PuuidMapping): Prom
   }
 
   nameStore.set(nameKey, data);
+}
+
+// ── Ranked (League-v1) history ──────────────────────────────────────────────
+// Riot's public match-v1 API has no per-match LP delta, so the only way to
+// track "LP gain/loss over time" is to snapshot the player's current League
+// standing (tier/rank/LP) every time we successfully talk to Riot, and diff
+// consecutive snapshots on the frontend. Snapshots are only appended when
+// they differ from the previous one, so this doesn't grow on every no-op
+// refresh — just on actual rank/LP movement.
+
+export type RankSnapshot = {
+  tier: string;
+  rank: string;
+  leaguePoints: number;
+  wins: number;
+  losses: number;
+  capturedAt: number;
+};
+
+const RANK_KEY_PREFIX = 'tft:rank:';
+const RANK_TTL_SECONDS = 60 * 60 * 24 * 365; // 1 year, same lifetime as the puuid mapping
+const RANK_HISTORY_MAX_ENTRIES = 500;
+const rankMemoryStore = new Map<string, RankSnapshot[]>();
+
+export async function getRankHistory(puuid: string): Promise<RankSnapshot[]> {
+  const kv = getVercelKvClient();
+  if (kv) {
+    const raw = await kv.get(`${RANK_KEY_PREFIX}${puuid}`);
+    return (raw as RankSnapshot[] | null) ?? [];
+  }
+
+  const redis = getRedis();
+  if (redis) {
+    const raw = await redis.get<RankSnapshot[]>(`${RANK_KEY_PREFIX}${puuid}`);
+    return raw ?? [];
+  }
+
+  return rankMemoryStore.get(puuid) ?? [];
+}
+
+export async function appendRankSnapshot(puuid: string, snapshot: RankSnapshot): Promise<RankSnapshot[]> {
+  const history = await getRankHistory(puuid);
+  const previous = history[history.length - 1];
+  const unchanged = previous
+    && previous.tier === snapshot.tier
+    && previous.rank === snapshot.rank
+    && previous.leaguePoints === snapshot.leaguePoints
+    && previous.wins === snapshot.wins
+    && previous.losses === snapshot.losses;
+
+  const updated = unchanged ? history : [...history, snapshot].slice(-RANK_HISTORY_MAX_ENTRIES);
+
+  if (!unchanged) {
+    const kv = getVercelKvClient();
+    if (kv) {
+      await kv.set(`${RANK_KEY_PREFIX}${puuid}`, updated, { ex: RANK_TTL_SECONDS });
+    } else {
+      const redis = getRedis();
+      if (redis) {
+        await redis.set(`${RANK_KEY_PREFIX}${puuid}`, updated, { ex: RANK_TTL_SECONDS });
+      } else {
+        rankMemoryStore.set(puuid, updated);
+      }
+    }
+  }
+
+  return updated;
 }
