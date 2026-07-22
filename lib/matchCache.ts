@@ -81,6 +81,42 @@ function getRedis(): Redis | null {
 // ── In-memory fallback ────────────────────────────────────────────────────────
 
 const memoryStore = new Map<string, PlayerCache>();
+const genericMemoryStore = new Map<string, unknown>();
+
+// ── Generic raw cache (used for things like the CommunityDragon TFT name
+// lookup tables, which aren't per-player and don't fit the PlayerCache shape) ─
+
+export async function getRawCache<T>(key: string): Promise<T | null> {
+  const kv = getVercelKvClient();
+  if (kv) {
+    const raw = await kv.get(key);
+    return (raw ?? null) as T | null;
+  }
+
+  const redis = getRedis();
+  if (redis) {
+    const raw = await redis.get<T>(key);
+    return raw ?? null;
+  }
+
+  return (genericMemoryStore.get(key) as T | undefined) ?? null;
+}
+
+export async function setRawCache<T>(key: string, value: T, ttlSeconds: number): Promise<void> {
+  const kv = getVercelKvClient();
+  if (kv) {
+    await kv.set(key, value, { ex: ttlSeconds });
+    return;
+  }
+
+  const redis = getRedis();
+  if (redis) {
+    await redis.set(key, value, { ex: ttlSeconds });
+    return;
+  }
+
+  genericMemoryStore.set(key, value);
+}
 
 // ── Public API ────────────────────────────────────────────────────────────────
 

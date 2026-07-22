@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCache, setCache, getPuuidMapping, setPuuidMapping, type CachedMatch, type PlayerCache } from '@/lib/matchCache';
+import { getTftNameMaps, lookupDisplayName, type TftNameMaps } from '@/lib/tftData';
+import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from '@/lib/tftFormat';
 
 type RiotTrait = {
   name?: string;
@@ -61,41 +63,6 @@ function getRouting(region: string) {
   return 'americas';
 }
 
-function formatChampionName(characterId?: string) {
-  if (!characterId) return 'Unknown';
-  return characterId
-    .replace(/^TFT[0-9]+_/, '')
-    .replace(/_/g, ' ')
-    .replace(/\b\w/g, (char) => char.toUpperCase());
-}
-
-function formatItemName(itemId?: string) {
-  if (!itemId) return 'Unknown Item';
-  return itemId
-    .replace(/^TFT[0-9]*_Item_/, '')
-    .replace(/_/g, ' ')
-    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-    .trim();
-}
-
-function formatAugmentName(augmentId?: string) {
-  if (!augmentId) return 'Unknown Augment';
-  return augmentId
-    .replace(/^TFT[0-9]*_Augment_/, '')
-    .replace(/_/g, ' ')
-    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-    .trim();
-}
-
-function formatTraitName(traitId?: string) {
-  if (!traitId) return 'Unknown Trait';
-  return traitId
-    .replace(/^TFT[0-9]*_/, '')
-    .replace(/_/g, ' ')
-    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-    .trim();
-}
-
 // Shared mapping from a raw Riot match + the tracked player's puuid into the
 // CachedMatch shape we persist. Pulls in everything the public match-v1
 // response actually exposes: itemization, augments picked, traits (with
@@ -103,14 +70,23 @@ function formatTraitName(traitId?: string) {
 // survived, damage dealt, players eliminated, time eliminated). Riot's public
 // API does not expose a round-by-round event/combat log — only these
 // end-of-match aggregates are available.
-function toCachedMatch(match: RiotMatch, puuid: string): CachedMatch {
+//
+// Riot's apiName ids (e.g. "TFT17_ShieldTank", "TFT13_Augment_BruiserCrown")
+// frequently have NO textual relationship to their in-client display name
+// ("Vanguard", "Bruiser Crown") — regex cleanup can't recover that. When
+// `nameMaps` (from CommunityDragon, see lib/tftData.ts) has an entry we use
+// the real display name; otherwise we fall back to the best-effort regex
+// formatter so the app still works if that lookup is unavailable.
+function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | null): CachedMatch {
   const participant = match.info.participants.find((p) => p.puuid === puuid);
   const champions = (participant?.units ?? [])
     .map((u) => ({
       id: u.character_id ?? '',
-      name: formatChampionName(u.character_id),
+      name: lookupDisplayName(nameMaps, 'champions', u.character_id, formatChampionName(u.character_id)),
       traits: Array.isArray(u.traits) ? u.traits : [],
-      items: Array.isArray(u.itemNames) ? u.itemNames.map((item) => formatItemName(item)) : [],
+      items: Array.isArray(u.itemNames)
+        ? u.itemNames.map((item) => lookupDisplayName(nameMaps, 'items', item, formatItemName(item)))
+        : [],
       tier: u.tier,
       rarity: u.rarity,
       chosen: u.chosen,
@@ -118,7 +94,7 @@ function toCachedMatch(match: RiotMatch, puuid: string): CachedMatch {
     .filter((c) => c.id && c.name !== 'Unknown');
 
   const traits = (participant?.traits ?? []).map((t) => ({
-    name: formatTraitName(t.name),
+    name: lookupDisplayName(nameMaps, 'traits', t.name, formatTraitName(t.name)),
     style: t.style,
     num_units: t.num_units,
     tier_current: t.tier_current,
@@ -133,7 +109,7 @@ function toCachedMatch(match: RiotMatch, puuid: string): CachedMatch {
     patch: match.info.tft_set_core_name ?? 'Unknown set',
     champions,
     traits,
-    augments: (participant?.augments ?? []).map((a) => formatAugmentName(a)),
+    augments: (participant?.augments ?? []).map((a) => lookupDisplayName(nameMaps, 'items', a, formatAugmentName(a))),
     level: participant?.level,
     goldLeft: participant?.gold_left,
     lastRound: participant?.last_round,
@@ -365,7 +341,8 @@ export async function GET(request: Request) {
         }
       }
 
-      const newCached: CachedMatch[] = newRiotMatches.map((match) => toCachedMatch(match, puuid));
+      const nameMaps = await getTftNameMaps().catch(() => null);
+      const newCached: CachedMatch[] = newRiotMatches.map((match) => toCachedMatch(match, puuid, nameMaps));
 
       const mergedMatches = [...newCached, ...(cached?.matches ?? [])];
       await setCache(puuid, {
@@ -465,7 +442,8 @@ export async function GET(request: Request) {
     }
 
     // ── Convert new Riot matches → CachedMatch shape ─────────────────────────
-    const newCached: CachedMatch[] = newRiotMatches.map((match) => toCachedMatch(match, puuid));
+    const nameMaps = await getTftNameMaps().catch(() => null);
+    const newCached: CachedMatch[] = newRiotMatches.map((match) => toCachedMatch(match, puuid, nameMaps));
 
     // ── Merge + persist ───────────────────────────────────────────────────────
     const mergedMatches: CachedMatch[] = [...newCached, ...(cached?.matches ?? [])];

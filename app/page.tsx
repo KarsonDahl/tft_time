@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import type { NameFixMap } from '@/app/api/tft-names/route';
 
 type MatchSummary = {
   id: string;
@@ -105,7 +106,29 @@ export default function Home() {
   const [selectedSets, setSelectedSets] = useState<string[]>([]);
   const [trackingMore, setTrackingMore] = useState(false);
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
+  const [nameFixMap, setNameFixMap] = useState<NameFixMap | null>(null);
   const retryTimerRef = useRef<number | null>(null);
+
+  // Older cached matches stored regex-guessed names (e.g. "Shield Tank")
+  // instead of the real CommunityDragon display name ("Vanguard"). This map
+  // corrects those on display only, without touching the cached data.
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/tft-names')
+      .then((res) => (res.ok ? (res.json() as Promise<NameFixMap>) : null))
+      .then((json) => {
+        if (!cancelled && json) setNameFixMap(json);
+      })
+      .catch(() => { });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function fixName(category: keyof NameFixMap, value?: string): string {
+    if (!value) return value ?? '';
+    return nameFixMap?.[category]?.[value] ?? value;
+  }
 
   async function loadStats(mode: 'auto' | 'fetch-missing' | 'refresh' = 'auto') {
     if (retryTimerRef.current) {
@@ -449,32 +472,37 @@ export default function Home() {
                       </div>
                       <p className="mt-1 text-xs text-base-content/60">Played {formatPlayedAt(match.playedAt)}</p>
                       <div className="mt-2 flex flex-wrap gap-2">
-                        {match.champions.map((champ) => (
-                          <div key={champ.id || champ.name} className="flex flex-col gap-1 rounded-md bg-base-200 px-1.5 py-1 text-xs text-base-content/80">
-                            <span className="flex items-center gap-1 font-medium">
-                              {champ.id && (
-                                <img
-                                  src={`https://cdn.communitydragon.org/latest/champion/${championIconId(champ.id)}/square.png`}
-                                  alt={champ.name}
-                                  className="h-4 w-4 rounded-sm object-cover"
-                                  referrerPolicy="no-referrer"
-                                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                                />
-                              )}
-                              {champ.name}
-                              {champ.chosen ? <span className="text-primary" title="Chosen unit">★</span> : null}
-                            </span>
-                            {champ.items && champ.items.length > 0 ? (
-                              <span className="text-[10px] leading-tight text-base-content/60">{champ.items.join(', ')}</span>
-                            ) : null}
-                          </div>
-                        ))}
+                        {match.champions.map((champ) => {
+                          const fixedChampName = fixName('champions', champ.name);
+                          return (
+                            <div key={champ.id || champ.name} className="flex flex-col gap-1 rounded-md bg-base-200 px-1.5 py-1 text-xs text-base-content/80">
+                              <span className="flex items-center gap-1 font-medium">
+                                {champ.id && (
+                                  <img
+                                    src={`https://cdn.communitydragon.org/latest/champion/${championIconId(champ.id)}/square.png`}
+                                    alt={fixedChampName}
+                                    className="h-4 w-4 rounded-sm object-cover"
+                                    referrerPolicy="no-referrer"
+                                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                  />
+                                )}
+                                {fixedChampName}
+                                {champ.chosen ? <span className="text-primary" title="Chosen unit">★</span> : null}
+                              </span>
+                              {champ.items && champ.items.length > 0 ? (
+                                <span className="text-[10px] leading-tight text-base-content/60">
+                                  {champ.items.map((item) => fixName('items', item)).join(', ')}
+                                </span>
+                              ) : null}
+                            </div>
+                          );
+                        })}
                       </div>
                       {match.augments && match.augments.length > 0 ? (
                         <div className="mt-2 flex flex-wrap gap-1">
                           {match.augments.map((augment) => (
                             <span key={augment} className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                              {augment}
+                              {fixName('augments', augment)}
                             </span>
                           ))}
                         </div>
@@ -486,7 +514,7 @@ export default function Home() {
                             .sort((a, b) => (b.tier_current ?? 0) - (a.tier_current ?? 0))
                             .map((t) => (
                               <span key={t.name} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${traitStyleClass(t.style)}`}>
-                                {t.name}{t.num_units ? ` ${t.num_units}` : ''}
+                                {fixName('traits', t.name)}{t.num_units ? ` ${t.num_units}` : ''}
                               </span>
                             ))}
                         </div>
