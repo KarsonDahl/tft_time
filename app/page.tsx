@@ -58,14 +58,14 @@ function placementLabel(n: number): string {
 }
 
 function placementBadgeClass(n: number): string {
-  if (n === 1) return 'bg-yellow-400 text-yellow-900';
+  if (n === 1) return 'bg-amber-400 text-amber-950';
   if (n === 2) return 'bg-slate-300 text-slate-800';
   if (n === 3) return 'bg-amber-700 text-amber-100';
-  if (n === 4) return 'bg-green-500 text-white';
-  if (n === 5) return 'bg-lime-400 text-lime-900';
-  if (n === 6) return 'bg-yellow-300 text-yellow-900';
-  if (n === 7) return 'bg-orange-500 text-white';
-  return 'bg-red-600 text-white';
+  if (n === 4) return 'bg-emerald-500 text-emerald-950';
+  if (n === 5) return 'bg-red-500 text-white';
+  if (n === 6) return 'bg-red-700 text-white';
+  if (n === 7) return 'bg-red-800 text-white';
+  return 'bg-red-950 text-red-100';
 }
 
 function formatDuration(minutes: number): string {
@@ -84,6 +84,13 @@ function itemIconUrl(itemId?: string): string | null {
   const numericId = Number(itemId);
   if (!Number.isFinite(numericId) || numericId <= 0) return null;
   return `https://ddragon.leagueoflegends.com/cdn/14.19.1/img/item/${numericId}.png`;
+}
+
+function itemLabel(item?: string): string {
+  if (!item) return '';
+  const numericId = Number(item);
+  if (Number.isFinite(numericId) && numericId > 0) return '';
+  return item;
 }
 
 function formatPlayedAt(timestamp: number): string {
@@ -535,17 +542,24 @@ export default function Home() {
                                   <div className="flex flex-wrap gap-1">
                                     {champ.items.map((item) => {
                                       const iconSrc = itemIconUrl(item);
-                                      if (!iconSrc) return null;
-                                      return (
-                                        <img
-                                          key={`${champ.id || champ.name}-${item}`}
-                                          src={iconSrc}
-                                          alt=""
-                                          className="h-5 w-5 rounded-sm object-cover"
-                                          referrerPolicy="no-referrer"
-                                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                                        />
-                                      );
+                                      const label = itemLabel(item);
+                                      if (iconSrc) {
+                                        return (
+                                          <img
+                                            key={`${champ.id || champ.name}-${item}`}
+                                            src={iconSrc}
+                                            alt=""
+                                            className="h-5 w-5 rounded-sm object-cover"
+                                            referrerPolicy="no-referrer"
+                                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                          />
+                                        );
+                                      }
+                                      return label ? (
+                                        <span key={`${champ.id || champ.name}-${item}`} className="rounded-sm bg-base-300 px-1.5 py-0.5 text-[10px] font-medium text-base-content/80">
+                                          {fixName('items', label)}
+                                        </span>
+                                      ) : null;
                                     })}
                                   </div>
                                 ) : null}
