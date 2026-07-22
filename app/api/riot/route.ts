@@ -69,14 +69,16 @@ function buildNameKey(region: string, summoner: string) {
   return `${region.toLowerCase()}:${summoner.toLowerCase()}`;
 }
 
-function cacheFallbackResponse(region: string, cache: PlayerCache, warning: string) {
+function cacheFallbackResponse(region: string, cache: PlayerCache, warning?: string) {
   const { summary, matches } = summarizeMatches(cache.matches);
   return NextResponse.json({
     summoner: cache.displayName,
     region,
     source: 'cache',
-    warning,
+    ...(warning ? { warning } : {}),
+    totalKnownGames: cache.cachedMatchIds.length,
     cachedGames: cache.matches.length,
+    isCaughtUp: cache.cachedMatchIds.length <= cache.matches.length,
     lastFetchedAt: cache.lastFetchedAt,
     summary,
     matches,
@@ -127,6 +129,17 @@ export async function GET(request: Request) {
   const nameKey = buildNameKey(region, summoner);
   const mapping = await getPuuidMapping(nameKey);
   const fallbackCache = mapping ? await getCache(mapping.puuid) : null;
+  const hasCachedData = Boolean(
+    fallbackCache && (fallbackCache.matches.length > 0 || fallbackCache.cachedMatchIds.length > 0),
+  );
+
+  // The default action (mode=auto) never reaches for the Riot API when we
+  // already have this player's data cached — it's served straight from Redis.
+  // Use mode=refresh to explicitly ask Riot for brand-new games.
+  if (mode === 'auto' && fallbackCache && hasCachedData) {
+    console.info('[riot-route] auto mode: serving cached data, skipping Riot API', { summoner, region });
+    return cacheFallbackResponse(region, fallbackCache);
+  }
 
   if (!apiKey) {
     if (fallbackCache) {
@@ -146,12 +159,19 @@ export async function GET(request: Request) {
   try {
     const routing = getRouting(region);
 
-    // Riot IDs are "gameName#tagLine". Use the Account API to resolve a PUUID first.
-    const hashIndex = summoner.indexOf('#');
     let puuid: string;
     let displayName: string;
 
-    if (hashIndex !== -1) {
+    if (mapping) {
+      // Already know the PUUID for this Riot ID from a previous lookup — skip
+      // the identity API call entirely so refresh/fetch-missing don't burn a
+      // request against the daily-rotated key when they don't need one.
+      puuid = mapping.puuid;
+      displayName = mapping.displayName;
+      console.info('[riot-route] puuid resolved from cache mapping', { summoner, puuid: puuid.slice(0, 8) + '…' });
+    } else if (summoner.indexOf('#') !== -1) {
+      // Riot IDs are "gameName#tagLine". Use the Account API to resolve a PUUID first.
+      const hashIndex = summoner.indexOf('#');
       const gameName = summoner.slice(0, hashIndex);
       const tagLine = summoner.slice(hashIndex + 1);
 
@@ -205,7 +225,9 @@ export async function GET(request: Request) {
 
     // Persist the Riot ID → PUUID mapping so future requests can serve cached
     // data straight from Redis even if the API key has since expired.
-    await setPuuidMapping(nameKey, { puuid, displayName });
+    if (!mapping) {
+      await setPuuidMapping(nameKey, { puuid, displayName });
+    }
 
     // ── Load cache ───────────────────────────────────────────────────────────
     const cached = await getCache(puuid);

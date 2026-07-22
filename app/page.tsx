@@ -84,14 +84,14 @@ export default function Home() {
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
   const retryTimerRef = useRef<number | null>(null);
 
-  async function loadStats(mode: 'auto' | 'fetch-missing' = 'auto') {
+  async function loadStats(mode: 'auto' | 'fetch-missing' | 'refresh' = 'auto') {
     if (retryTimerRef.current) {
       window.clearTimeout(retryTimerRef.current);
       retryTimerRef.current = null;
     }
     setLoading(true);
     setError('');
-    setStatusMessage('Resolving player account…');
+    setStatusMessage(mode === 'auto' ? 'Checking cached stats…' : 'Checking Riot for new games…');
 
     try {
       setTrackingMore(mode === 'fetch-missing');
@@ -130,6 +130,10 @@ export default function Home() {
   function cacheStatusMessage(data: ApiResponse | null) {
     if (!data) return 'No stats loaded yet.';
 
+    if (data.source === 'cache') {
+      return 'Served straight from the Redis cache — Riot API was not called.';
+    }
+
     if (data.isCaughtUp) {
       return 'History is caught up — all currently available games are cached.';
     }
@@ -153,7 +157,10 @@ export default function Home() {
 
     retryTimerRef.current = window.setTimeout(() => {
       retryTimerRef.current = null;
-      void loadStats();
+      // Use 'refresh' (not 'auto') so this continuation keeps talking to Riot
+      // to finish a multi-page backfill instead of being short-circuited by
+      // the cache-first check that 'auto' does once data already exists.
+      void loadStats('refresh');
     }, delay);
 
     return () => {
@@ -289,6 +296,14 @@ export default function Home() {
               </select>
               <button className="btn btn-primary" onClick={() => void loadStats('auto')} disabled={loading}>
                 {loading ? 'Loading…' : 'Load stats'}
+              </button>
+              <button
+                className="btn btn-outline"
+                onClick={() => void loadStats('refresh')}
+                disabled={loading}
+                title="Ask Riot for brand-new games beyond what's cached"
+              >
+                Check Riot for new games
               </button>
               <button
                 className="btn btn-outline btn-secondary"
