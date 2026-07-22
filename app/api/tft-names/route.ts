@@ -14,15 +14,18 @@ export type NameFixMap = {
 };
 
 /**
- * Older cached matches (fetched before lib/tftData.ts existed) stored the
- * regex-guessed name instead of the real CommunityDragon display name, e.g.
- * "Shield Tank" instead of "Vanguard" — and only the guessed string was
- * persisted, not the original apiName, so there's no way to re-derive the
- * real name from stored data alone.
- *
- * Since the regex guess is a deterministic function of the apiName, we can
- * still recover a correction table by re-running that same guess function
- * over every known apiName and recording guess → real wherever they differ.
+ * Older cached matches went through a couple of different name formats
+ * before this display-name fix existed:
+ *   1. The very oldest matches stored the raw Riot apiName verbatim (e.g.
+ *      "TFT17_ShieldTank") — traits in particular were persisted completely
+ *      unformatted for a long time.
+ *   2. Slightly newer matches stored a regex-guessed name (e.g.
+ *      "Shield Tank") from a brief period after formatting was added but
+ *      before the CommunityDragon lookup existed.
+ * Neither stored the original apiName *and* a formatted guess side by side,
+ * so there's no single field to recover the real name from — but both the
+ * raw apiName and the regex guess are deterministic, recoverable strings, so
+ * we map BOTH of them to the real name here.
  * The frontend uses this map to patch up old cached matches purely for
  * display, without needing to touch Redis or re-fetch from Riot.
  */
@@ -32,6 +35,9 @@ function buildReverseMap(
 ): Record<string, string> {
     const reverse: Record<string, string> = {};
     for (const [apiName, realName] of Object.entries(entries)) {
+        if (apiName !== realName && !(apiName in reverse)) {
+            reverse[apiName] = realName;
+        }
         const guess = guessFn(apiName);
         if (guess && guess !== realName && !(guess in reverse)) {
             reverse[guess] = realName;
