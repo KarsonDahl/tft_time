@@ -79,6 +79,13 @@ function championIconId(characterId: string): string {
   return characterId.replace(/^TFT\d+_/i, '').toLowerCase();
 }
 
+function itemIconUrl(itemId?: string): string | null {
+  if (!itemId) return null;
+  const numericId = Number(itemId);
+  if (!Number.isFinite(numericId) || numericId <= 0) return null;
+  return `https://ddragon.leagueoflegends.com/cdn/14.19.1/img/item/${numericId}.png`;
+}
+
 function formatPlayedAt(timestamp: number): string {
   if (!timestamp) return 'Date unavailable';
   return new Date(timestamp).toLocaleString(undefined, {
@@ -525,9 +532,22 @@ export default function Home() {
                                   {champ.chosen ? <span className="text-primary" title="Chosen unit">★</span> : null}
                                 </span>
                                 {champ.items && champ.items.length > 0 ? (
-                                  <span className="text-[10px] leading-tight text-base-content/60">
-                                    {champ.items.map((item) => fixName('items', item)).join(', ')}
-                                  </span>
+                                  <div className="flex flex-wrap gap-1">
+                                    {champ.items.map((item) => {
+                                      const iconSrc = itemIconUrl(item);
+                                      if (!iconSrc) return null;
+                                      return (
+                                        <img
+                                          key={`${champ.id || champ.name}-${item}`}
+                                          src={iconSrc}
+                                          alt=""
+                                          className="h-5 w-5 rounded-sm object-cover"
+                                          referrerPolicy="no-referrer"
+                                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                        />
+                                      );
+                                    })}
+                                  </div>
                                 ) : null}
                               </div>
                             );

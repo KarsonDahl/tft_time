@@ -84,8 +84,8 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
       id: u.character_id ?? '',
       name: lookupDisplayName(nameMaps, 'champions', u.character_id, formatChampionName(u.character_id)),
       traits: Array.isArray(u.traits) ? u.traits : [],
-      items: Array.isArray(u.itemNames)
-        ? u.itemNames.map((item) => lookupDisplayName(nameMaps, 'items', item, formatItemName(item)))
+      items: Array.isArray(u.items)
+        ? u.items.map((item) => String(item))
         : [],
       tier: u.tier,
       rarity: u.rarity,
