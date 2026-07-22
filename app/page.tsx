@@ -125,9 +125,24 @@ export default function Home() {
     };
   }, []);
 
+  function normalizeLookupKey(value?: string): string {
+    return (value ?? '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim();
+  }
+
   function fixName(category: keyof NameFixMap, value?: string): string {
     if (!value) return value ?? '';
-    return nameFixMap?.[category]?.[value] ?? value;
+
+    const direct = nameFixMap?.[category]?.[value];
+    if (direct) return direct;
+
+    const normalizedValue = normalizeLookupKey(value);
+    if (!normalizedValue) return value;
+
+    const match = Object.entries(nameFixMap?.[category] ?? {}).find(([key]) => normalizeLookupKey(key) === normalizedValue);
+    return match?.[1] ?? value;
   }
 
   async function loadStats(mode: 'auto' | 'fetch-missing' | 'refresh' = 'auto') {
