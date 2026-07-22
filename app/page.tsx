@@ -89,8 +89,8 @@ function formatPlayedAt(timestamp: number): string {
 }
 
 function traitStyleClass(style?: number): string {
-  if (style === 4) return 'bg-fuchsia-400 text-fuchsia-950';
-  if (style === 3) return 'bg-yellow-400 text-yellow-900';
+  if (style === 4) return 'bg-rose-500 text-rose-950';
+  if (style === 3) return 'bg-amber-400 text-amber-950';
   if (style === 2) return 'bg-slate-300 text-slate-800';
   if (style === 1) return 'bg-amber-700 text-amber-100';
   return 'bg-base-200 text-base-content/70';
@@ -299,6 +299,8 @@ export default function Home() {
     [data],
   );
 
+  const hasMoreMatchesToAdd = Boolean(data && (data.totalKnownGames ?? 0) > (data.summary?.totalGames ?? 0));
+
   return (
     <main className="min-h-screen bg-base-200 text-base-content">
       <section className="mx-auto flex min-h-screen max-w-7xl flex-col gap-8 px-6 py-10 lg:px-10">
@@ -343,21 +345,24 @@ export default function Home() {
               <button className="btn btn-primary" onClick={() => void loadStats('auto')} disabled={loading}>
                 {loading ? 'Loading…' : 'Load stats'}
               </button>
-              <button
-                className="btn btn-outline"
-                onClick={() => void loadStats('refresh')}
-                disabled={loading}
-                title="Ask Riot for brand-new games beyond what's cached"
-              >
-                Check Riot for new games
-              </button>
-              <button
-                className="btn btn-outline btn-secondary"
-                onClick={() => void loadStats('fetch-missing')}
-                disabled={loading || !data || (data.totalKnownGames ?? 0) <= (data.summary?.totalGames ?? 0)}
-              >
-                {trackingMore ? 'Tracking more…' : 'Track more matches'}
-              </button>
+              {hasMoreMatchesToAdd ? (
+                <button
+                  className="btn btn-outline btn-secondary"
+                  onClick={() => void loadStats('fetch-missing')}
+                  disabled={loading || !data}
+                >
+                  {trackingMore ? 'Adding matches…' : 'Add new matches'}
+                </button>
+              ) : (
+                <button
+                  className="btn btn-outline"
+                  onClick={() => void loadStats('refresh')}
+                  disabled={loading}
+                  title="Ask Riot for brand-new games beyond what's cached"
+                >
+                  Check Riot for new games
+                </button>
+              )}
             </div>
           </div>
           {error ? <p className="mt-4 text-sm text-error">{error}</p> : null}
