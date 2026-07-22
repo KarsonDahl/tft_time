@@ -17,8 +17,23 @@ export type CachedMatch = {
   placement: number;
   queue: string;
   patch: string;
-  champions: Array<{ id: string; name: string; traits?: string[] }>;
-  traits?: Array<{ name?: string; style?: number; num_units?: number }>;
+  champions: Array<{
+    id: string;
+    name: string;
+    traits?: string[];
+    items?: string[];
+    tier?: number;
+    rarity?: number;
+    chosen?: string;
+  }>;
+  traits?: Array<{ name?: string; style?: number; num_units?: number; tier_current?: number; tier_total?: number }>;
+  augments?: string[];
+  level?: number;
+  goldLeft?: number;
+  lastRound?: number;
+  timeEliminated?: number;
+  playersEliminated?: number;
+  totalDamageToPlayers?: number;
   playedAt: number;
 };
 

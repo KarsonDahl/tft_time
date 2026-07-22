@@ -6,6 +6,7 @@ type RiotTrait = {
   num_units?: number;
   style?: number;
   tier_current?: number;
+  tier_total?: number;
 };
 
 type RiotUnit = {
@@ -14,6 +15,9 @@ type RiotUnit = {
   traits?: string[];
   tier?: number;
   rarity?: number;
+  itemNames?: string[];
+  items?: number[];
+  chosen?: string;
 };
 
 type RiotParticipant = {
@@ -21,6 +25,13 @@ type RiotParticipant = {
   placement: number;
   units?: RiotUnit[];
   traits?: RiotTrait[];
+  augments?: string[];
+  gold_left?: number;
+  last_round?: number;
+  level?: number;
+  players_eliminated?: number;
+  time_eliminated?: number;
+  total_damage_to_players?: number;
 };
 
 type RiotMatch = {
@@ -56,6 +67,81 @@ function formatChampionName(characterId?: string) {
     .replace(/^TFT[0-9]+_/, '')
     .replace(/_/g, ' ')
     .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function formatItemName(itemId?: string) {
+  if (!itemId) return 'Unknown Item';
+  return itemId
+    .replace(/^TFT[0-9]*_Item_/, '')
+    .replace(/_/g, ' ')
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .trim();
+}
+
+function formatAugmentName(augmentId?: string) {
+  if (!augmentId) return 'Unknown Augment';
+  return augmentId
+    .replace(/^TFT[0-9]*_Augment_/, '')
+    .replace(/_/g, ' ')
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .trim();
+}
+
+function formatTraitName(traitId?: string) {
+  if (!traitId) return 'Unknown Trait';
+  return traitId
+    .replace(/^TFT[0-9]*_/, '')
+    .replace(/_/g, ' ')
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .trim();
+}
+
+// Shared mapping from a raw Riot match + the tracked player's puuid into the
+// CachedMatch shape we persist. Pulls in everything the public match-v1
+// response actually exposes: itemization, augments picked, traits (with
+// tier progress), and end-of-game round stats (level, gold left, last round
+// survived, damage dealt, players eliminated, time eliminated). Riot's public
+// API does not expose a round-by-round event/combat log — only these
+// end-of-match aggregates are available.
+function toCachedMatch(match: RiotMatch, puuid: string): CachedMatch {
+  const participant = match.info.participants.find((p) => p.puuid === puuid);
+  const champions = (participant?.units ?? [])
+    .map((u) => ({
+      id: u.character_id ?? '',
+      name: formatChampionName(u.character_id),
+      traits: Array.isArray(u.traits) ? u.traits : [],
+      items: Array.isArray(u.itemNames) ? u.itemNames.map((item) => formatItemName(item)) : [],
+      tier: u.tier,
+      rarity: u.rarity,
+      chosen: u.chosen,
+    }))
+    .filter((c) => c.id && c.name !== 'Unknown');
+
+  const traits = (participant?.traits ?? []).map((t) => ({
+    name: formatTraitName(t.name),
+    style: t.style,
+    num_units: t.num_units,
+    tier_current: t.tier_current,
+    tier_total: t.tier_total,
+  }));
+
+  return {
+    id: match.metadata.match_id,
+    durationMinutes: match.info.game_length / 60,
+    placement: participant?.placement ?? 0,
+    queue: queueLabel(match.info.queue_id),
+    patch: match.info.tft_set_core_name ?? 'Unknown set',
+    champions,
+    traits,
+    augments: (participant?.augments ?? []).map((a) => formatAugmentName(a)),
+    level: participant?.level,
+    goldLeft: participant?.gold_left,
+    lastRound: participant?.last_round,
+    timeEliminated: participant?.time_eliminated,
+    playersEliminated: participant?.players_eliminated,
+    totalDamageToPlayers: participant?.total_damage_to_players,
+    playedAt: match.info.game_datetime ?? 0,
+  };
 }
 
 function queueLabel(queueId?: number) {
@@ -279,22 +365,7 @@ export async function GET(request: Request) {
         }
       }
 
-      const newCached: CachedMatch[] = newRiotMatches.map((match) => {
-        const participant = match.info.participants.find((p) => p.puuid === puuid)!;
-        const champions = (participant?.units ?? [])
-          .map((u) => ({ id: u.character_id ?? '', name: formatChampionName(u.character_id), traits: Array.isArray(u.traits) ? u.traits : [] }))
-          .filter((c) => c.id && c.name !== 'Unknown');
-        return {
-          id: match.metadata.match_id,
-          durationMinutes: match.info.game_length / 60,
-          placement: participant?.placement ?? 0,
-          queue: queueLabel(match.info.queue_id),
-          patch: match.info.tft_set_core_name ?? 'Unknown set',
-          champions,
-          traits: participant?.traits ?? [],
-          playedAt: match.info.game_datetime ?? 0,
-        };
-      });
+      const newCached: CachedMatch[] = newRiotMatches.map((match) => toCachedMatch(match, puuid));
 
       const mergedMatches = [...newCached, ...(cached?.matches ?? [])];
       await setCache(puuid, {
@@ -394,26 +465,7 @@ export async function GET(request: Request) {
     }
 
     // ── Convert new Riot matches → CachedMatch shape ─────────────────────────
-    const newCached: CachedMatch[] = newRiotMatches.map((match) => {
-      const participant = match.info.participants.find((p) => p.puuid === puuid)!;
-      const champions = (participant?.units ?? [])
-        .map((u) => ({
-          id: u.character_id ?? '',
-          name: formatChampionName(u.character_id),
-          traits: Array.isArray(u.traits) ? u.traits : [],
-        }))
-        .filter((c) => c.id && c.name !== 'Unknown');
-      return {
-        id: match.metadata.match_id,
-        durationMinutes: match.info.game_length / 60,
-        placement: participant?.placement ?? 0,
-        queue: queueLabel(match.info.queue_id),
-        patch: match.info.tft_set_core_name ?? 'Unknown set',
-        champions,
-        traits: participant?.traits ?? [],
-        playedAt: match.info.game_datetime ?? 0,
-      };
-    });
+    const newCached: CachedMatch[] = newRiotMatches.map((match) => toCachedMatch(match, puuid));
 
     // ── Merge + persist ───────────────────────────────────────────────────────
     const mergedMatches: CachedMatch[] = [...newCached, ...(cached?.matches ?? [])];

@@ -8,8 +8,23 @@ type MatchSummary = {
   placement: number;
   queue: string;
   patch: string;
-  champions: Array<{ id: string; name: string; traits?: string[] }>;
-  traits?: Array<{ name?: string; num_units?: number; style?: number }>;
+  champions: Array<{
+    id: string;
+    name: string;
+    traits?: string[];
+    items?: string[];
+    tier?: number;
+    rarity?: number;
+    chosen?: string;
+  }>;
+  traits?: Array<{ name?: string; num_units?: number; style?: number; tier_current?: number; tier_total?: number }>;
+  augments?: string[];
+  level?: number;
+  goldLeft?: number;
+  lastRound?: number;
+  timeEliminated?: number;
+  playersEliminated?: number;
+  totalDamageToPlayers?: number;
   playedAt: number;
 };
 
@@ -70,6 +85,14 @@ function formatPlayedAt(timestamp: number): string {
     day: 'numeric',
     year: 'numeric',
   });
+}
+
+function traitStyleClass(style?: number): string {
+  if (style === 4) return 'bg-fuchsia-400 text-fuchsia-950';
+  if (style === 3) return 'bg-yellow-400 text-yellow-900';
+  if (style === 2) return 'bg-slate-300 text-slate-800';
+  if (style === 1) return 'bg-amber-700 text-amber-100';
+  return 'bg-base-200 text-base-content/70';
 }
 
 export default function Home() {
@@ -425,21 +448,55 @@ export default function Home() {
                         <span className="shrink-0 text-sm tabular-nums text-base-content/60">{formatDuration(match.durationMinutes)}</span>
                       </div>
                       <p className="mt-1 text-xs text-base-content/60">Played {formatPlayedAt(match.playedAt)}</p>
-                      <div className="mt-2 flex flex-wrap gap-1">
+                      <div className="mt-2 flex flex-wrap gap-2">
                         {match.champions.map((champ) => (
-                          <span key={champ.id || champ.name} className="flex items-center gap-1 rounded-md bg-base-200 px-1.5 py-0.5 text-xs text-base-content/80">
-                            {champ.id && (
-                              <img
-                                src={`https://cdn.communitydragon.org/latest/champion/${championIconId(champ.id)}/square.png`}
-                                alt={champ.name}
-                                className="h-4 w-4 rounded-sm object-cover"
-                                referrerPolicy="no-referrer"
-                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                              />
-                            )}
-                            {champ.name}
-                          </span>
+                          <div key={champ.id || champ.name} className="flex flex-col gap-1 rounded-md bg-base-200 px-1.5 py-1 text-xs text-base-content/80">
+                            <span className="flex items-center gap-1 font-medium">
+                              {champ.id && (
+                                <img
+                                  src={`https://cdn.communitydragon.org/latest/champion/${championIconId(champ.id)}/square.png`}
+                                  alt={champ.name}
+                                  className="h-4 w-4 rounded-sm object-cover"
+                                  referrerPolicy="no-referrer"
+                                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                />
+                              )}
+                              {champ.name}
+                              {champ.chosen ? <span className="text-primary" title="Chosen unit">★</span> : null}
+                            </span>
+                            {champ.items && champ.items.length > 0 ? (
+                              <span className="text-[10px] leading-tight text-base-content/60">{champ.items.join(', ')}</span>
+                            ) : null}
+                          </div>
                         ))}
+                      </div>
+                      {match.augments && match.augments.length > 0 ? (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {match.augments.map((augment) => (
+                            <span key={augment} className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+                              {augment}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
+                      {match.traits && match.traits.some((t) => (t.tier_current ?? 0) > 0) ? (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {[...match.traits]
+                            .filter((t) => (t.tier_current ?? 0) > 0)
+                            .sort((a, b) => (b.tier_current ?? 0) - (a.tier_current ?? 0))
+                            .map((t) => (
+                              <span key={t.name} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${traitStyleClass(t.style)}`}>
+                                {t.name}{t.num_units ? ` ${t.num_units}` : ''}
+                              </span>
+                            ))}
+                        </div>
+                      ) : null}
+                      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-base-content/60">
+                        {typeof match.level === 'number' ? <span>Level {match.level}</span> : null}
+                        {typeof match.lastRound === 'number' ? <span>Survived to round {match.lastRound}</span> : null}
+                        {typeof match.totalDamageToPlayers === 'number' ? <span>{match.totalDamageToPlayers} dmg to players</span> : null}
+                        {typeof match.playersEliminated === 'number' ? <span>{match.playersEliminated} eliminated</span> : null}
+                        {typeof match.goldLeft === 'number' ? <span>{match.goldLeft} gold left</span> : null}
                       </div>
                     </div>
                   </div>
