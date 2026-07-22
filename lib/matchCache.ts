@@ -22,6 +22,8 @@ export type CachedMatch = {
     name: string;
     traits?: string[];
     items?: string[];
+    itemIcons?: (string | null)[];
+    icon?: string;
     tier?: number;
     rarity?: number;
     chosen?: string;

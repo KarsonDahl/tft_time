@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCache, setCache, getPuuidMapping, setPuuidMapping, type CachedMatch, type PlayerCache } from '@/lib/matchCache';
-import { getTftNameMaps, lookupDisplayName, type TftNameMaps } from '@/lib/tftData';
+import { getTftNameMaps, lookupDisplayName, lookupIconUrl, type TftNameMaps } from '@/lib/tftData';
 import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from '@/lib/tftFormat';
 
 type RiotTrait = {
@@ -80,19 +80,28 @@ function getRouting(region: string) {
 function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | null): CachedMatch {
   const participant = match.info.participants.find((p) => p.puuid === puuid);
   const champions = (participant?.units ?? [])
-    .map((u) => ({
-      id: u.character_id ?? '',
-      name: lookupDisplayName(nameMaps, 'champions', u.character_id, formatChampionName(u.character_id)),
-      traits: Array.isArray(u.traits) ? u.traits : [],
-      items: Array.isArray(u.items) && u.items.length > 0
-        ? u.items.map((item) => String(item))
-        : Array.isArray(u.itemNames)
-          ? u.itemNames.map((item) => lookupDisplayName(nameMaps, 'items', item, formatItemName(item)))
-          : [],
-      tier: u.tier,
-      rarity: u.rarity,
-      chosen: u.chosen,
-    }))
+    .map((u) => {
+      const itemApiNames = Array.isArray(u.itemNames) ? u.itemNames : [];
+      const items = itemApiNames.length > 0
+        ? itemApiNames.map((item) => lookupDisplayName(nameMaps, 'items', item, formatItemName(item)))
+        : Array.isArray(u.items)
+          ? u.items.map((item) => String(item))
+          : [];
+      const itemIcons = itemApiNames.length > 0
+        ? itemApiNames.map((item) => lookupIconUrl(nameMaps, 'items', item) ?? null)
+        : [];
+      return {
+        id: u.character_id ?? '',
+        name: lookupDisplayName(nameMaps, 'champions', u.character_id, formatChampionName(u.character_id)),
+        traits: Array.isArray(u.traits) ? u.traits : [],
+        items,
+        itemIcons,
+        icon: lookupIconUrl(nameMaps, 'champions', u.character_id),
+        tier: u.tier,
+        rarity: u.rarity,
+        chosen: u.chosen,
+      };
+    })
     .filter((c) => c.id && c.name !== 'Unknown');
 
   const traits = (participant?.traits ?? []).map((t) => ({

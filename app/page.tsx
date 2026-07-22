@@ -14,6 +14,8 @@ type MatchSummary = {
     name: string;
     traits?: string[];
     items?: string[];
+    itemIcons?: (string | null)[];
+    icon?: string;
     tier?: number;
     rarity?: number;
     chosen?: string;
@@ -77,20 +79,6 @@ function formatDuration(minutes: number): string {
 
 function championIconId(characterId: string): string {
   return characterId.replace(/^TFT\d+_/i, '').toLowerCase();
-}
-
-function itemIconUrl(itemId?: string): string | null {
-  if (!itemId) return null;
-  const numericId = Number(itemId);
-  if (!Number.isFinite(numericId) || numericId <= 0) return null;
-  return `https://ddragon.leagueoflegends.com/cdn/14.19.1/img/item/${numericId}.png`;
-}
-
-function itemLabel(item?: string): string {
-  if (!item) return '';
-  const numericId = Number(item);
-  if (Number.isFinite(numericId) && numericId > 0) return '';
-  return item;
 }
 
 function formatPlayedAt(timestamp: number): string {
@@ -525,7 +513,7 @@ export default function Home() {
                                 <span className="flex items-center gap-1 font-medium">
                                   {champ.id && (
                                     <img
-                                      src={`https://cdn.communitydragon.org/latest/champion/${championIconId(champ.id)}/square.png`}
+                                      src={champ.icon ?? `https://cdn.communitydragon.org/latest/champion/${championIconId(champ.id)}/square.png`}
                                       alt={fixedChampName}
                                       className="h-4 w-4 rounded-sm object-cover"
                                       referrerPolicy="no-referrer"
@@ -540,13 +528,12 @@ export default function Home() {
                                 </span>
                                 {champ.items && champ.items.length > 0 ? (
                                   <div className="flex flex-wrap gap-1">
-                                    {champ.items.map((item) => {
-                                      const iconSrc = itemIconUrl(item);
-                                      const label = itemLabel(item);
+                                    {champ.items.map((item, idx) => {
+                                      const iconSrc = champ.itemIcons?.[idx];
                                       if (iconSrc) {
                                         return (
                                           <img
-                                            key={`${champ.id || champ.name}-${item}`}
+                                            key={`${champ.id || champ.name}-${item}-${idx}`}
                                             src={iconSrc}
                                             alt=""
                                             className="h-5 w-5 rounded-sm object-cover"
@@ -555,11 +542,11 @@ export default function Home() {
                                           />
                                         );
                                       }
-                                      return label ? (
-                                        <span key={`${champ.id || champ.name}-${item}`} className="rounded-sm bg-base-300 px-1.5 py-0.5 text-[10px] font-medium text-base-content/80">
-                                          {fixName('items', label)}
+                                      return (
+                                        <span key={`${champ.id || champ.name}-${item}-${idx}`} className="rounded-sm bg-base-300 px-1.5 py-0.5 text-[10px] font-medium text-base-content/80">
+                                          {fixName('items', item)}
                                         </span>
-                                      ) : null;
+                                      );
                                     })}
                                   </div>
                                 ) : null}
@@ -580,7 +567,19 @@ export default function Home() {
                         <div className="mt-2 flex flex-wrap gap-1">
                           {[...match.traits]
                             .filter((t) => (t.tier_current ?? 0) > 0)
-                            .sort((a, b) => (b.tier_current ?? 0) - (a.tier_current ?? 0))
+                            .sort((a, b) => {
+                              // "Unique" traits only ever have a single tier (no
+                              // scaling breakpoints) — they carry no comparable
+                              // magnitude, so they're always sorted after every
+                              // trait that does scale, regardless of unit count.
+                              const aUnique = (a.tier_total ?? 0) <= 1;
+                              const bUnique = (b.tier_total ?? 0) <= 1;
+                              if (aUnique !== bUnique) return aUnique ? 1 : -1;
+
+                              const tierDiff = (b.tier_current ?? 0) - (a.tier_current ?? 0);
+                              if (tierDiff !== 0) return tierDiff;
+                              return (b.num_units ?? 0) - (a.num_units ?? 0);
+                            })
                             .map((t) => (
                               <span key={t.name} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${traitStyleClass(t.style)}`}>
                                 {fixName('traits', t.name)}{t.num_units ? ` ${t.num_units}` : ''}

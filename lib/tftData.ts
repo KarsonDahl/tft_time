@@ -18,7 +18,7 @@ import { getRawCache, setRawCache } from './matchCache';
 import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from './tftFormat';
 
 const CDRAGON_URL = 'https://raw.communitydragon.org/latest/cdragon/tft/en_us.json';
-const CACHE_KEY = 'tft:cdragon:namemaps:v1';
+const CACHE_KEY = 'tft:cdragon:namemaps:v2';
 const CACHE_TTL_SECONDS = 60 * 60 * 24; // 24h — the dump only changes when a patch ships
 const FETCH_TIMEOUT_MS = 10_000;
 
@@ -28,16 +28,28 @@ export type TftNameMaps = {
     // CommunityDragon lists them all in the same flat top-level `items` array.
     items: Record<string, string>;
     champions: Record<string, string>;
+    // apiName -> fully-qualified CDN image URL, converted from CommunityDragon's
+    // raw ".tex" asset paths (see convertIconPath below). Kept separate from the
+    // name maps above so both display name and icon can be looked up by apiName.
+    itemIcons: Record<string, string>;
+    // Champions use the TFT-specific "tileIcon" (falling back to "squareIcon")
+    // asset instead of the base League champion square — TFT-exclusive units
+    // like Rhaast have no base-game champion art, and reskinned units should
+    // show the art matching the set they were played in, not whatever the
+    // live base-game splash currently is.
+    championIcons: Record<string, string>;
     builtAt: number;
 };
 
-type RawApiNameEntry = { apiName?: string; name?: string };
+type RawApiNameEntry = { apiName?: string; name?: string; icon?: string };
+
+type RawChampionEntry = RawApiNameEntry & { squareIcon?: string; tileIcon?: string };
 
 type RawCDragonTft = {
     items?: RawApiNameEntry[];
     setData?: Array<{
         traits?: RawApiNameEntry[];
-        champions?: RawApiNameEntry[];
+        champions?: RawChampionEntry[];
     }>;
 };
 
@@ -47,6 +59,25 @@ let inflight: Promise<TftNameMaps | null> | null = null;
 function addEntries(target: Record<string, string>, entries?: RawApiNameEntry[]) {
     for (const entry of entries ?? []) {
         if (entry.apiName && entry.name) target[entry.apiName] = entry.name;
+    }
+}
+
+// CommunityDragon exposes raw game asset paths like
+// "ASSETS/Maps/TFT/Icons/Items/Hexcore/TFT_Item_InfinityEdge.tex". The CDN
+// serves these back at the same path, lowercased, with the extension swapped
+// to .png — this holds for every asset category we use here (items, augments,
+// champion tile/square icons).
+function convertIconPath(path?: string): string | undefined {
+    if (!path) return undefined;
+    const lower = path.toLowerCase();
+    const withPngExt = lower.endsWith('.tex') ? `${lower.slice(0, -4)}.png` : lower;
+    return `https://raw.communitydragon.org/latest/game/${withPngExt}`;
+}
+
+function addIconEntries(target: Record<string, string>, entries?: RawApiNameEntry[]) {
+    for (const entry of entries ?? []) {
+        const url = convertIconPath(entry.icon);
+        if (entry.apiName && url) target[entry.apiName] = url;
     }
 }
 
@@ -84,15 +115,22 @@ async function fetchRemoteMaps(): Promise<TftNameMaps> {
 
         const items: Record<string, string> = {};
         addEntries(items, data.items);
+        const itemIcons: Record<string, string> = {};
+        addIconEntries(itemIcons, data.items);
 
         const traits: Record<string, string> = {};
         const champions: Record<string, string> = {};
+        const championIcons: Record<string, string> = {};
         for (const set of data.setData ?? []) {
             addEntries(traits, set.traits);
             addEntries(champions, set.champions);
+            for (const champ of set.champions ?? []) {
+                const url = convertIconPath(champ.tileIcon ?? champ.squareIcon);
+                if (champ.apiName && url) championIcons[champ.apiName] = url;
+            }
         }
 
-        return { traits, items, champions, builtAt: Date.now() };
+        return { traits, items, champions, itemIcons, championIcons, builtAt: Date.now() };
     } finally {
         clearTimeout(timeout);
     }
@@ -166,4 +204,35 @@ export function lookupDisplayName(
     }
 
     return fallback;
+}
+
+// Same fuzzy-matching strategy as lookupDisplayName, but resolves an apiName
+// to its CDN icon URL instead of its display name. Returns undefined (no
+// fallback) when the icon can't be found — callers should hide the image
+// rather than show a broken link.
+export function lookupIconUrl(
+    maps: TftNameMaps | null,
+    category: 'champions' | 'items',
+    apiName: string | undefined,
+): string | undefined {
+    if (!apiName || !maps) return undefined;
+
+    const entries = category === 'champions' ? maps.championIcons : maps.itemIcons;
+    const direct = entries[apiName];
+    if (direct) return direct;
+
+    const normalizedInput = normalizeLookupKey(apiName);
+    const guess = guessDisplayName(category, apiName);
+    const normalizedGuess = normalizeLookupKey(guess);
+
+    for (const [key, resolved] of Object.entries(entries)) {
+        if (key === apiName || key === guess) return resolved;
+
+        const normalizedKey = normalizeLookupKey(key);
+        if (normalizedKey && (normalizedKey === normalizedInput || normalizedKey === normalizedGuess)) {
+            return resolved;
+        }
+    }
+
+    return undefined;
 }
