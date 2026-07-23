@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { NameFixMap } from '@/app/api/tft-names/route';
+import { formatRoundLabel } from '@/lib/tftFormat';
 
 type MatchSummary = {
   id: string;
@@ -20,7 +21,7 @@ type MatchSummary = {
     rarity?: number;
     chosen?: string;
   }>;
-  traits?: Array<{ name?: string; num_units?: number; style?: number; tier_current?: number; tier_total?: number }>;
+  traits?: Array<{ name?: string; icon?: string | null; num_units?: number; style?: number; tier_current?: number; tier_total?: number }>;
   augments?: string[];
   augmentIcons?: (string | null)[];
   augmentTiers?: number[];
@@ -147,9 +148,16 @@ function getChampionValueScore(champion: MatchSummary['champions'][number]): num
   return (champion.rarity ?? 1) * (champion.tier ?? 1);
 }
 
-function renderStarLevel(tier?: number): string | null {
-  if (!tier || tier <= 1) return null;
-  return `${tier}★`;
+// Star count colors: 1★ = plain/no color, 2★ = silver, 3★ = gold, 4★ = green.
+function starColorClass(tier: number): string {
+  if (tier >= 4) return 'text-emerald-400';
+  if (tier === 3) return 'text-amber-400';
+  if (tier === 2) return 'text-slate-300';
+  return 'text-base-content/40';
+}
+
+function starCount(tier?: number): number {
+  return Math.max(1, tier ?? 1);
 }
 
 export default function Home() {
@@ -599,8 +607,8 @@ export default function Home() {
             <div className="mt-6 space-y-2">
               {selectedSets.length ? (
                 filteredMatches.map((match) => (
-                  <div key={match.id} className="flex items-start gap-4 rounded-2xl border border-base-300 p-4">
-                    <div className={`flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl text-sm font-black ${placementBadgeClass(match.placement)}`}>
+                  <div key={match.id} className="flex items-stretch gap-4 rounded-2xl border border-base-300 p-4">
+                    <div className={`flex w-14 shrink-0 flex-col items-center justify-center self-stretch rounded-xl text-sm font-black ${placementBadgeClass(match.placement)}`}>
                       <span className="text-lg leading-none">{match.placement}</span>
                       <span className="text-xs font-semibold opacity-80">{placementLabel(match.placement).slice(1)}</span>
                     </div>
@@ -610,54 +618,76 @@ export default function Home() {
                         <span className="shrink-0 text-sm tabular-nums text-base-content/60">{formatDuration(match.durationMinutes)}</span>
                       </div>
                       <p className="mt-1 text-xs text-base-content/60">Played {formatPlayedAt(match.playedAt)}</p>
-                      <div className="mt-2 flex flex-wrap gap-2">
+                      <div className="mt-2 flex flex-wrap gap-1.5">
                         {[...match.champions]
                           .sort((a, b) => getChampionValueScore(b) - getChampionValueScore(a))
                           .map((champ) => {
                             const fixedChampName = fixName('champions', champ.name);
-                            const starLevel = renderStarLevel(champ.tier);
+                            const stars = starCount(champ.tier);
+                            const itemSlots = Math.max(3, champ.items?.length ?? 0);
                             return (
-                              <div key={champ.id || champ.name} className="flex flex-col gap-1 rounded-md bg-base-200 px-1.5 py-1 text-xs text-base-content/80">
-                                <span className="flex items-center gap-1 font-medium">
+                              <div
+                                key={champ.id || champ.name}
+                                className="flex w-16 shrink-0 flex-col items-center gap-1 rounded-md bg-base-200 px-1 py-1.5 text-center text-xs text-base-content/80"
+                              >
+                                <div className="relative">
                                   {champ.id && (
                                     <img
                                       src={champ.icon ?? `https://cdn.communitydragon.org/latest/champion/${championIconId(champ.id)}/square.png`}
                                       alt={fixedChampName}
-                                      className="h-4 w-4 rounded-sm object-cover"
+                                      className="h-9 w-9 rounded-md object-cover"
                                       referrerPolicy="no-referrer"
                                       onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                                     />
                                   )}
-                                  {fixedChampName}
-                                  {starLevel ? (
-                                    <span className="ml-0.5 text-amber-500" title={`${champ.tier} star unit`}>{starLevel}</span>
+                                  {champ.chosen ? (
+                                    <span className="absolute -right-1 -top-1 text-primary" title="Chosen unit">★</span>
                                   ) : null}
-                                  {champ.chosen ? <span className="text-primary" title="Chosen unit">★</span> : null}
+                                </div>
+                                <span className="line-clamp-1 w-full text-[9px] font-medium leading-tight" title={fixedChampName}>
+                                  {fixedChampName}
                                 </span>
-                                {champ.items && champ.items.length > 0 ? (
-                                  <div className="flex flex-wrap gap-1">
-                                    {champ.items.map((item, idx) => {
-                                      const iconSrc = champ.itemIcons?.[idx];
-                                      if (iconSrc) {
-                                        return (
-                                          <img
-                                            key={`${champ.id || champ.name}-${item}-${idx}`}
-                                            src={iconSrc}
-                                            alt=""
-                                            className="h-5 w-5 rounded-sm object-cover"
-                                            referrerPolicy="no-referrer"
-                                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                                          />
-                                        );
-                                      }
+                                <div className="flex gap-0.5" title={`${stars} star unit`}>
+                                  {Array.from({ length: stars }).map((_, i) => (
+                                    <span key={i} className={`text-[10px] leading-none ${starColorClass(stars)}`}>★</span>
+                                  ))}
+                                </div>
+                                <div className="flex gap-0.5">
+                                  {Array.from({ length: itemSlots }).map((_, idx) => {
+                                    const item = champ.items?.[idx];
+                                    const iconSrc = champ.itemIcons?.[idx];
+                                    if (item && iconSrc) {
                                       return (
-                                        <span key={`${champ.id || champ.name}-${item}-${idx}`} className="rounded-sm bg-base-300 px-1.5 py-0.5 text-[10px] font-medium text-base-content/80">
-                                          {fixName('items', item)}
+                                        <img
+                                          key={`${champ.id || champ.name}-item-${idx}`}
+                                          src={iconSrc}
+                                          alt=""
+                                          title={fixName('items', item)}
+                                          className="h-4 w-4 rounded-sm object-cover"
+                                          referrerPolicy="no-referrer"
+                                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                        />
+                                      );
+                                    }
+                                    if (item) {
+                                      return (
+                                        <span
+                                          key={`${champ.id || champ.name}-item-${idx}`}
+                                          title={fixName('items', item)}
+                                          className="h-4 w-4 rounded-sm bg-base-300 text-[7px] leading-4 text-base-content/70"
+                                        >
+                                          •
                                         </span>
                                       );
-                                    })}
-                                  </div>
-                                ) : null}
+                                    }
+                                    return (
+                                      <span
+                                        key={`${champ.id || champ.name}-item-${idx}`}
+                                        className="h-4 w-4 rounded-sm border border-dashed border-base-content/20"
+                                      />
+                                    );
+                                  })}
+                                </div>
                               </div>
                             );
                           })}
@@ -709,16 +739,41 @@ export default function Home() {
                               if (tierDiff !== 0) return tierDiff;
                               return (b.num_units ?? 0) - (a.num_units ?? 0);
                             })
-                            .map((t) => (
-                              <span key={t.name} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${traitStyleClass(t.style)}`}>
-                                {fixName('traits', t.name)}{t.num_units ? ` ${t.num_units}` : ''}
-                              </span>
-                            ))}
+                            .map((t) => {
+                              const fixedTraitName = fixName('traits', t.name);
+                              if (t.icon) {
+                                return (
+                                  <span
+                                    key={t.name}
+                                    title={`${fixedTraitName}${t.num_units ? ` (${t.num_units})` : ''}`}
+                                    className={`relative flex h-6 w-6 items-center justify-center rounded-full p-0.5 ${traitStyleClass(t.style)}`}
+                                  >
+                                    <img
+                                      src={t.icon}
+                                      alt={fixedTraitName}
+                                      className="h-full w-full object-contain"
+                                      referrerPolicy="no-referrer"
+                                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                    />
+                                    {t.num_units ? (
+                                      <span className="absolute -bottom-1 -right-1 rounded-full bg-base-100 px-1 text-[8px] font-bold leading-tight text-base-content">
+                                        {t.num_units}
+                                      </span>
+                                    ) : null}
+                                  </span>
+                                );
+                              }
+                              return (
+                                <span key={t.name} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${traitStyleClass(t.style)}`}>
+                                  {fixedTraitName}{t.num_units ? ` ${t.num_units}` : ''}
+                                </span>
+                              );
+                            })}
                         </div>
                       ) : null}
                       <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-base-content/60">
                         {typeof match.level === 'number' ? <span>Level {match.level}</span> : null}
-                        {typeof match.lastRound === 'number' ? <span>Survived to round {match.lastRound}</span> : null}
+                        {typeof match.lastRound === 'number' ? <span>Survived to {formatRoundLabel(match.lastRound)}</span> : null}
                         {typeof match.totalDamageToPlayers === 'number' ? <span>{match.totalDamageToPlayers} dmg to players</span> : null}
                         {typeof match.playersEliminated === 'number' ? <span>{match.playersEliminated} eliminated</span> : null}
                         {typeof match.goldLeft === 'number' ? <span>{match.goldLeft} gold left</span> : null}

@@ -18,7 +18,7 @@ import { getRawCache, setRawCache } from './matchCache';
 import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from './tftFormat';
 
 const CDRAGON_URL = 'https://raw.communitydragon.org/latest/cdragon/tft/en_us.json';
-const CACHE_KEY = 'tft:cdragon:namemaps:v3';
+const CACHE_KEY = 'tft:cdragon:namemaps:v4';
 const CACHE_TTL_SECONDS = 60 * 60 * 24; // 24h — the dump only changes when a patch ships
 const FETCH_TIMEOUT_MS = 10_000;
 
@@ -38,6 +38,9 @@ export type TftNameMaps = {
     // show the art matching the set they were played in, not whatever the
     // live base-game splash currently is.
     championIcons: Record<string, string>;
+    // apiName -> fully-qualified CDN image URL for the trait's icon, same
+    // convertIconPath conversion as items/champions.
+    traitIcons: Record<string, string>;
     // apiName -> trait-style number (2=silver, 4=gold, 3=prismatic/chromatic,
     // 0=unknown) derived from the augment icon filename's trailing Roman
     // numeral (I/II/III), which corresponds to the augment's actual in-game
@@ -151,16 +154,18 @@ async function fetchRemoteMaps(): Promise<TftNameMaps> {
         const traits: Record<string, string> = {};
         const champions: Record<string, string> = {};
         const championIcons: Record<string, string> = {};
+        const traitIcons: Record<string, string> = {};
         for (const set of data.setData ?? []) {
             addEntries(traits, set.traits);
             addEntries(champions, set.champions);
+            addIconEntries(traitIcons, set.traits);
             for (const champ of set.champions ?? []) {
                 const url = convertIconPath(champ.tileIcon ?? champ.squareIcon);
                 if (champ.apiName && url) championIcons[champ.apiName] = url;
             }
         }
 
-        return { traits, items, champions, itemIcons, championIcons, augmentTiers, builtAt: Date.now() };
+        return { traits, items, champions, itemIcons, championIcons, traitIcons, augmentTiers, builtAt: Date.now() };
     } finally {
         clearTimeout(timeout);
     }
@@ -242,12 +247,12 @@ export function lookupDisplayName(
 // rather than show a broken link.
 export function lookupIconUrl(
     maps: TftNameMaps | null,
-    category: 'champions' | 'items',
+    category: 'champions' | 'items' | 'traits',
     apiName: string | undefined,
 ): string | undefined {
     if (!apiName || !maps) return undefined;
 
-    const entries = category === 'champions' ? maps.championIcons : maps.itemIcons;
+    const entries = category === 'champions' ? maps.championIcons : category === 'traits' ? maps.traitIcons : maps.itemIcons;
     const direct = entries[apiName];
     if (direct) return direct;
 

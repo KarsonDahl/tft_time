@@ -44,3 +44,13 @@ export function formatTraitName(traitId?: string) {
         .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
         .trim();
 }
+
+export function formatRoundLabel(round?: number) {
+    if (typeof round !== 'number' || !Number.isFinite(round) || round < 1) {
+        return 'Unknown';
+    }
+
+    const stage = Math.floor((round - 1) / 4) + 1;
+    const roundInStage = ((round - 1) % 4) + 1;
+    return `${stage}-${roundInStage}`;
+}

@@ -28,7 +28,7 @@ export type CachedMatch = {
     rarity?: number;
     chosen?: string;
   }>;
-  traits?: Array<{ name?: string; style?: number; num_units?: number; tier_current?: number; tier_total?: number }>;
+  traits?: Array<{ name?: string; icon?: string | null; style?: number; num_units?: number; tier_current?: number; tier_total?: number }>;
   augments?: string[];
   // Parallel arrays to `augments`, matched by index (same pattern as
   // champions[].itemIcons) — icon URL (or null if unresolved) and trait-style

@@ -150,6 +150,7 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
 
   const traits = (participant?.traits ?? []).map((t) => ({
     name: lookupDisplayName(nameMaps, 'traits', t.name, formatTraitName(t.name)),
+    icon: lookupIconUrl(nameMaps, 'traits', t.name) ?? null,
     style: t.style,
     num_units: t.num_units,
     tier_current: t.tier_current,
