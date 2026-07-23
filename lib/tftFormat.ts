@@ -50,7 +50,11 @@ export function formatRoundLabel(round?: number) {
         return 'Unknown';
     }
 
-    const stage = Math.floor((round - 1) / 4) + 1;
-    const roundInStage = ((round - 1) % 4) + 1;
+    if (round <= 4) {
+        return `1-${round}`;
+    }
+
+    const stage = Math.floor((round - 5) / 7) + 2;
+    const roundInStage = ((round - 5) % 7) + 1;
     return `${stage}-${roundInStage}`;
 }

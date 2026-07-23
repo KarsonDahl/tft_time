@@ -31,12 +31,14 @@ type RiotUnit = {
   chosen?: string;
 };
 
+type RiotAugment = string | { apiName?: string; name?: string };
+
 type RiotParticipant = {
   puuid: string;
   placement: number;
   units?: RiotUnit[];
   traits?: RiotTrait[];
-  augments?: string[];
+  augments?: RiotAugment[];
   gold_left?: number;
   last_round?: number;
   level?: number;
@@ -70,6 +72,21 @@ function getRouting(region: string) {
   if (['kr', 'jp1'].includes(normalized)) return 'asia';
 
   return 'americas';
+}
+
+function normalizeAugmentApiNames(augments: RiotParticipant['augments'] | undefined): string[] {
+  if (!Array.isArray(augments)) return [];
+  return augments
+    .map((augment) => {
+      if (typeof augment === 'string') return augment;
+      if (augment && typeof augment === 'object') {
+        const maybeApiName = 'apiName' in augment ? augment.apiName : undefined;
+        const maybeName = 'name' in augment ? augment.name : undefined;
+        return typeof maybeApiName === 'string' && maybeApiName ? maybeApiName : typeof maybeName === 'string' ? maybeName : '';
+      }
+      return '';
+    })
+    .filter((value): value is string => Boolean(value));
 }
 
 // League-v1 (by-puuid) is platform-routed (na1/euw1/etc, same as the `region`
@@ -157,6 +174,11 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
     tier_total: t.tier_total,
   }));
 
+  const augmentApiNames = normalizeAugmentApiNames(participant?.augments);
+  const augmentDisplayNames = augmentApiNames.map((a) => lookupDisplayName(nameMaps, 'items', a, formatAugmentName(a)));
+  const augmentIcons = augmentApiNames.map((a) => lookupIconUrl(nameMaps, 'items', a) ?? null);
+  const augmentTiers = augmentApiNames.map((a) => lookupAugmentTier(nameMaps, a));
+
   return {
     id: match.metadata.match_id,
     durationMinutes: match.info.game_length / 60,
@@ -165,9 +187,9 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
     patch: match.info.tft_set_core_name ?? 'Unknown set',
     champions,
     traits,
-    augments: (participant?.augments ?? []).map((a) => lookupDisplayName(nameMaps, 'items', a, formatAugmentName(a))),
-    augmentIcons: (participant?.augments ?? []).map((a) => lookupIconUrl(nameMaps, 'items', a) ?? null),
-    augmentTiers: (participant?.augments ?? []).map((a) => lookupAugmentTier(nameMaps, a)),
+    augments: augmentDisplayNames,
+    augmentIcons,
+    augmentTiers,
     level: participant?.level,
     goldLeft: participant?.gold_left,
     lastRound: participant?.last_round,
@@ -255,11 +277,18 @@ export async function GET(request: Request) {
   const hasCachedData = Boolean(
     fallbackCache && (fallbackCache.matches.length > 0 || fallbackCache.cachedMatchIds.length > 0),
   );
+  const needsAugmentBackfill = Boolean(
+    apiKey &&
+    fallbackCache &&
+    hasCachedData &&
+    fallbackCache.matches.some((match) => match.augments === undefined || match.augmentIcons === undefined || match.augmentTiers === undefined),
+  );
 
-  // The default action (mode=auto) never reaches for the Riot API when we
-  // already have this player's data cached — it's served straight from Redis.
-  // Use mode=refresh to explicitly ask Riot for brand-new games.
-  if (mode === 'auto' && fallbackCache && hasCachedData) {
+  // The default action (mode=auto) normally serves cached data straight from
+  // Redis, but older cached rows can be missing augment fields entirely. In
+  // that case we should refresh once from Riot so the UI can render augment
+  // images/text for those existing matches instead of leaving them blank.
+  if (mode === 'auto' && fallbackCache && hasCachedData && !needsAugmentBackfill) {
     console.info('[riot-route] auto mode: serving cached data, skipping Riot API', { summoner, region });
     return cacheFallbackResponse(region, mapping!.puuid, fallbackCache);
   }
