@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getCache, setCache, getPuuidMapping, setPuuidMapping, getRankHistory, appendRankSnapshot, type CachedMatch, type PlayerCache, type RankSnapshot } from '@/lib/matchCache';
 import { getTftNameMaps, lookupDisplayName, lookupIconUrl, lookupAugmentTier, type TftNameMaps } from '@/lib/tftData';
 import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from '@/lib/tftFormat';
+import { resolveRankSnapshotForMatch } from '@/lib/rankTrend';
 
 type RiotLeagueEntry = {
   queueType?: string;
@@ -31,7 +32,7 @@ type RiotUnit = {
   chosen?: string;
 };
 
-type RiotAugment = string | { apiName?: string; name?: string };
+type RiotAugment = string | { apiName?: string; name?: string; id?: string; augmentId?: string; augmentName?: string; displayName?: string; fullName?: string };
 
 type RiotParticipant = {
   puuid: string;
@@ -74,19 +75,61 @@ function getRouting(region: string) {
   return 'americas';
 }
 
-function normalizeAugmentApiNames(augments: RiotParticipant['augments'] | undefined): string[] {
-  if (!Array.isArray(augments)) return [];
-  return augments
-    .map((augment) => {
-      if (typeof augment === 'string') return augment;
-      if (augment && typeof augment === 'object') {
-        const maybeApiName = 'apiName' in augment ? augment.apiName : undefined;
-        const maybeName = 'name' in augment ? augment.name : undefined;
-        return typeof maybeApiName === 'string' && maybeApiName ? maybeApiName : typeof maybeName === 'string' ? maybeName : '';
+function normalizeAugmentApiNames(participant: RiotParticipant | undefined): string[] {
+  const candidates: unknown[] = [];
+  if (participant) {
+    const participantRecord = participant as RiotParticipant & Record<string, unknown>;
+    candidates.push(participantRecord.augments);
+    candidates.push(participantRecord.selectedAugments);
+    candidates.push(participantRecord.selected_augments);
+    candidates.push(participantRecord.selectedAugment);
+    candidates.push(participantRecord.selected_augment);
+    candidates.push(participantRecord.chosenAugments);
+    candidates.push(participantRecord.chosen_augments);
+    if (participantRecord.augment && typeof participantRecord.augment === 'object') {
+      candidates.push(participantRecord.augment);
+    }
+  }
+
+  const seen = new Set<string>();
+  const values: string[] = [];
+
+  for (const source of candidates) {
+    if (Array.isArray(source)) {
+      for (const item of source) {
+        const normalized = normalizeAugmentValue(item);
+        if (normalized && !seen.has(normalized)) {
+          seen.add(normalized);
+          values.push(normalized);
+        }
       }
-      return '';
-    })
-    .filter((value): value is string => Boolean(value));
+      continue;
+    }
+
+    const normalized = normalizeAugmentValue(source);
+    if (normalized && !seen.has(normalized)) {
+      seen.add(normalized);
+      values.push(normalized);
+    }
+  }
+
+  return values;
+}
+
+function normalizeAugmentValue(value: unknown): string | null {
+  if (typeof value === 'string') return value;
+  if (!value || typeof value !== 'object') return null;
+
+  const record = value as Record<string, unknown>;
+  const maybeApiName = typeof record.apiName === 'string' ? record.apiName : undefined;
+  const maybeName = typeof record.name === 'string' ? record.name : undefined;
+  const maybeId = typeof record.id === 'string' ? record.id : undefined;
+  const maybeAugmentId = typeof record.augmentId === 'string' ? record.augmentId : undefined;
+  const maybeAugmentName = typeof record.augmentName === 'string' ? record.augmentName : undefined;
+  const maybeDisplayName = typeof record.displayName === 'string' ? record.displayName : undefined;
+  const maybeFullName = typeof record.fullName === 'string' ? record.fullName : undefined;
+
+  return maybeApiName || maybeAugmentId || maybeId || maybeName || maybeAugmentName || maybeDisplayName || maybeFullName || null;
 }
 
 // League-v1 (by-puuid) is platform-routed (na1/euw1/etc, same as the `region`
@@ -138,7 +181,18 @@ async function fetchRankedSnapshot(region: string, puuid: string, apiKey: string
 // `nameMaps` (from CommunityDragon, see lib/tftData.ts) has an entry we use
 // the real display name; otherwise we fall back to the best-effort regex
 // formatter so the app still works if that lookup is unavailable.
-function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | null): CachedMatch {
+function attachRankSnapshot(match: CachedMatch, rankHistory: RankSnapshot[]): CachedMatch {
+  return {
+    ...match,
+    rankedSnapshot: match.queue === 'Ranked TFT' ? resolveRankSnapshotForMatch(match.playedAt, rankHistory) : null,
+  };
+}
+
+function enrichMatchesWithRankSnapshots(matches: CachedMatch[], rankHistory: RankSnapshot[]): CachedMatch[] {
+  return matches.map((match) => attachRankSnapshot(match, rankHistory));
+}
+
+function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | null, rankHistory: RankSnapshot[] = []): CachedMatch {
   const participant = match.info.participants.find((p) => p.puuid === puuid);
   const champions = (participant?.units ?? [])
     .map((u) => {
@@ -174,12 +228,12 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
     tier_total: t.tier_total,
   }));
 
-  const augmentApiNames = normalizeAugmentApiNames(participant?.augments);
+  const augmentApiNames = normalizeAugmentApiNames(participant);
   const augmentDisplayNames = augmentApiNames.map((a) => lookupDisplayName(nameMaps, 'items', a, formatAugmentName(a)));
   const augmentIcons = augmentApiNames.map((a) => lookupIconUrl(nameMaps, 'items', a) ?? null);
   const augmentTiers = augmentApiNames.map((a) => lookupAugmentTier(nameMaps, a));
 
-  return {
+  const baseMatch: CachedMatch = {
     id: match.metadata.match_id,
     durationMinutes: match.info.game_length / 60,
     placement: participant?.placement ?? 0,
@@ -198,6 +252,8 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
     totalDamageToPlayers: participant?.total_damage_to_players,
     playedAt: match.info.game_datetime ?? 0,
   };
+
+  return attachRankSnapshot(baseMatch, rankHistory);
 }
 
 function queueLabel(queueId?: number) {
@@ -212,8 +268,9 @@ function buildNameKey(region: string, summoner: string) {
 }
 
 async function cacheFallbackResponse(region: string, puuid: string, cache: PlayerCache, warning?: string) {
-  const { summary, matches } = summarizeMatches(cache.matches);
   const rankHistory = await getRankHistory(puuid).catch(() => []);
+  const enrichedMatches = enrichMatchesWithRankSnapshots(cache.matches, rankHistory);
+  const { summary, matches } = summarizeMatches(enrichedMatches);
   return NextResponse.json({
     summoner: cache.displayName,
     region,
@@ -402,7 +459,8 @@ export async function GET(request: Request) {
       const toFetch = missingDetailIds.slice(0, 90);
 
       if (!toFetch.length) {
-        const { summary, matches: playerMatches } = summarizeMatches(cached?.matches ?? []);
+        const enrichedMatches = enrichMatchesWithRankSnapshots(cached?.matches ?? [], rankHistory);
+        const { summary, matches: playerMatches } = summarizeMatches(enrichedMatches);
         return NextResponse.json({
           summoner: displayName,
           region,
@@ -442,17 +500,18 @@ export async function GET(request: Request) {
       }
 
       const nameMaps = await getTftNameMaps().catch(() => null);
-      const newCached: CachedMatch[] = newRiotMatches.map((match) => toCachedMatch(match, puuid, nameMaps));
+      const newCached: CachedMatch[] = newRiotMatches.map((match) => toCachedMatch(match, puuid, nameMaps, rankHistory));
 
       const mergedMatches = [...newCached, ...(cached?.matches ?? [])];
+      const persistedMatches = enrichMatchesWithRankSnapshots(mergedMatches, rankHistory);
       await setCache(puuid, {
         displayName,
         cachedMatchIds: cachedMatchIds,
-        matches: mergedMatches,
+        matches: persistedMatches,
         lastFetchedAt: Date.now(),
       });
 
-      const { summary, matches: playerMatches } = summarizeMatches(mergedMatches);
+      const { summary, matches: playerMatches } = summarizeMatches(persistedMatches);
       return NextResponse.json({
         summoner: displayName,
         region,
@@ -545,21 +604,23 @@ export async function GET(request: Request) {
 
     // ── Convert new Riot matches → CachedMatch shape ─────────────────────────
     const nameMaps = await getTftNameMaps().catch(() => null);
-    const newCached: CachedMatch[] = newRiotMatches.map((match) => toCachedMatch(match, puuid, nameMaps));
+    const newCached: CachedMatch[] = newRiotMatches.map((match) => toCachedMatch(match, puuid, nameMaps, rankHistory));
 
     // ── Merge + persist ───────────────────────────────────────────────────────
     const mergedMatches: CachedMatch[] = [...newCached, ...(cached?.matches ?? [])];
     const mergedIds = [...new Set([...allMatchIds, ...Array.from(cachedIdSet)])];
+    const persistedMatches = enrichMatchesWithRankSnapshots(mergedMatches, rankHistory);
     await setCache(puuid, {
       displayName,
       cachedMatchIds: mergedIds,
-      matches: mergedMatches,
+      matches: persistedMatches,
       lastFetchedAt: Date.now(),
     });
 
     const uncachedRemaining = Math.max(0, newIds.length - toFetch.length);
     const uncachedCount = newIds.length;
-    const { summary, matches: playerMatches } = summarizeMatches(mergedMatches);
+    const enrichedMatches = persistedMatches;
+    const { summary, matches: playerMatches } = summarizeMatches(enrichedMatches);
 
     console.info('[riot-route] success', {
       summoner,

@@ -33,6 +33,7 @@ type MatchSummary = {
   playersEliminated?: number;
   totalDamageToPlayers?: number;
   playedAt: number;
+  rankedSnapshot?: RankSnapshot | null;
 };
 
 type ApiResponse = {
@@ -725,8 +726,15 @@ export default function Home() {
                       <span className="text-xs font-semibold opacity-80">{placementLabel(match.placement).slice(1)}</span>
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-sm font-semibold">{match.queue} · {match.patch}</span>
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-sm font-semibold">{match.queue} · {match.patch}</span>
+                          {match.rankedSnapshot ? (
+                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${tierBadgeClass(match.rankedSnapshot.tier)}`}>
+                              {formatRankLabel(match.rankedSnapshot)}
+                            </span>
+                          ) : null}
+                        </div>
                         <span className="shrink-0 text-sm tabular-nums text-base-content/60">{formatDuration(match.durationMinutes)}</span>
                       </div>
                       <p className="mt-1 text-xs text-base-content/60">Played {formatPlayedAt(match.playedAt)}</p>

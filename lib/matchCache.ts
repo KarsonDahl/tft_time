@@ -43,6 +43,7 @@ export type CachedMatch = {
   playersEliminated?: number;
   totalDamageToPlayers?: number;
   playedAt: number;
+  rankedSnapshot?: RankSnapshot | null;
 };
 
 export type PlayerCache = {
