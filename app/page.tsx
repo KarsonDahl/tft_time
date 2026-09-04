@@ -542,7 +542,7 @@ export default function Home() {
             {activeRankTab === 'history' ? (
               <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
                 <div className="rounded-2xl border border-base-300 bg-base-200/70 p-4">
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <p className="text-sm font-semibold">Current standing</p>
                       <p className="text-xs text-base-content/60">The latest ranked snapshot from Riot for your account.</p>
@@ -596,7 +596,7 @@ export default function Home() {
                         const peakSnapshot = group.peak?.snapshot;
                         return (
                           <div key={group.patch} className="rounded-xl border border-base-300 bg-base-100 px-3 py-3">
-                            <div className="flex items-center justify-between gap-3">
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                               <span className="text-sm font-semibold">{group.patch}</span>
                               <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${tierBadgeClass(peakSnapshot?.tier)}`}>
                                 {peakSnapshot ? formatRankLabel(peakSnapshot) : 'Unranked'}
@@ -687,7 +687,7 @@ export default function Home() {
             )}
             {setSummaries.length > 0 && (
               <div className="mt-6 space-y-3">
-                <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-sm font-semibold">Set breakdown</p>
                   <button
                     type="button"
@@ -725,7 +725,7 @@ export default function Home() {
           </article>
 
           <article className="rounded-3xl bg-base-100 p-6 shadow-xl">
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-xl font-semibold">Recent TFT Sessions</h2>
               <span className="badge badge-secondary">{data?.source ?? 'demo'}</span>
             </div>
