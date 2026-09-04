@@ -3,6 +3,7 @@ import { getCache, setCache, getPuuidMapping, setPuuidMapping, getRankHistory, a
 import { getTftNameMaps, lookupDisplayName, lookupIconUrl, lookupAugmentTier, type TftNameMaps } from '@/lib/tftData';
 import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from '@/lib/tftFormat';
 import { resolveRankSnapshotForMatch } from '@/lib/rankTrend';
+import { normalizeAugmentApiNames } from '@/lib/augmentParsing';
 
 type RiotLeagueEntry = {
   queueType?: string;
@@ -75,62 +76,6 @@ function getRouting(region: string) {
   return 'americas';
 }
 
-function normalizeAugmentApiNames(participant: RiotParticipant | undefined): string[] {
-  const candidates: unknown[] = [];
-  if (participant) {
-    const participantRecord = participant as RiotParticipant & Record<string, unknown>;
-    candidates.push(participantRecord.augments);
-    candidates.push(participantRecord.selectedAugments);
-    candidates.push(participantRecord.selected_augments);
-    candidates.push(participantRecord.selectedAugment);
-    candidates.push(participantRecord.selected_augment);
-    candidates.push(participantRecord.chosenAugments);
-    candidates.push(participantRecord.chosen_augments);
-    if (participantRecord.augment && typeof participantRecord.augment === 'object') {
-      candidates.push(participantRecord.augment);
-    }
-  }
-
-  const seen = new Set<string>();
-  const values: string[] = [];
-
-  for (const source of candidates) {
-    if (Array.isArray(source)) {
-      for (const item of source) {
-        const normalized = normalizeAugmentValue(item);
-        if (normalized && !seen.has(normalized)) {
-          seen.add(normalized);
-          values.push(normalized);
-        }
-      }
-      continue;
-    }
-
-    const normalized = normalizeAugmentValue(source);
-    if (normalized && !seen.has(normalized)) {
-      seen.add(normalized);
-      values.push(normalized);
-    }
-  }
-
-  return values;
-}
-
-function normalizeAugmentValue(value: unknown): string | null {
-  if (typeof value === 'string') return value;
-  if (!value || typeof value !== 'object') return null;
-
-  const record = value as Record<string, unknown>;
-  const maybeApiName = typeof record.apiName === 'string' ? record.apiName : undefined;
-  const maybeName = typeof record.name === 'string' ? record.name : undefined;
-  const maybeId = typeof record.id === 'string' ? record.id : undefined;
-  const maybeAugmentId = typeof record.augmentId === 'string' ? record.augmentId : undefined;
-  const maybeAugmentName = typeof record.augmentName === 'string' ? record.augmentName : undefined;
-  const maybeDisplayName = typeof record.displayName === 'string' ? record.displayName : undefined;
-  const maybeFullName = typeof record.fullName === 'string' ? record.fullName : undefined;
-
-  return maybeApiName || maybeAugmentId || maybeId || maybeName || maybeAugmentName || maybeDisplayName || maybeFullName || null;
-}
 
 // League-v1 (by-puuid) is platform-routed (na1/euw1/etc, same as the `region`
 // query param) rather than the account-routing (americas/europe/asia) used
