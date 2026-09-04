@@ -3,7 +3,7 @@ import { getCache, setCache, getPuuidMapping, setPuuidMapping, getRankHistory, a
 import { getTftNameMaps, lookupDisplayName, lookupIconUrl, lookupAugmentTier, type TftNameMaps } from '@/lib/tftData';
 import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from '@/lib/tftFormat';
 import { resolveRankSnapshotForMatch } from '@/lib/rankTrend';
-import { normalizeAugmentApiNames } from '@/lib/augmentParsing';
+import { normalizeAugmentApiNames, shouldBackfillAugments } from '@/lib/augmentParsing';
 
 type RiotLeagueEntry = {
   queueType?: string;
@@ -292,7 +292,7 @@ export async function GET(request: Request) {
     apiKey &&
     fallbackCache &&
     hasCachedData &&
-    fallbackCache.matches.some((match) => match.augments === undefined || match.augmentIcons === undefined || match.augmentTiers === undefined),
+    fallbackCache.matches.some((match) => shouldBackfillAugments(match)),
   );
 
   // The default action (mode=auto) normally serves cached data straight from
