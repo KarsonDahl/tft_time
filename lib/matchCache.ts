@@ -169,6 +169,28 @@ export async function setCache(puuid: string, data: PlayerCache): Promise<void> 
   memoryStore.set(puuid, data);
 }
 
+export async function clearPlayerCache(puuid: string): Promise<void> {
+  const matchKey = `${KEY_PREFIX}${puuid}`;
+  const rankKey = `${RANK_KEY_PREFIX}${puuid}`;
+
+  const kv = getVercelKvClient();
+  if (kv) {
+    await kv.del(matchKey);
+    await kv.del(rankKey);
+    return;
+  }
+
+  const redis = getRedis();
+  if (redis) {
+    await redis.del(matchKey);
+    await redis.del(rankKey);
+    return;
+  }
+
+  memoryStore.delete(puuid);
+  rankMemoryStore.delete(puuid);
+}
+
 // ── Riot ID → PUUID lookup ──────────────────────────────────────────────────
 // Lets the route resolve a player's cached data straight from Redis, without
 // depending on the (frequently rotated) Riot API key being valid.
@@ -205,6 +227,24 @@ export async function setPuuidMapping(nameKey: string, data: PuuidMapping): Prom
   }
 
   nameStore.set(nameKey, data);
+}
+
+export async function clearPuuidMapping(nameKey: string): Promise<void> {
+  const mappingKey = `${NAME_KEY_PREFIX}${nameKey}`;
+
+  const kv = getVercelKvClient();
+  if (kv) {
+    await kv.del(mappingKey);
+    return;
+  }
+
+  const redis = getRedis();
+  if (redis) {
+    await redis.del(mappingKey);
+    return;
+  }
+
+  nameStore.delete(nameKey);
 }
 
 // ── Ranked (League-v1) history ──────────────────────────────────────────────

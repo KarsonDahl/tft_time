@@ -255,6 +255,30 @@ export default function Home() {
     }
   }
 
+  async function resetCache() {
+    if (!summoner) return;
+    setLoading(true);
+    setError('');
+    setStatusMessage('Clearing cached stats for this account…');
+
+    try {
+      const response = await fetch(`/api/riot/clear-cache?summoner=${encodeURIComponent(summoner)}&region=${encodeURIComponent(region)}`, {
+        cache: 'no-store',
+      });
+      const json = (await response.json()) as { ok?: boolean; error?: string };
+      if (!response.ok || !json.ok) {
+        throw new Error(json.error ?? 'Unable to clear cache.');
+      }
+      setStatusMessage('Cache cleared. Reloading stats…');
+      await loadStats('auto');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      setStatusMessage('Unable to clear the cache.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   function formatSummonerLabel(value: string) {
     return value.replace(/#/, ' #');
   }
@@ -451,6 +475,9 @@ export default function Home() {
               </select>
               <button className="btn btn-primary" onClick={() => void loadStats('auto')} disabled={loading}>
                 {loading ? 'Loading…' : 'Load stats'}
+              </button>
+              <button className="btn btn-outline btn-warning" onClick={() => void resetCache()} disabled={loading}>
+                {loading ? 'Clearing…' : 'Reset cache'}
               </button>
               {hasMoreMatchesToAdd ? (
                 <button
