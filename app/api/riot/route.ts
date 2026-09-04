@@ -181,18 +181,27 @@ async function fetchRankedSnapshot(region: string, puuid: string, apiKey: string
 // `nameMaps` (from CommunityDragon, see lib/tftData.ts) has an entry we use
 // the real display name; otherwise we fall back to the best-effort regex
 // formatter so the app still works if that lookup is unavailable.
-function attachRankSnapshot(match: CachedMatch, rankHistory: RankSnapshot[]): CachedMatch {
+//
+// Crucially, the public TFT match-v1 payload does not expose the player's
+// tier/rank/LP for that specific match. For newly fetched ranked matches we can
+// supplement each match with a league-v1 snapshot captured during ingestion, and
+// for cached history we still resolve earlier snapshots from the stored
+// rank-history timeline when that data is available.
+function attachRankSnapshot(match: CachedMatch, snapshot: RankSnapshot | null): CachedMatch {
   return {
     ...match,
-    rankedSnapshot: match.queue === 'Ranked TFT' ? resolveRankSnapshotForMatch(match.playedAt, rankHistory) : null,
+    rankedSnapshot: match.queue === 'Ranked TFT' ? snapshot : null,
   };
 }
 
 function enrichMatchesWithRankSnapshots(matches: CachedMatch[], rankHistory: RankSnapshot[]): CachedMatch[] {
-  return matches.map((match) => attachRankSnapshot(match, rankHistory));
+  return matches.map((match) => {
+    const snapshot = match.queue === 'Ranked TFT' ? resolveRankSnapshotForMatch(match.playedAt, rankHistory) : null;
+    return attachRankSnapshot(match, snapshot);
+  });
 }
 
-function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | null, rankHistory: RankSnapshot[] = []): CachedMatch {
+function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | null, rankSnapshot: RankSnapshot | null = null): CachedMatch {
   const participant = match.info.participants.find((p) => p.puuid === puuid);
   const champions = (participant?.units ?? [])
     .map((u) => {
@@ -253,7 +262,7 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
     playedAt: match.info.game_datetime ?? 0,
   };
 
-  return attachRankSnapshot(baseMatch, rankHistory);
+  return attachRankSnapshot(baseMatch, rankSnapshot);
 }
 
 function queueLabel(queueId?: number) {
@@ -477,8 +486,8 @@ export async function GET(request: Request) {
         });
       }
 
-      const fetchMatchDetail = (matchId: string): Promise<RiotMatch> =>
-        fetch(`https://${routing}.api.riotgames.com/tft/match/v1/matches/${matchId}`, {
+      const fetchMatchDetail = async (matchId: string): Promise<{ match: RiotMatch; rankSnapshot: RankSnapshot | null }> => {
+        const match = await fetch(`https://${routing}.api.riotgames.com/tft/match/v1/matches/${matchId}`, {
           headers: { 'X-Riot-Token': apiKey, Accept: 'application/json' },
           cache: 'no-store',
         }).then(async (r) => {
@@ -489,18 +498,26 @@ export async function GET(request: Request) {
           return r.json() as Promise<RiotMatch>;
         });
 
+        const rankSnapshot = match.info.queue_id === 1100 ? await fetchRankedSnapshot(region, puuid, apiKey) : null;
+        return { match, rankSnapshot };
+      };
+
       const newRiotMatches: RiotMatch[] = [];
+      const newMatchRankSnapshots: Array<RankSnapshot | null> = [];
       for (let i = 0; i < toFetch.length; i += BATCH_SIZE) {
         const batch = toFetch.slice(i, i + BATCH_SIZE);
         const results = await Promise.all(batch.map(fetchMatchDetail));
-        newRiotMatches.push(...results);
+        for (const result of results) {
+          newRiotMatches.push(result.match);
+          newMatchRankSnapshots.push(result.rankSnapshot);
+        }
         if (i + BATCH_SIZE < toFetch.length) {
           await new Promise<void>((resolve) => setTimeout(resolve, BATCH_DELAY_MS));
         }
       }
 
       const nameMaps = await getTftNameMaps().catch(() => null);
-      const newCached: CachedMatch[] = newRiotMatches.map((match) => toCachedMatch(match, puuid, nameMaps, rankHistory));
+      const newCached: CachedMatch[] = newRiotMatches.map((match, index) => toCachedMatch(match, puuid, nameMaps, newMatchRankSnapshots[index] ?? null));
 
       const mergedMatches = [...newCached, ...(cached?.matches ?? [])];
       const persistedMatches = enrichMatchesWithRankSnapshots(mergedMatches, rankHistory);
@@ -579,8 +596,8 @@ export async function GET(request: Request) {
     const BATCH_SIZE = 10;
     const BATCH_DELAY_MS = BACKFILL_COOLDOWN_MS;
 
-    const fetchMatchDetail = (matchId: string): Promise<RiotMatch> =>
-      fetch(`https://${routing}.api.riotgames.com/tft/match/v1/matches/${matchId}`, {
+    const fetchMatchDetail = async (matchId: string): Promise<{ match: RiotMatch; rankSnapshot: RankSnapshot | null }> => {
+      const match = await fetch(`https://${routing}.api.riotgames.com/tft/match/v1/matches/${matchId}`, {
         headers: { 'X-Riot-Token': apiKey, Accept: 'application/json' },
         cache: 'no-store',
       }).then(async (r) => {
@@ -591,12 +608,20 @@ export async function GET(request: Request) {
         return r.json() as Promise<RiotMatch>;
       });
 
+      const rankSnapshot = match.info.queue_id === 1100 ? await fetchRankedSnapshot(region, puuid, apiKey) : null;
+      return { match, rankSnapshot };
+    };
+
     const toFetch = newIds.slice(0, DETAIL_LIMIT);
     const newRiotMatches: RiotMatch[] = [];
+    const newMatchRankSnapshots: Array<RankSnapshot | null> = [];
     for (let i = 0; i < toFetch.length; i += BATCH_SIZE) {
       const batch = toFetch.slice(i, i + BATCH_SIZE);
       const results = await Promise.all(batch.map(fetchMatchDetail));
-      newRiotMatches.push(...results);
+      for (const result of results) {
+        newRiotMatches.push(result.match);
+        newMatchRankSnapshots.push(result.rankSnapshot);
+      }
       if (i + BATCH_SIZE < toFetch.length) {
         await new Promise<void>((resolve) => setTimeout(resolve, BATCH_DELAY_MS));
       }
@@ -604,7 +629,7 @@ export async function GET(request: Request) {
 
     // ── Convert new Riot matches → CachedMatch shape ─────────────────────────
     const nameMaps = await getTftNameMaps().catch(() => null);
-    const newCached: CachedMatch[] = newRiotMatches.map((match) => toCachedMatch(match, puuid, nameMaps, rankHistory));
+    const newCached: CachedMatch[] = newRiotMatches.map((match, index) => toCachedMatch(match, puuid, nameMaps, newMatchRankSnapshots[index] ?? null));
 
     // ── Merge + persist ───────────────────────────────────────────────────────
     const mergedMatches: CachedMatch[] = [...newCached, ...(cached?.matches ?? [])];
