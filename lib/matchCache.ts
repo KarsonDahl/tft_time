@@ -36,6 +36,8 @@ export type CachedMatch = {
   // as images with the same bronze/silver/gold/chromatic color scheme traits use.
   augmentIcons?: (string | null)[];
   augmentTiers?: number[];
+  // See AUGMENTS_VERSION in lib/augmentParsing.js.
+  augmentsVersion?: number;
   level?: number;
   goldLeft?: number;
   lastRound?: number;

@@ -114,6 +114,37 @@ function traitStyleClass(style?: number): string {
   return 'bg-base-200 text-base-content/70';
 }
 
+// Same style numbering as traitStyleClass: 1=bronze, 2=silver, 4=gold, 3=prismatic.
+function hexMetalClass(style?: number): string {
+  if (style === 4) return 'hex-metal-gold';
+  if (style === 3) return 'hex-metal-prismatic';
+  if (style === 2) return 'hex-metal-silver';
+  if (style === 1) return 'hex-metal-bronze';
+  return 'hex-metal-none';
+}
+
+// Metallic hexagon plate with an icon on top. The plate is a separate clipped
+// layer so the optional count chip can overhang the edge without being cut off.
+function HexBadge({ style, title, src, alt, count }: { style?: number; title: string; src: string; alt: string; count?: number }) {
+  return (
+    <span title={title} className="relative inline-flex h-7 w-7 items-center justify-center">
+      <span aria-hidden className={`hex-badge ${hexMetalClass(style)}`} />
+      <img
+        src={src}
+        alt={alt}
+        className="relative h-[62%] w-[62%] object-contain drop-shadow"
+        referrerPolicy="no-referrer"
+        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+      />
+      {count ? (
+        <span className="absolute -bottom-1 -right-1 rounded-full bg-base-100 px-1 text-[8px] font-bold leading-tight text-base-content">
+          {count}
+        </span>
+      ) : null}
+    </span>
+  );
+}
+
 function tierBadgeClass(tier?: string): string {
   const normalized = (tier ?? '').toUpperCase();
   if (normalized === 'IRON') return 'bg-stone-500 text-stone-50';
@@ -846,19 +877,13 @@ export default function Home() {
                             const tier = match.augmentTiers?.[idx];
                             if (iconSrc) {
                               return (
-                                <span
+                                <HexBadge
                                   key={`${augment}-${idx}`}
+                                  style={tier}
                                   title={fixName('augments', augment)}
-                                  className={`flex h-6 w-6 items-center justify-center rounded-full p-0.5 ${traitStyleClass(tier)}`}
-                                >
-                                  <img
-                                    src={iconSrc}
-                                    alt={fixName('augments', augment)}
-                                    className="h-full w-full rounded-full object-cover"
-                                    referrerPolicy="no-referrer"
-                                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                                  />
-                                </span>
+                                  src={iconSrc}
+                                  alt={fixName('augments', augment)}
+                                />
                               );
                             }
                             return (
@@ -890,24 +915,14 @@ export default function Home() {
                               const fixedTraitName = fixName('traits', t.name);
                               if (t.icon) {
                                 return (
-                                  <span
+                                  <HexBadge
                                     key={t.name}
+                                    style={t.style}
                                     title={`${fixedTraitName}${t.num_units ? ` (${t.num_units})` : ''}`}
-                                    className={`relative flex h-6 w-6 items-center justify-center rounded-full p-0.5 ${traitStyleClass(t.style)}`}
-                                  >
-                                    <img
-                                      src={t.icon}
-                                      alt={fixedTraitName}
-                                      className="h-full w-full object-contain"
-                                      referrerPolicy="no-referrer"
-                                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                                    />
-                                    {t.num_units ? (
-                                      <span className="absolute -bottom-1 -right-1 rounded-full bg-base-100 px-1 text-[8px] font-bold leading-tight text-base-content">
-                                        {t.num_units}
-                                      </span>
-                                    ) : null}
-                                  </span>
+                                    src={t.icon}
+                                    alt={fixedTraitName}
+                                    count={t.num_units}
+                                  />
                                 );
                               }
                               return (
