@@ -51762,7 +51762,7 @@
             "desc": "A random back row champion gains @ASMultiplier*100@% Attack Speed for @ASDuration@ seconds.",
             "effects": {
                 "ASDuration": 7.0,
-                "ASMultiplier": 0.75
+                "ASMultiplier": 1.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -51873,7 +51873,7 @@
             "composition": [],
             "desc": "Enemies attacking your highest health champion deal @DamageReduction_Upgrade*100@% less damage.",
             "effects": {
-                "{57df3692}": 0.18000000715255737
+                "{57df3692}": 0.20000000298023224
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -51892,7 +51892,7 @@
             "composition": [],
             "desc": "Gain @DamageAmpUpgrade*100@% Damage Amp for every @PerXGold@ gold you have.",
             "effects": {
-                "{94a79fde}": 0.04500000178813934,
+                "{94a79fde}": 0.03999999910593033,
                 "{ddf97b5a}": 10.0
             },
             "from": null,
@@ -52275,23 +52275,6 @@
             "unique": false
         },
         {
-            "apiName": "DA_MemorialDummy18",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "Your first itemized tank spawns a Dummy with their items on death.",
-            "effects": {},
-            "from": null,
-            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": false,
-            "name": "Memorial Dummy",
-            "tags": [
-                "{5b609ae2}"
-            ],
-            "unique": false
-        },
-        {
             "apiName": "DA_Grandmaster18",
             "associatedTraits": [],
             "composition": [],
@@ -52351,7 +52334,7 @@
             "desc": "Sell your board and bench, gain @Gold@ gold and @Rerolls@ rerolls.",
             "effects": {
                 "Gold": 6.0,
-                "Rerolls": 10.0
+                "Rerolls": 8.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -52407,7 +52390,7 @@
             "composition": [],
             "desc": "Gain @Seeds@ seeds at start of combat.",
             "effects": {
-                "{3cc8530d}": 5.0
+                "{3cc8530d}": 7.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -52415,25 +52398,6 @@
             "incompatibleTraits": [],
             "isAugment": false,
             "name": "Terraforming",
-            "tags": [
-                "{5b609ae2}"
-            ],
-            "unique": false
-        },
-        {
-            "apiName": "DA_MemorialDummy18_Upgrade",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "The first @Upgrade_DummyAmount@ tanks that die spawns a Training Dummy with their items.",
-            "effects": {
-                "{2f6ceba8}": 2.0
-            },
-            "from": null,
-            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": false,
-            "name": "Memorial Dummy",
             "tags": [
                 "{5b609ae2}"
             ],
@@ -52480,7 +52444,7 @@
             "apiName": "DA_BorrowedGear18",
             "associatedTraits": [],
             "composition": [],
-            "desc": "A champion gains a temporary recommended item.",
+            "desc": "At the start of combat, a champion gains a temporary recommended item.",
             "effects": {},
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -52499,7 +52463,7 @@
             "composition": [],
             "desc": "Your champions gain @UpgradeADAP*100@% Attack Damage and Ability Power.",
             "effects": {
-                "{e3d9411b}": 0.15000000596046448
+                "{e3d9411b}": 0.05999999865889549
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -52543,6 +52507,26 @@
             "incompatibleTraits": [],
             "isAugment": false,
             "name": "Giant's Aura",
+            "tags": [
+                "{5b609ae2}"
+            ],
+            "unique": false
+        },
+        {
+            "apiName": "DA_18_Drizzle",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "After @Delay@ seconds of combat, your team gains @ManaToGain@ Mana.",
+            "effects": {
+                "Delay": 8.0,
+                "{2d7e43a8}": 10.0
+            },
+            "from": null,
+            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": false,
+            "name": "Drizzle",
             "tags": [
                 "{5b609ae2}"
             ],
@@ -53173,7 +53157,7 @@
             "desc": "Fighters execute targets under @ExecuteThreshold@% Health. They gain @OnKillAtkSpdAmount*100@% Attack Speed on kill.",
             "effects": {
                 "ExecuteThreshold": 12.0,
-                "{a074cdeb}": 0.1499999761581421
+                "{a074cdeb}": 0.2999999523162842
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -53226,7 +53210,7 @@
             "apiName": "DA_PottedLifebloom18",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain a temporary Lifeblossom.",
+            "desc": "Gain a temporary Lifebloom.",
             "effects": {},
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -53283,7 +53267,7 @@
             "composition": [],
             "desc": "The BFF eats enemies he damages under @ExecuteThresholdUpgrade*100@% Max Health.",
             "effects": {
-                "{0f6cb861}": 0.20000000298023224
+                "{0f6cb861}": 0.2199999988079071
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -53359,8 +53343,8 @@
             "composition": [],
             "desc": "On cast, your champions gain @AttackSpeedGain*100@% Attack Speed for @Duration@ seconds.",
             "effects": {
-                "Duration": 4.0,
-                "{f5c9e48b}": 0.2999999523162842
+                "AttackSpeedGain": 0.2999999523162842,
+                "Duration": 4.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -53545,7 +53529,7 @@
             "composition": [],
             "desc": "A random back row champion gains @ASMultiplierUpgrade*100@% Attack Speed for @ASDurationUpgrade@ seconds.",
             "effects": {
-                "{6c71691e}": 1.0,
+                "{6c71691e}": 1.2999999523162842,
                 "{707d81f7}": 8.0
             },
             "from": null,
@@ -53623,7 +53607,7 @@
             "composition": [],
             "desc": "The wilds couldn't find a wisp for you this roll. Gain @GoldUpgrade@ gold.",
             "effects": {
-                "{726ae049}": 6.0
+                "{726ae049}": 3.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -53700,7 +53684,7 @@
             "desc": "Your first @NumUnits@ champions to die stun their killer for @StunDuration@ seconds.",
             "effects": {
                 "NumUnits": 3.0,
-                "StunDuration": 1.25
+                "StunDuration": 1.5
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -53941,7 +53925,7 @@
             "apiName": "DA_Flow18_Upgrade",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Your champions are Unstoppable and gain @AttackSpeed*100@% Attack Speed for @DurationUpgrade@ seconds.",
+            "desc": "Your champions are unstoppable and gain @AttackSpeed*100@% Attack Speed for @DurationUpgrade@ seconds.",
             "effects": {
                 "AttackSpeed": 0.1499999761581421,
                 "{0772688f}": 15.0
@@ -54127,8 +54111,8 @@
             "composition": [],
             "desc": "Champions alone in their row gain @Health_Upgrade*100@% Health and @DamageAmp_Upgrade*100@% Damage Amp.",
             "effects": {
-                "{7acd771c}": 0.2200000286102295,
-                "{7b935ba9}": 0.2199999988079071
+                "{7acd771c}": 0.20000004768371582,
+                "{7b935ba9}": 0.20000000298023224
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -54319,7 +54303,7 @@
             "desc": "Fighters execute targets under @UpgradeExecuteThreshold@<Set18CharmUpgrade>%</Set18CharmUpgrade> Health. They gain @OnKillAtkSpdAmountUpgrade*100@% Attack Speed on kill.",
             "effects": {
                 "UpgradeExecuteThreshold": 15.0,
-                "{c2df5b31}": 0.3999999761581421
+                "{c2df5b31}": 0.6000000238418579
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -54431,7 +54415,7 @@
             "composition": [],
             "desc": "Your front center champion gains @UpgradeMaxHealthPerFrontRowUnit*100@% Max Health per front-row unit.",
             "effects": {
-                "{7792756f}": 0.059999942779541016
+                "{7792756f}": 0.08000004291534424
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -54487,7 +54471,7 @@
             "composition": [],
             "desc": "Your champions gain @ADAP*100@% Attack Damage and Ability Power.",
             "effects": {
-                "ADAP": 0.07999999821186066
+                "ADAP": 0.03999999910593033
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -54697,7 +54681,7 @@
             "composition": [],
             "desc": "Enemies attacking your highest health champion deal @DamageReduction*100@% less damage.",
             "effects": {
-                "DamageReduction": 0.11999999731779099
+                "DamageReduction": 0.14000000059604645
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -54767,6 +54751,23 @@
             "unique": false
         },
         {
+            "apiName": "DA_ReturningFriendUpgrade",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Gain a Training Dummy with <Set18CharmUpgrade>Three Giant's Belts</Set18CharmUpgrade>.",
+            "effects": {},
+            "from": null,
+            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": false,
+            "name": "Returning Friend",
+            "tags": [
+                "{5b609ae2}"
+            ],
+            "unique": false
+        },
+        {
             "apiName": "DA_StandAlone18_Prismatic",
             "associatedTraits": [],
             "composition": [],
@@ -54792,7 +54793,7 @@
             "composition": [],
             "desc": "Allies with Precision gain @UpgradeCritDamage*100@% Critical Strike Damage.",
             "effects": {
-                "{6c5a2a96}": 0.4000000059604645
+                "UpgradeCritDamage": 0.4000000059604645
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -55197,6 +55198,26 @@
             "unique": false
         },
         {
+            "apiName": "DA_18_GroveArmorUpgrade",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Your highest Health champion gains @BonusArmorUpgrade@ Armor and @BonusMRUpgrade@ Magic Resist.",
+            "effects": {
+                "{18e2f9a9}": 25.0,
+                "{ac3cc501}": 25.0
+            },
+            "from": null,
+            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": false,
+            "name": "Grove Armor",
+            "tags": [
+                "{5b609ae2}"
+            ],
+            "unique": false
+        },
+        {
             "apiName": "DA_FlipFrenzy18",
             "associatedTraits": [],
             "composition": [],
@@ -55221,7 +55242,7 @@
             "composition": [],
             "desc": "Every @Timer_Upgraded@ seconds, your champions have a @PercentChance*100@% chance to drop @GoldDrop@ Gold.",
             "effects": {
-                "{59d091e2}": 0.15000000596046448,
+                "{59d091e2}": 0.20000000298023224,
                 "{627bf513}": 4.0,
                 "{90187eca}": 1.0
             },
@@ -55278,7 +55299,7 @@
             "composition": [],
             "desc": "Your first @NumUnitsUpgrade@ champions to die stun their killer for @StunDurationUpgrade@ second.",
             "effects": {
-                "{371528cb}": 1.5,
+                "{371528cb}": 1.75,
                 "{6d8a71ae}": 4.0
             },
             "from": null,
@@ -55463,6 +55484,26 @@
             "unique": false
         },
         {
+            "apiName": "DA_18_DrizzleUpgrade",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "After @Delay@ seconds of combat, your team gains @ManaToGainUpgrade@ Mana.",
+            "effects": {
+                "Delay": 8.0,
+                "{6d8ce3e4}": 15.0
+            },
+            "from": null,
+            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": false,
+            "name": "Drizzle",
+            "tags": [
+                "{5b609ae2}"
+            ],
+            "unique": false
+        },
+        {
             "apiName": "DA_18_AllTwos",
             "associatedTraits": [],
             "composition": [],
@@ -55486,7 +55527,7 @@
             "desc": "For @UpgradeDuration@ seconds, your shop rerolls for free every @Period@ seconds.",
             "effects": {
                 "Period": 2.0,
-                "{dc488023}": 26.0
+                "{dc488023}": 24.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -55692,7 +55733,7 @@
             "composition": [],
             "desc": "Gain @SeedsUpgrade@ seeds at start of combat.",
             "effects": {
-                "{9debba8f}": 9.0
+                "{9debba8f}": 10.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -55843,7 +55884,7 @@
             "composition": [],
             "desc": "Your highest Health unit grows, gaining @HPGain@ Health.",
             "effects": {
-                "{e26d6f9e}": 700.0
+                "{e26d6f9e}": 800.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -55919,7 +55960,7 @@
             "desc": "Every @Timer@ seconds, your champions have a @PercentChance*100@% chance to drop @GoldDrop@ Gold.",
             "effects": {
                 "Timer": 5.0,
-                "{59d091e2}": 0.15000000596046448,
+                "{59d091e2}": 0.20000000298023224,
                 "{90187eca}": 1.0
             },
             "from": null,
@@ -55939,7 +55980,7 @@
             "composition": [],
             "desc": "The wilds couldn't find a wisp for you this roll. Gain @Gold@ gold.",
             "effects": {
-                "Gold": 4.0
+                "Gold": 2.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -56030,7 +56071,7 @@
             "composition": [],
             "desc": "Your champions explode on death, dealing @maxHealthExplosionDamage*100@% Max Health magic damage.",
             "effects": {
-                "{8e1bf27f}": 0.15000000596046448
+                "{8e1bf27f}": 0.11999999731779099
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -56177,9 +56218,9 @@
             "apiName": "DA_BorrowedGear18_Upgrade",
             "associatedTraits": [],
             "composition": [],
-            "desc": "A champion gains a temporary recommended item and @UpgradeHealth@<Set18CharmUpgrade> Health</Set18CharmUpgrade>.",
+            "desc": "At the start of combat, a champion gains a temporary recommended item and @UpgradeHealth@<Set18CharmUpgrade> Health</Set18CharmUpgrade>.",
             "effects": {
-                "{f1950c41}": 250.0
+                "UpgradeHealth": 250.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -56254,7 +56295,7 @@
             "apiName": "DA_Flow18",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Your champions are Unstoppable and gain @AttackSpeed*100@% Attack Speed for @Duration@ seconds.",
+            "desc": "Your champions are unstoppable and gain @AttackSpeed*100@% Attack Speed for @Duration@ seconds.",
             "effects": {
                 "AttackSpeed": 0.1499999761581421,
                 "Duration": 10.0
@@ -56284,23 +56325,6 @@
             "incompatibleTraits": [],
             "isAugment": false,
             "name": "Nature's Wrath",
-            "tags": [
-                "{5b609ae2}"
-            ],
-            "unique": false
-        },
-        {
-            "apiName": "DA_18_FieldofMice_Upgrade",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "Gain a Tiny Duplicator <Set18CharmUpgrade>and a gold</Set18CharmUpgrade> for each unique 1-cost champion you fielded last round.",
-            "effects": {},
-            "from": null,
-            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": false,
-            "name": "Field of Mice",
             "tags": [
                 "{5b609ae2}"
             ],
@@ -56386,8 +56410,8 @@
             "composition": [],
             "desc": "@NumChampionsUpgrade@ random champions on the back row are untargetable for @UntargetableDurationUpgrade@ seconds.",
             "effects": {
-                "{38788569}": 10.0,
-                "{3f2cae9b}": 2.0
+                "{38788569}": 12.0,
+                "{3f2cae9b}": 3.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -56414,6 +56438,25 @@
             "incompatibleTraits": [],
             "isAugment": false,
             "name": "Petrified Dummy",
+            "tags": [
+                "{5b609ae2}"
+            ],
+            "unique": false
+        },
+        {
+            "apiName": "DA_CrystalBall18",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Reveal your next opponent. Your team gains @AttackSpeed*100@% Attack Speed.",
+            "effects": {
+                "AttackSpeed": 0.12000000476837158
+            },
+            "from": null,
+            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": false,
+            "name": "Crystal Ball",
             "tags": [
                 "{5b609ae2}"
             ],
@@ -56459,7 +56502,7 @@
             "apiName": "DA_HealthPotion18_Charm",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain a tempoary equippable Health Potion.",
+            "desc": "Gain a temporary equippable Health Potion.",
             "effects": {},
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -56548,6 +56591,25 @@
             "unique": false
         },
         {
+            "apiName": "DA_RoomForAShroomUpgrade",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Gain @ShroomsToGrantUpgrade@ random mushrooms.",
+            "effects": {
+                "{6cddf9fd}": 3.0
+            },
+            "from": null,
+            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": false,
+            "name": "Room for a Shroom",
+            "tags": [
+                "{5b609ae2}"
+            ],
+            "unique": false
+        },
+        {
             "apiName": "DA_DoodadJar18_Upgrade",
             "associatedTraits": [],
             "composition": [],
@@ -56627,7 +56689,7 @@
             "composition": [],
             "desc": "Your champions gain @UpgradeHealthAmount@ Health.",
             "effects": {
-                "{73ad14ad}": 175.0
+                "{73ad14ad}": 75.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -56704,7 +56766,7 @@
             "composition": [],
             "desc": "Your champions explode on death, dealing @maxHealthExplosionDamage_Upgrade*100@% Max Health magic damage.",
             "effects": {
-                "{168a598c}": 0.2199999988079071
+                "{168a598c}": 0.18000000715255737
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -56821,7 +56883,7 @@
             "composition": [],
             "desc": "The BFF eats enemies he damages under @ExecuteThreshold*100@% Max Health.",
             "effects": {
-                "ExecuteThreshold": 0.15000000596046448
+                "ExecuteThreshold": 0.1599999964237213
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -56899,7 +56961,7 @@
             "composition": [],
             "desc": "Your @NumUnitsUpgrade@ highest Health units grow, gaining @HPGainUpgrade@ Health.",
             "effects": {
-                "{58332efe}": 700.0,
+                "{58332efe}": 800.0,
                 "{6d8a71ae}": 2.0
             },
             "from": null,
@@ -57044,6 +57106,25 @@
             "unique": false
         },
         {
+            "apiName": "DA_RoomForAShroom",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Gain @ShroomsToGrant@ random mushrooms.",
+            "effects": {
+                "{f2956f6f}": 2.0
+            },
+            "from": null,
+            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": false,
+            "name": "Room for a Shroom",
+            "tags": [
+                "{5b609ae2}"
+            ],
+            "unique": false
+        },
+        {
             "apiName": "DA_18_Preppers_Upgrade",
             "associatedTraits": [],
             "composition": [],
@@ -57109,6 +57190,25 @@
             "incompatibleTraits": [],
             "isAugment": false,
             "name": "Treetop Archers",
+            "tags": [
+                "{5b609ae2}"
+            ],
+            "unique": false
+        },
+        {
+            "apiName": "DA_CrystalBall18_Upgrade",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Reveal your next opponent. Your team gains @AttackSpeedUpgrade*100@% Attack Speed.",
+            "effects": {
+                "{101dcf04}": 0.1799999475479126
+            },
+            "from": null,
+            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": false,
+            "name": "Crystal Ball",
             "tags": [
                 "{5b609ae2}"
             ],
@@ -57214,7 +57314,7 @@
             "composition": [],
             "desc": "Your highest Health unit grows, gaining @HealthUpgrade@ Health.",
             "effects": {
-                "{32cf649d}": 600.0
+                "{32cf649d}": 500.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -57233,8 +57333,8 @@
             "composition": [],
             "desc": "Your @NumChampions@ strongest Fighters or Assassins are untargetable for @UntargetableDuration@ seconds.",
             "effects": {
-                "NumChampions": 2.0,
-                "UntargetableDuration": 6.0
+                "NumChampions": 3.0,
+                "UntargetableDuration": 8.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -57434,12 +57534,29 @@
             "unique": false
         },
         {
+            "apiName": "DA_ReturningFriend",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Gain a temporary Training Dummy with two Giant's Belts.",
+            "effects": {},
+            "from": null,
+            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": false,
+            "name": "Returning Friend",
+            "tags": [
+                "{5b609ae2}"
+            ],
+            "unique": false
+        },
+        {
             "apiName": "DA_18_VerdantVitality",
             "associatedTraits": [],
             "composition": [],
             "desc": "Your champions gain @HealthAmount@ Health.",
             "effects": {
-                "HealthAmount": 100.0
+                "HealthAmount": 50.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -57478,7 +57595,7 @@
             "composition": [],
             "desc": "Gain a Rengar or a Kha'Zix. They gain @NumStacksUpgrade@ takedowns.",
             "effects": {
-                "{4d47989a}": 7.0
+                "{4d47989a}": 5.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -57676,7 +57793,7 @@
             "composition": [],
             "desc": "Open an item store. Items cost 0 to @TooltipMaxCostOfItem@ gold.",
             "effects": {
-                "{72eb58d9}": 15.0
+                "{72eb58d9}": 17.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -57712,7 +57829,7 @@
             "apiName": "DA_PottedLifebloom18_Upgrade",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain a temporary Lifeblossom.",
+            "desc": "Gain a temporary Lifebloom.",
             "effects": {},
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -57748,7 +57865,7 @@
             "composition": [],
             "desc": "Your front center champion gains @MaxHealthPerFrontRowUnit*100@% Max Health per front-row unit.",
             "effects": {
-                "{94e5ce49}": 0.039999961853027344
+                "{94e5ce49}": 0.059999942779541016
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -57801,7 +57918,7 @@
             "composition": [],
             "desc": "Sell your board and bench, gain @GoldUpgrade@ gold and @RerollsUpgrade@ rerolls.",
             "effects": {
-                "{30bc37c4}": 12.0,
+                "{30bc37c4}": 10.0,
                 "{726ae049}": 10.0
             },
             "from": null,
@@ -57830,6 +57947,26 @@
             "incompatibleTraits": [],
             "isAugment": false,
             "name": "Bark Armor",
+            "tags": [
+                "{5b609ae2}"
+            ],
+            "unique": false
+        },
+        {
+            "apiName": "DA_18_GroveArmor",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Your highest Health champion gains @BonusArmor@ Armor and @BonusMR@ Magic Resist.",
+            "effects": {
+                "BonusArmor": 15.0,
+                "BonusMR": 15.0
+            },
+            "from": null,
+            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": false,
+            "name": "Grove Armor",
             "tags": [
                 "{5b609ae2}"
             ],
@@ -57927,30 +58064,13 @@
             "unique": false
         },
         {
-            "apiName": "DA_18_FieldofMice",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "Gain a Tiny Champion Duplicator for each unique one-cost fielded last round.",
-            "effects": {},
-            "from": null,
-            "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": false,
-            "name": "Field of Mice",
-            "tags": [
-                "{5b609ae2}"
-            ],
-            "unique": false
-        },
-        {
             "apiName": "DA_CurioCart18_Upgrade",
             "associatedTraits": [],
             "composition": [],
             "desc": "Open an item store. Items cost 0 to @TooltipMaxCostOfItem@ gold. <Set18CharmUpgrade>Gain </Set18CharmUpgrade>@UpgradeGoldGain@<Set18CharmUpgrade> Gold.</Set18CharmUpgrade>",
             "effects": {
-                "{0fb627ae}": 2.0,
-                "{72eb58d9}": 15.0
+                "{0fb627ae}": 1.0,
+                "{72eb58d9}": 17.0
             },
             "from": null,
             "icon": "assets/ux/tft/hud/zaps/wands/set18_mechanicicon.tex",
@@ -58189,7 +58309,8 @@
             "isAugment": false,
             "name": "Vanguard Emblem",
             "tags": [
-                "{ebcd1bac}"
+                "{ebcd1bac}",
+                "{d8d00bcc}"
             ],
             "unique": false
         },
@@ -58600,24 +58721,6 @@
             "unique": false
         },
         {
-            "apiName": "DA_Artifact_DeathsDefiance",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": null,
-            "effects": {},
-            "from": null,
-            "icon": "assets/maps/tft/icons/items/hexcore/tft4_item_ornndeathsdefiance.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": false,
-            "name": "Death's Defiance",
-            "tags": [
-                "{44ace175}",
-                "{ec243f6b}"
-            ],
-            "unique": false
-        },
-        {
             "apiName": "DA_Artifact_RapidFireCannon",
             "associatedTraits": [],
             "composition": [],
@@ -58685,7 +58788,7 @@
             "id": null,
             "incompatibleTraits": [],
             "isAugment": false,
-            "name": "Warmogs Armor",
+            "name": "Warmog's Armor",
             "tags": [
                 "{7ea41d13}",
                 "Health"
@@ -60135,7 +60238,7 @@
             "id": null,
             "incompatibleTraits": [],
             "isAugment": false,
-            "name": "Mogul'sMail",
+            "name": "Mogul's Mail",
             "tags": [
                 "{d8d00bcc}",
                 "{44ace175}",
@@ -60361,9 +60464,7 @@
             "incompatibleTraits": [],
             "isAugment": false,
             "name": "Coven Emblem",
-            "tags": [
-                "{ebcd1bac}"
-            ],
+            "tags": [],
             "unique": false
         },
         {
@@ -83003,33 +83104,16 @@
             "unique": false
         },
         {
-            "apiName": "DA_NestingDollsPlus",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "After a champion dies in combat, spawn a copy of them one star level lower with @HealthMultiplier*100@% health. Gain @NumRerolls@ free rerolls.",
-            "effects": {
-                "NumRerolls": 3.0,
-                "{52fcdfb4}": 0.6000000238418579
-            },
-            "from": null,
-            "icon": "assets/maps/tft/icons/augments/hexcore/missing-t3.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": true,
-            "name": "Nesting Dolls",
-            "tags": [
-                "{cf1fd3af}"
-            ],
-            "unique": false
-        },
-        {
             "apiName": "DA_18_RiftbeastTraitAugment",
             "associatedTraits": [
                 "DA_Riftbeast18"
             ],
             "composition": [],
-            "desc": "You can now choose a second Alpha Riftbeast. Gain a Scuttlecrab, a Cinderling, and a Pebbles.",
-            "effects": {},
+            "desc": "You can now choose a second Alpha Riftbeast. Alpha Riftbeasts gain @BonusHP*100@% max Health and @BonusAS*100@% Attack Speed. Gain a Scuttlecrab, a Cinderling, and a Pebbles.",
+            "effects": {
+                "BonusAS": 0.08000004291534424,
+                "BonusHP": 0.08000004291534424
+            },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
             "id": null,
@@ -83045,8 +83129,10 @@
             "apiName": "DA_Min_Max",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain a Golden Item Remover and 4 random components.",
-            "effects": {},
+            "desc": "Gain a Golden Item Remover, 4 random components, and @GoldAmount@ gold.",
+            "effects": {
+                "GoldAmount": 4.0
+            },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/minmax_iii.tex",
             "id": null,
@@ -83142,10 +83228,10 @@
             "apiName": "DA_ShoppingSpree",
             "associatedTraits": [],
             "composition": [],
-            "desc": "When you level up, gain a number of free shop refreshes equal to your level +@BonusRollPerLevel@. Gain @GoldGain@ gold.",
+            "desc": "When you level up, gain a number of Shop refreshes equal to your level +@BonusRollPerLevel@. Gain @GoldGain@ gold.",
             "effects": {
                 "BonusRollPerLevel": 1.0,
-                "GoldGain": 6.0
+                "GoldGain": 7.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/silver-ticket-iii.tex",
@@ -83187,8 +83273,8 @@
             "composition": [],
             "desc": "Champions in your back 2 rows gain @AbilityPowerPcntPerFrontLiner*100@% Ability Power and @AttackDamagePcntPerFrontLiner*100@% Attack Damage for each champion that starts combat in your front row.",
             "effects": {
-                "{910d2567}": 0.07999999821186066,
-                "{dac37571}": 0.09000000357627869
+                "{910d2567}": 0.10999999940395355,
+                "{dac37571}": 0.10999999940395355
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/holdtheline_iii.tex",
@@ -83207,7 +83293,7 @@
             "composition": [],
             "desc": "Combat start: Champions grant other adjacent champions @Armor_Silver@ Armor and Magic Resist. This effect stacks.",
             "effects": {
-                "{9724cae4}": 6.0
+                "{9724cae4}": 7.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/grouphug1_i.tex",
@@ -83224,7 +83310,7 @@
             "apiName": "DA_TradeSector",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain a free Shop reroll every round. Gain @NumGold@ gold.",
+            "desc": "Gain a Shop reroll every round. Gain @NumGold@ gold.",
             "effects": {
                 "NumGold": 2.0
             },
@@ -83321,7 +83407,7 @@
             "composition": [],
             "desc": "Gain a random @ActorLevel@-star @UnitCost@-cost champion. Gain @NumGold@ gold.",
             "effects": {
-                "NumGold": 6.0,
+                "NumGold": 9.0,
                 "UnitCost": 1.0,
                 "{141b5538}": 3.0
             },
@@ -83337,32 +83423,12 @@
             "unique": false
         },
         {
-            "apiName": "DA_NestingDollsPlusPlus",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "After a champion dies in combat, spawn a copy of them one star level lower with @HealthMultiplier*100@% health. Gain @NumRerolls@ free rerolls.",
-            "effects": {
-                "NumRerolls": 3.0,
-                "{52fcdfb4}": 0.6000000238418579
-            },
-            "from": null,
-            "icon": "assets/maps/tft/icons/augments/hexcore/missing-t3.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": true,
-            "name": "Nesting Dolls",
-            "tags": [
-                "{cf1fd3af}"
-            ],
-            "unique": false
-        },
-        {
             "apiName": "DA_EarlyLearnings",
             "associatedTraits": [],
             "composition": [],
             "desc": "Your team gains @InitialStacks@% Attack Damage & Ability Power. This increases by @StacksPerCombat@% after each player combat. 1-cost champions gain double.",
             "effects": {
-                "{6af58d52}": 5.0,
+                "{6af58d52}": 3.0,
                 "{b584a6db}": 1.0
             },
             "from": null,
@@ -83397,7 +83463,7 @@
             "apiName": "DA_WeStickTogether",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain a random Emblem and a completed item anvil. Allies that share a trait with that Emblem gain @AttackSpeed*100@% Attack Speed. 0 0<br><br><rules>Into The Arcane Tactician's Crown, 2025</rules>",
+            "desc": "Gain an Emblem of a random trait and a completed item anvil. Allies with that trait gain @AttackSpeed*100@% Attack Speed.<br>0 0<br><br><rules>Into The Arcane Tactician's Crown, 2025</rules>",
             "effects": {
                 "AttackSpeed": 0.30000001192092896
             },
@@ -83438,7 +83504,7 @@
             "composition": [],
             "desc": "When you buy XP, gain an additional @AdditionalXP@. Gain @InstantXP@ immediately.",
             "effects": {
-                "InstantXP": 6.0,
+                "InstantXP": 10.0,
                 "{322ef094}": 2.0
             },
             "from": null,
@@ -83460,17 +83526,17 @@
             "composition": [],
             "desc": "Gain a Leona, a Kayle, and a Sejuani. Leona gains @FlatHealth@ permanent max Health each round, increased by @HealthPerThreeStar@ for each unique 3-star champion fielded.",
             "effects": {
-                "FlatHealth": 60.0,
+                "FlatHealth": 70.0,
                 "{ff019e0e}": 10.0
             },
             "from": null,
-            "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
+            "icon": "assets/maps/tft/icons/augments/hexcore/missing-t1.tex",
             "id": null,
             "incompatibleTraits": [],
             "isAugment": true,
             "name": "Chosen of the Sun",
             "tags": [
-                "{ce1fd21c}"
+                "{d11fd6d5}"
             ],
             "unique": false
         },
@@ -83500,7 +83566,7 @@
             "apiName": "DA_GoingLong",
             "associatedTraits": [],
             "composition": [],
-            "desc": "You no longer gain interest. Gain @GoldInstant@ gold now. Round start: gain @RoundStartBonusXp@ XP.<br><br><rules>Interest is extra gold you gain per </rules>@OldInterestThreshold@<rules>g saved.</rules>",
+            "desc": "You no longer gain interest. Gain @GoldInstant@ gold now. Gain @RoundStartBonusXp@ XP after every player combat.<br><br><rules>Interest is extra gold you gain per </rules>@OldInterestThreshold@<rules>g saved.</rules>",
             "effects": {
                 "{1e108c20}": 10.0,
                 "{677df9f0}": 4.0,
@@ -83523,7 +83589,7 @@
             "composition": [],
             "desc": "Gain a random Gold Augment and @Gold@ gold.",
             "effects": {
-                "Gold": 6.0
+                "Gold": 5.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/goldendestiny_ii.tex",
@@ -83559,7 +83625,7 @@
             "composition": [],
             "desc": "Gain a random item component now and at the start of the next @RoundsDuration@ rounds.",
             "effects": {
-                "{bb1120a8}": 5.0
+                "{bb1120a8}": 6.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/buried-treasures-iii.tex",
@@ -83636,7 +83702,7 @@
             "apiName": "DA_SpreadingRootsPlus",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain @EmblemAmountPlus@ random Emblems, a Reforger, and @GoldAmountPlus@ gold.",
+            "desc": "Gain @EmblemAmountPlus@ random Emblems and @GoldAmountPlus@ gold.",
             "effects": {
                 "{1a129973}": 2.0,
                 "{c99cbe2b}": 2.0
@@ -83678,7 +83744,7 @@
             "composition": [],
             "desc": "Gain @NumItemsToGrant@ Hands of Justice. Allies equipped with Hand of Justice gain <TFTKeyword>Precision</TFTKeyword> and @CriticalStrikeChance*100@% Critical Strike Chance.<br><br><rules>Precision: Ability damage can critically strike. Additional Precision grants 10% Critical Strike Damage.</rules>",
             "effects": {
-                "CriticalStrikeChance": 0.25,
+                "CriticalStrikeChance": 0.15000000596046448,
                 "{cf436c6a}": 2.0
             },
             "from": null,
@@ -83699,14 +83765,14 @@
             "desc": "Whenever you open a loot orb, you have a @Chance*100@% chance to gain a gray loot orb. Gain @StartingOrbs@ gray loot orbs.",
             "effects": {
                 "Chance": 0.25,
-                "{8ec37f1f}": 3.0
+                "{8ec37f1f}": 2.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
             "id": null,
             "incompatibleTraits": [],
             "isAugment": true,
-            "name": "Bonus Gift+",
+            "name": "Bonus Gifts+",
             "tags": [
                 "{ce1fd21c}"
             ],
@@ -83779,7 +83845,7 @@
             "composition": [],
             "desc": "Your team gains @DamageAmp*100@% Damage Amp and @Armor@ Armor and Magic Resist for each Bronze-tier trait.",
             "effects": {
-                "Armor": 4.0,
+                "Armor": 2.5,
                 "DamageAmp": 0.02500000037252903
             },
             "from": null,
@@ -83794,14 +83860,31 @@
             "unique": false
         },
         {
+            "apiName": "DA_BranchingOut",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Gain a random Emblem.",
+            "effects": {},
+            "from": null,
+            "icon": "assets/maps/tft/icons/augments/hexcore/branching-out-i.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": true,
+            "name": "Branching Out",
+            "tags": [
+                "{d11fd6d5}"
+            ],
+            "unique": false
+        },
+        {
             "apiName": "DA_InvestmentStrategy",
             "associatedTraits": [],
             "composition": [],
             "desc": "Your champions gain @MaxHealthPerInterest@ permanent max health per interest you earn. Your max interest is increased by @MaxInterestInc@. Gain @InstantGold@ gold now.",
             "effects": {
-                "InstantGold": 8.0,
+                "InstantGold": 6.0,
                 "{77dbf275}": 2.0,
-                "{da66a800}": 8.0
+                "{da66a800}": 12.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/investmentstrategy_iii.tex",
@@ -83955,6 +84038,26 @@
             "unique": false
         },
         {
+            "apiName": "DA_KnowYourEnemy",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "You can see who you will fight next. Your team gains @DefaultDamageAmp*100@% Damage Amp, increased to @SharedTraitDamageAmp*100@% if you and your opponent have any of the same traits active.",
+            "effects": {
+                "{2b91485b}": 0.07999999821186066,
+                "{9b25dff5}": 0.15000000596046448
+            },
+            "from": null,
+            "icon": "assets/maps/tft/icons/augments/hexcore/know-your-enemy-ii.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": true,
+            "name": "Know Your Enemy",
+            "tags": [
+                "{ce1fd21c}"
+            ],
+            "unique": false
+        },
+        {
             "apiName": "DA_GlassCannon_Gold",
             "associatedTraits": [],
             "composition": [],
@@ -83992,25 +84095,6 @@
             "unique": false
         },
         {
-            "apiName": "DA_18_BigGrabBag",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "Gain 3 random components, @Gold@ gold, and 1 Reforger.",
-            "effects": {
-                "Gold": 2.0
-            },
-            "from": null,
-            "icon": "assets/maps/tft/icons/augments/hexcore/grab-bag-ii.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": true,
-            "name": "Big Grab Bag",
-            "tags": [
-                "{ce1fd21c}"
-            ],
-            "unique": false
-        },
-        {
             "apiName": "DA_CapitalGainsII",
             "associatedTraits": [],
             "composition": [],
@@ -84019,7 +84103,7 @@
                 "Round": 3.0,
                 "Stage": 3.0,
                 "{1c49a816}": 1.25,
-                "{66816927}": 1.0
+                "{66816927}": 3.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
@@ -84036,10 +84120,10 @@
             "apiName": "DA_UpwardMobility",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Buying XP costs @ReducedXPCost@ less. Gain @HealthOnLevelUp@ Health and @RerollsOnLevelUp@ free reroll whenever you level up.",
+            "desc": "Buying XP costs @ReducedXPCost@ less. Gain @HealthOnLevelUp@ Health and @RerollsOnLevelUp@ Shop rerolls whenever you level up.",
             "effects": {
                 "{0ef06055}": 2.0,
-                "{3e85783c}": 1.0,
+                "{3e85783c}": 2.0,
                 "{9ba044dc}": 1.0
             },
             "from": null,
@@ -84099,14 +84183,14 @@
             "desc": "Whenever you open a loot orb, you have a @Chance*100@% chance to gain a gray loot orb. Gain @StartingOrbs@ gray loot orbs.",
             "effects": {
                 "Chance": 0.25,
-                "{8ec37f1f}": 2.0
+                "{8ec37f1f}": 1.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
             "id": null,
             "incompatibleTraits": [],
             "isAugment": true,
-            "name": "Bonus Gift",
+            "name": "Bonus Gifts",
             "tags": [
                 "{ce1fd21c}"
             ],
@@ -84156,7 +84240,7 @@
                 "DA_18_Blackthorn"
             ],
             "composition": [],
-            "desc": "The first @NumComponents@ times you sacrifice a champion in the Blackthorn hex, gain a copy of a random component they're holding. Gain a Veigar and a Rek'Sai.",
+            "desc": "The first @NumComponents@ times you sacrifice a champion in the Blackthorn hex, gain a copy of a random component they're holding. Gain an Azir and a Rek'Sai.",
             "effects": {
                 "NumComponents": 3.0
             },
@@ -84196,7 +84280,7 @@
             "composition": [],
             "desc": "Gain a random 4-cost champion. For each item equipped to that champion, your team gains @Health@ health.",
             "effects": {
-                "Health": 120.0
+                "Health": 100.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
@@ -84345,11 +84429,11 @@
             "apiName": "DA_ElectrochargeI",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Every @ProcAttackCount@ attacks an ally takes, they deal @DamageI@-@DamageI_4@ (based on current Stage) magic damage to nearby enemies (@Cooldown@ second cooldown).",
+            "desc": "Every @ProcAttackCount@ attacks an ally takes, they deal @DamageI@-@DamageI_2@ (based on current Stage) magic damage to nearby enemies (@Cooldown@ second cooldown).",
             "effects": {
                 "Cooldown": 1.0,
-                "{75249118}": 90.0,
-                "{b342e48b}": 30.0,
+                "{7b249a8a}": 80.0,
+                "{b342e48b}": 25.0,
                 "{c6163c80}": 4.0
             },
             "from": null,
@@ -84360,6 +84444,26 @@
             "name": "Electrocharge I",
             "tags": [
                 "{d11fd6d5}"
+            ],
+            "unique": false
+        },
+        {
+            "apiName": "DA_PandorasItemsIIPlusPlus",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Round start: items on your bench are randomized. <br><br>Gain @NumberOfComponentsII@ random components and @GoldAmountIIPlusPlus@ gold.",
+            "effects": {
+                "{65ecd389}": 6.0,
+                "{739a48af}": 2.0
+            },
+            "from": null,
+            "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": true,
+            "name": "Pandora's Items II++",
+            "tags": [
+                "{ce1fd21c}"
             ],
             "unique": false
         },
@@ -84461,27 +84565,6 @@
             "unique": false
         },
         {
-            "apiName": "DA_18_FloraFatalisAugmentPlus",
-            "associatedTraits": [
-                "DA_FloraFatalis18"
-            ],
-            "composition": [],
-            "desc": "Gain a Flora Fatalis emblem. The champion holding the emblem gains double benefits from the Flora Fatalis trait. Gain @PlusGold@ gold.",
-            "effects": {
-                "{22830bc3}": 3.0
-            },
-            "from": null,
-            "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": true,
-            "name": "Consuming Flora",
-            "tags": [
-                "{ce1fd21c}"
-            ],
-            "unique": false
-        },
-        {
             "apiName": "DA_ClearMind",
             "associatedTraits": [],
             "composition": [],
@@ -84495,25 +84578,6 @@
             "incompatibleTraits": [],
             "isAugment": true,
             "name": "Clear Mind",
-            "tags": [
-                "{ce1fd21c}"
-            ],
-            "unique": false
-        },
-        {
-            "apiName": "DA_PandorasItemsII",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "Round start: items on your bench are randomized. <br><br>Gain @NumberOfComponentsII@ random components.",
-            "effects": {
-                "{739a48af}": 2.0
-            },
-            "from": null,
-            "icon": "assets/maps/tft/icons/augments/hexcore/pandora2.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": true,
-            "name": "Pandora's Items II",
             "tags": [
                 "{ce1fd21c}"
             ],
@@ -84545,7 +84609,7 @@
             "composition": [],
             "desc": "Gain an Artifact Anvil now and after every @RoundCounter@ player combats.",
             "effects": {
-                "{1accd79d}": 9.0
+                "{1accd79d}": 10.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/living-forge-iii.tex",
@@ -84612,9 +84676,10 @@
                 "DA_FloraFatalis18"
             ],
             "composition": [],
-            "desc": "Gain a Flora Fatalis emblem. The champion holding the emblem gains double benefits from the Flora Fatalis trait. Gain @Gold@ gold.",
+            "desc": "Gain a Flora Fatalis emblem. The champion holding the emblem gains @ExtraEffectiveness*100@% increased benefits from Flora Fatalis. Gain @Gold@ gold.",
             "effects": {
-                "Gold": 3.0
+                "Gold": 3.0,
+                "{df808d3d}": 0.699999988079071
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
@@ -84648,32 +84713,13 @@
             "unique": false
         },
         {
-            "apiName": "DA_18_OneTwoFive",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "Gain 1 random component, @Gold@ gold, and 1 random 5-cost champion.",
-            "effects": {
-                "Gold": 2.0
-            },
-            "from": null,
-            "icon": "assets/maps/tft/icons/augments/hexcore/one-two-five-i.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": true,
-            "name": "One, Two, Five!",
-            "tags": [
-                "{d11fd6d5}"
-            ],
-            "unique": false
-        },
-        {
             "apiName": "DA_MaliciousMonetization",
             "associatedTraits": [],
             "composition": [],
             "desc": "Gain @InstantGold@ gold. For the next @Duration@ rounds, enemy champions drop @GoldPerEnemy@ gold when killed.",
             "effects": {
                 "Duration": 2.0,
-                "InstantGold": 4.0,
+                "InstantGold": 6.0,
                 "{2af2509e}": 2.0
             },
             "from": null,
@@ -84775,7 +84821,7 @@
             "composition": [],
             "desc": "Your team gains @CritChance_I@% Critical Strike Chance and <TFTKeyword>Precision.</TFTKeyword><br><br><rules>Precision: Ability damage can critically strike. Additional Precision grants 10% Critical Strike Damage.</rules>",
             "effects": {
-                "{eb825291}": 10.0
+                "{eb825291}": 15.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/jeweled-lotus-ii.tex",
@@ -84895,7 +84941,7 @@
             "composition": [],
             "desc": "Gain 2 Lesser Champion Duplicators. Gain @Gold@ gold.",
             "effects": {
-                "Gold": 4.0
+                "Gold": 6.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/heroic-grab-bag-ii.tex",
@@ -84925,6 +84971,23 @@
             "name": "Cognitive Tax+",
             "tags": [
                 "{d11fd6d5}"
+            ],
+            "unique": false
+        },
+        {
+            "apiName": "DA_ExpectedUnexpectedness",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Now and at the start of the next 2 stages, roll 3 dice. Gain various rewards based on their total.",
+            "effects": {},
+            "from": null,
+            "icon": "assets/maps/tft/icons/augments/hexcore/addicted-to-rolling-iii.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": true,
+            "name": "Expected Unexpectedness",
+            "tags": [
+                "{cf1fd3af}"
             ],
             "unique": false
         },
@@ -84997,7 +85060,7 @@
             "desc": "Now and at the start of the next @Rounds@ rounds, gain @XPPerRound_Plus@ XP.",
             "effects": {
                 "rounds": 3.0,
-                "{5ad11391}": 10.0,
+                "{5ad11391}": 9.0,
                 "{822fdcb5}": 3.0
             },
             "from": null,
@@ -85057,7 +85120,7 @@
             "desc": "Your team gains @ArmorInstant@ Armor and Magic Resist. After falling below @HealthDropThreshold*100@% Health, increase this to @ThresholdArmorBoostCombined@ for the rest of combat.",
             "effects": {
                 "{0735b729}": 40.0,
-                "{5705afa5}": 8.0,
+                "{5705afa5}": 10.0,
                 "{a6c6ae91}": 0.5
             },
             "from": null,
@@ -85072,12 +85135,32 @@
             "unique": false
         },
         {
+            "apiName": "DA_GoodForSomethingI",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Champions that aren't holding items have a @ChangeDrop*100@% chance to drop @GoldReward@ gold on death.",
+            "effects": {
+                "GoldReward": 1.0,
+                "{f117ccd4}": 0.4000000059604645
+            },
+            "from": null,
+            "icon": "assets/maps/tft/icons/augments/hexcore/good-for-something-i.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": true,
+            "name": "Good For Something I",
+            "tags": [
+                "{d11fd6d5}"
+            ],
+            "unique": false
+        },
+        {
             "apiName": "DA_ShimmerscaleEssence",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain a Mogul's Mail. After @NumberOfRoundsToWait@  player combats, gain a Gamblers Blade.",
+            "desc": "Gain a Gambler's Blade. After @NumberOfRoundsToWait@ player combats, gain a Mogul's Mail.",
             "effects": {
-                "{9b9fe148}": 7.0
+                "{9b9fe148}": 6.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/shimmerscaleessence_iii.tex",
@@ -85205,8 +85288,8 @@
             "composition": [],
             "desc": "At the start of combat, allies gain @AttackSpeedMultiplier*100@% Attack Speed for @BuffDuration@ seconds. On takedown, allies dash to their next target and gain this bonus again.",
             "effects": {
-                "BuffDuration": 3.0,
-                "{ad998bcf}": 0.25
+                "BuffDuration": 4.0,
+                "{ad998bcf}": 0.2999999523162842
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/choiceui/precisiongrace_ii.tex",
@@ -85220,6 +85303,23 @@
             "unique": false
         },
         {
+            "apiName": "DA_OneTwoFive",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Gain 1 random component, 2 gold, and 1 random 5-cost champion",
+            "effects": {},
+            "from": null,
+            "icon": "assets/maps/tft/icons/augments/hexcore/one-two-five-i.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": true,
+            "name": "One, Two, Five!",
+            "tags": [
+                "{d11fd6d5}"
+            ],
+            "unique": false
+        },
+        {
             "apiName": "DA_18_FaeTraitAugment",
             "associatedTraits": [
                 "DA_18_Fae"
@@ -85227,8 +85327,8 @@
             "composition": [],
             "desc": "Fae pixies are now larger and grant @BonusMultiplier*100@% more Attack Damage and Ability Power. Fae champions gain @UpfrontADAP*100@% Attack Damage and Ability Power immediately. Gain a Xayah and a Rakan.",
             "effects": {
-                "BonusMultiplier": 0.5,
-                "{020fc56b}": 0.10000000149011612
+                "BonusMultiplier": 0.3499999940395355,
+                "{020fc56b}": 0.18000000715255737
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
@@ -85270,7 +85370,7 @@
             "desc": "Gain @AmountOfGlovesAtStartII@ Thief's Gloves. After @CombatsUntilNextRewardII@ player combats, gain another.",
             "effects": {
                 "{1e541b17}": 2.0,
-                "{cd9faa42}": 6.0
+                "{cd9faa42}": 5.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/bandthieves3.tex",
@@ -85289,7 +85389,7 @@
             "composition": [],
             "desc": "Champions gain @ADAP*100@% Attack Damage, @ADAP*100@% Ability Power, @resists@ Armor, and @resists@ Magic Resist for each ally that shares a trait with them.",
             "effects": {
-                "ADAP": 0.019999999552965164,
+                "ADAP": 0.02500000037252903,
                 "Resists": 2.0
             },
             "from": null,
@@ -85365,26 +85465,6 @@
             "unique": false
         },
         {
-            "apiName": "DA_CursedCrown",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "Gain +@MaxArmySizeIncrease@ max team size and your team gains @DurabilityBonus*100@% Durability, but you take double player damage when you lose a player combat.",
-            "effects": {
-                "DurabilityBonus": 0.04000002145767212,
-                "MaxArmySizeIncrease": 2.0
-            },
-            "from": null,
-            "icon": "assets/maps/tft/icons/augments/hexcore/cursedcrown-iii.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": true,
-            "name": "Cursed Crown",
-            "tags": [
-                "{cf1fd3af}"
-            ],
-            "unique": false
-        },
-        {
             "apiName": "DA_FeelingLucky",
             "associatedTraits": [],
             "composition": [],
@@ -85432,7 +85512,7 @@
             "desc": "Gain a Tear of the Goddess. Your team gains @RegenBonus@ Mana Regen. After @UpgradeDelay@ seconds in combat, increase this to @UpgradedRegenBonus@.",
             "effects": {
                 "RegenBonus": 1.0,
-                "UpgradedRegenBonus": 4.0,
+                "UpgradedRegenBonus": 3.0,
                 "{a69302a6}": 12.0
             },
             "from": null,
@@ -85484,30 +85564,10 @@
             "unique": false
         },
         {
-            "apiName": "DA_DoubleTrouble",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "When you field exactly 2 copies of a champion, they both gain @DamageStatAdd*100@% Attack Damage and Ability Power and @DefenseStatAdd@ Armor, and Magic Resist. When you 3-star, gain a 2-star copy.",
-            "effects": {
-                "{14ae3030}": 25.0,
-                "{65020e89}": 0.25
-            },
-            "from": null,
-            "icon": "assets/maps/tft/icons/augments/hexcore/double-trouble-ii.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": true,
-            "name": "Double Trouble",
-            "tags": [
-                "{ce1fd21c}"
-            ],
-            "unique": false
-        },
-        {
             "apiName": "DA_ItsMeBaby",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain a spotlight in the bottom right corner. The champion in it gains @DamageAmpPercent*100@% Damage Amp and @AttackSpeed*100@% Attack Speed, and drops @GoldToGrant@ gold every @TakedownsPerGold@ takedowns.<br><br><rules>Lore & Legends Tactician's Crown, 2026</rules>",
+            "desc": "Gain a championship hex in the bottom right corner. The champion in it gains @DamageAmpPercent*100@% Damage Amp and @AttackSpeed*100@% Attack Speed, and drops @GoldToGrant@ gold every @TakedownsPerGold@ takedowns.<br><br><rules>Lore & Legends Tactician's Crown, 2026</rules>",
             "effects": {
                 "AttackSpeed": 0.1499999761581421,
                 "DamageAmpPercent": 0.15000000596046448,
@@ -85550,7 +85610,7 @@
             "composition": [],
             "desc": "Gain an Artifact Anvil. After you open it, gain a Component Anvil. After you open that, gain @Gold@ gold.",
             "effects": {
-                "Gold": 8.0
+                "Gold": 6.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t3.tex",
@@ -85564,19 +85624,21 @@
             "unique": false
         },
         {
-            "apiName": "DA_18_BranchingOutPlus",
+            "apiName": "DA_BigGrabBag",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain a random Emblem and a Reforger.",
-            "effects": {},
+            "desc": "Gain 3 random components, @Gold@ gold, and 1 Reforger.",
+            "effects": {
+                "Gold": 2.0
+            },
             "from": null,
-            "icon": "assets/maps/tft/icons/augments/hexcore/branching-out-i.tex",
+            "icon": "assets/maps/tft/icons/augments/hexcore/grab-bag-ii.tex",
             "id": null,
             "incompatibleTraits": [],
             "isAugment": true,
-            "name": "Branching Out+",
+            "name": "Big Grab Bag",
             "tags": [
-                "{d11fd6d5}"
+                "{ce1fd21c}"
             ],
             "unique": false
         },
@@ -85770,7 +85832,7 @@
             "desc": "Gain @InitialGoldPlus@ gold now, then @GoldPerStagePlus@ gold at the start of every stage. Picking up gold makes your Tactician larger.",
             "effects": {
                 "{bac4bc6c}": 7.0,
-                "{f3c91381}": 10.0
+                "{f3c91381}": 13.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/moneyhungry2_ii.tex",
@@ -85790,7 +85852,7 @@
             "desc": "Lose all champions on your board and bench. Gain a Training Dummy with @CombinedHealthPercentage*100@% of their combined health. The dummy gains @HealthGainPerStage@ Health per stage. Gain a random non-tank 2-star 2 cost champion.",
             "effects": {
                 "{9190ad30}": 0.6000000238418579,
-                "{acc6fa4b}": 1000.0
+                "{acc6fa4b}": 1150.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/dummify_i.tex",
@@ -85809,7 +85871,7 @@
             "composition": [],
             "desc": "Gain an Artifact Anvil. After you open it, gain a Component Anvil. After you open that, gain @Gold@ gold.",
             "effects": {
-                "Gold": 12.0
+                "Gold": 8.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t3.tex",
@@ -86063,7 +86125,7 @@
             "desc": "Gain @RerollsUpfront@ rerolls now. Each round, gain @Rerolls@ free reroll if you did not buy a champion last round.",
             "effects": {
                 "Rerolls": 1.0,
-                "{88446308}": 4.0
+                "{88446308}": 5.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/patienceisavirtue_i.tex",
@@ -86119,8 +86181,8 @@
             "composition": [],
             "desc": "Gain a Mogul's Mail. Champions holding Mogul's Mail take up +@IncreasedTeamSizeContribution@ team slot but gain @BonusHealth@ Health and @BonusDurability*100@% Durability.<br><br><rules>Mogul's Mail gives gold as well as combat power.</rules><br><rules>Dragonlands Championship, 2022</rules>",
             "effects": {
-                "BonusDurability": 0.20000000298023224,
-                "BonusHealth": 700.0,
+                "BonusDurability": 0.15000000596046448,
+                "BonusHealth": 600.0,
                 "{857f7819}": 1.0
             },
             "from": null,
@@ -86178,8 +86240,8 @@
             "composition": [],
             "desc": "Your champions gain @MaxHealthPerInterest@ permanent max health per interest you earn. Gain @InstantGold@ gold now.",
             "effects": {
-                "InstantGold": 4.0,
-                "{da66a800}": 8.0
+                "InstantGold": 3.0,
+                "{da66a800}": 9.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/investmentstrategy_ii.tex",
@@ -86255,7 +86317,7 @@
             "composition": [],
             "desc": "Gain a package containing a @1StarCost@-cost champion, a 2-star @2StarCost@-cost champion, and @Gold@ gold.<br><br>At the start of the next @Stages@ stages, gain the package again.",
             "effects": {
-                "Gold": 3.0,
+                "Gold": 5.0,
                 "{04a101fa}": 2.0,
                 "{34512474}": 1.0,
                 "{3ae20dd9}": 5.0
@@ -86278,7 +86340,7 @@
             "desc": "Gain a Protector's Vow. Protector's Vow grants its holder @IncomingManaIncreasePercentage*100@% additional Mana from all sources and @FlatHP@ max Health.",
             "effects": {
                 "{88b73576}": 0.20000000298023224,
-                "{c38f01f2}": 200.0
+                "{c38f01f2}": 175.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/promisedprotection_ii.tex",
@@ -86357,7 +86419,7 @@
             "apiName": "DA_ForgedInStrength",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain @InitialArtifacts@ random Artifact. When you drop below @Health@ Health, gain @MoreArtifacts@ more random Artifact, @MoreCompletedItems@ random completed item, and @MoreComponents@ random component.<br><br><rules>Remix Rumble Championship, 2023</rules>",
+            "desc": "Gain @InitialArtifacts@ random Artifact. When you drop below @Health@ Health, gain @MoreArtifacts@ more random Artifact, @MoreCompletedItems@ random completed item, and @MoreComponents@ random components.<br><br><rules>Remix Rumble Championship, 2023</rules>",
             "effects": {
                 "Health": 35.0,
                 "{559cca94}": 2.0,
@@ -86441,7 +86503,7 @@
             "apiName": "DA_TradeSectorPlus",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain a free Shop reroll every round. Gain @NumGoldPlus@ gold.",
+            "desc": "Gain a Shop reroll every round. Gain @NumGoldPlus@ gold.",
             "effects": {
                 "{96ce7ab1}": 8.0
             },
@@ -86523,7 +86585,7 @@
             "composition": [],
             "desc": "Champions gain @ADAP*100@% Attack Damage, @ADAP*100@% Ability Power, @resists@ Armor, and @resists@ Magic Resist for each ally that shares a trait with them.",
             "effects": {
-                "ADAP": 0.03500000014901161,
+                "ADAP": 0.03999999910593033,
                 "Resists": 3.5
             },
             "from": null,
@@ -86601,10 +86663,9 @@
             "apiName": "DA_SpreadingRoots",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain @EmblemAmount@ random Emblems and @GoldAmount@ gold.",
+            "desc": "Gain a random Emblems. After @Delay@ combats, gain another.",
             "effects": {
-                "GoldAmount": 1.0,
-                "{bd12a44f}": 2.0
+                "Delay": 3.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/spreadingroots_ii.tex",
@@ -86662,7 +86723,7 @@
             "composition": [],
             "desc": "Your team gains @AttackSpeed*100@% Attack Speed every @FrequencySeconds@ seconds in combat.",
             "effects": {
-                "AttackSpeed": 0.10000002384185791,
+                "AttackSpeed": 0.12000000476837158,
                 "{0810f00e}": 3.0
             },
             "from": null,
@@ -86793,6 +86854,23 @@
             "unique": false
         },
         {
+            "apiName": "DA_BranchingOutPlus",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Gain a random Emblem and a Reforger.",
+            "effects": {},
+            "from": null,
+            "icon": "assets/maps/tft/icons/augments/hexcore/branching-out-i.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": true,
+            "name": "Branching Out+",
+            "tags": [
+                "{d11fd6d5}"
+            ],
+            "unique": false
+        },
+        {
             "apiName": "DA_Expedition",
             "associatedTraits": [],
             "composition": [],
@@ -86836,9 +86914,9 @@
                 "DA_18_Inferno"
             ],
             "composition": [],
-            "desc": "The Inferno champion that dealt the most damage last combat is On Fire, gaining @AS*100@% Attack Speed. Gain a Varus and an Akali.",
+            "desc": "Your 1 and 2-cost Inferno champions gain @ADAP@ Attack Damage and Ability Power. The one who did the most damage last combat gains double. Gain a Varus and an Akali.",
             "effects": {
-                "AS": 0.5499999523162842
+                "ADAP": 0.20000000298023224
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t1.tex",
@@ -86858,7 +86936,7 @@
             "desc": "Gain a random component and @NumGold@ gold. The next 7 times you win a player combat, gain a different random component. Afterwards, gain @CompletionGold@ gold.",
             "effects": {
                 "NumGold": 1.0,
-                "{4daea365}": 5.0
+                "{4daea365}": 1.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t3.tex",
@@ -86974,7 +87052,7 @@
             "composition": [],
             "desc": "Gain an Archangel's Staff. Archangel's Staff grants @ManaPerSecond@ additional Mana Regen if its holder has @APThreshold*100@% or more Ability Power.",
             "effects": {
-                "APThreshold": 0.8999999761581421,
+                "APThreshold": 1.0999999046325684,
                 "ManaPerSecond": 2.0
             },
             "from": null,
@@ -86992,7 +87070,7 @@
             "apiName": "DA_Staffsmith",
             "associatedTraits": [],
             "composition": [],
-            "desc": "Gain  @ItemQuantity@ random completed items that build from Needlessly Large Rod.",
+            "desc": "Gain @ItemQuantity@ random completed items that build from Needlessly Large Rod.",
             "effects": {
                 "{2ce16abf}": 2.0
             },
@@ -87002,6 +87080,26 @@
             "incompatibleTraits": [],
             "isAugment": true,
             "name": "Staffsmith",
+            "tags": [
+                "{ce1fd21c}"
+            ],
+            "unique": false
+        },
+        {
+            "apiName": "DA_PandorasItemsIIMinus",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Round start: items on your bench are randomized. <br><br>Gain @NumberOfComponentsII@ random components and @GoldAmountII@ gold.",
+            "effects": {
+                "{739a48af}": 2.0,
+                "{98f3fe09}": 1.0
+            },
+            "from": null,
+            "icon": "assets/maps/tft/icons/augments/hexcore/pandora2.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": true,
+            "name": "Pandora's Items II",
             "tags": [
                 "{ce1fd21c}"
             ],
@@ -87168,7 +87266,7 @@
             "desc": "Gain a Tear of the Goddess. After your champions spend @CompletionManaRequired@ Mana, gain @CompletionNumRewards@ more.",
             "effects": {
                 "{c11bb61b}": 2.0,
-                "{ca7d02a1}": 6500.0
+                "{ca7d02a1}": 7000.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/griefofthegreatgoddess_i.tex",
@@ -87227,7 +87325,7 @@
             "composition": [],
             "desc": "Gain a Steadfast Heart. Every @SurvivePeriodInSeconds@ seconds of combat its holder survives, Steadfast Heart gains additional @MaxHealthGain@ permanent max Health.",
             "effects": {
-                "MaxHealthGain": 16.0,
+                "MaxHealthGain": 18.0,
                 "{40e6f170}": 10.0
             },
             "from": null,
@@ -87286,7 +87384,7 @@
             "desc": "Your team gains @HPPerMissingHP@ Health and @ASMultiplyPerMissingHP*100@% Attack Speed per missing player Health.",
             "effects": {
                 "HPPerMissingHP": 4.0,
-                "{54f2d0e4}": 0.004000000189989805
+                "{54f2d0e4}": 0.003000000026077032
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/comebackstory_iii.tex",
@@ -87322,7 +87420,7 @@
             "composition": [],
             "desc": "Gain a random Prismatic Augment and @Gold@ gold.",
             "effects": {
-                "Gold": 4.0
+                "Gold": 2.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/prismaticdestiny_iii.tex",
@@ -87341,7 +87439,7 @@
             "composition": [],
             "desc": "At the start of each turn, all allies holding a Frying Pan or Spatula item grant the nearest champion @HealthIncrease@ permanent Health. Gain a Frying Pan.",
             "effects": {
-                "HealthIncrease": 60.0
+                "HealthIncrease": 70.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/cookingpot_ii.tex",
@@ -87360,7 +87458,7 @@
             "composition": [],
             "desc": "At the start of every round, champions on the @NumBenchSlots@ rightmost bench slots transform into random champions of the same cost. Gain @GoldGain@ gold.",
             "effects": {
-                "GoldGain": 4.0,
+                "GoldGain": 1.0,
                 "NumBenchSlots": 3.0
             },
             "from": null,
@@ -87397,7 +87495,7 @@
             "apiName": "DA_18_WeightTheWorth",
             "associatedTraits": [],
             "composition": [],
-            "desc": "The first time you 3-star a champion, gain a copy of them each round for the rest of the game. 3-starring the same champion again grants additional copies. Gain a Lesser Champion Duplicator and a Tiny Champion Duplicator.",
+            "desc": "The first time you 3-star a champion, gain a copy of them each round for the rest of the game. 3-starring the same champion again grants additional copies. Gain a Lesser Champion Duplicator.",
             "effects": {},
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
@@ -87496,7 +87594,7 @@
             "composition": [],
             "desc": "Combat start: Champions grant other adjacent champions @Armor_Gold@ Armor and Magic Resist. This effect stacks.",
             "effects": {
-                "{cf29d61f}": 9.0
+                "{cf29d61f}": 10.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/grouphug2_ii.tex",
@@ -87564,23 +87662,6 @@
             "name": "One Buff Two Buff",
             "tags": [
                 "{cf1fd3af}"
-            ],
-            "unique": false
-        },
-        {
-            "apiName": "DA_18_BranchingOut",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "Gain a random Emblem.",
-            "effects": {},
-            "from": null,
-            "icon": "assets/maps/tft/icons/augments/hexcore/branching-out-i.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": true,
-            "name": "Branching Out",
-            "tags": [
-                "{d11fd6d5}"
             ],
             "unique": false
         },
@@ -87694,7 +87775,7 @@
             "composition": [],
             "desc": "While Sprykin is active, gain a second BFF summon that is @Effectiveness_DoesntIncludeSummonSpell*100@% as powerful. Gain a Teemo, a Veigar, and a Kobuko.",
             "effects": {
-                "{7f8d6662}": 0.3499999940395355
+                "{7f8d6662}": 0.44999998807907104
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
@@ -87787,6 +87868,26 @@
             "unique": false
         },
         {
+            "apiName": "DA_PandorasItemsIIPlus",
+            "associatedTraits": [],
+            "composition": [],
+            "desc": "Round start: items on your bench are randomized. <br><br>Gain @NumberOfComponentsII@ random components and @GoldAmountIIPlus@ gold.",
+            "effects": {
+                "{739a48af}": 2.0,
+                "{c39cd1c9}": 4.0
+            },
+            "from": null,
+            "icon": "assets/maps/tft/icons/augments/hexcore/missing-t2.tex",
+            "id": null,
+            "incompatibleTraits": [],
+            "isAugment": true,
+            "name": "Pandora's Items II+",
+            "tags": [
+                "{ce1fd21c}"
+            ],
+            "unique": false
+        },
+        {
             "apiName": "DA_BronzeForLifeI",
             "associatedTraits": [],
             "composition": [],
@@ -87811,7 +87912,7 @@
             "composition": [],
             "desc": "Your team becomes large, gaining @FlatHealth@ Health and @HealthMultiplier*100@% max Health.",
             "effects": {
-                "FlatHealth": 200.0,
+                "FlatHealth": 225.0,
                 "{52fcdfb4}": 0.10000002384185791
             },
             "from": null,
@@ -87871,7 +87972,7 @@
                 "HealthLoss": 20.0,
                 "NumChampions": 3.0,
                 "NumRounds": 5.0,
-                "{461c2a88}": 8.0
+                "{461c2a88}": 5.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/missing-t1.tex",
@@ -87891,7 +87992,7 @@
             "desc": "Gain a random Tank item. After @StartSeconds@ seconds of combat, your team gains @Stats*100@% bonus Attack Damage and Ability Power every second for the rest of combat.<br><br><rules>TFT Paris Open, 2025</rules>",
             "effects": {
                 "StartSeconds": 8.0,
-                "Stats": 0.05000000074505806
+                "Stats": 0.03999999910593033
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/thebaronslair_iii.tex",
@@ -87905,33 +88006,13 @@
             "unique": false
         },
         {
-            "apiName": "DA_18_GoodForSomethingI",
-            "associatedTraits": [],
-            "composition": [],
-            "desc": "Champions that aren't holding items have a @ChangeDrop*100@% chance to drop @GoldReward@ gold on death.",
-            "effects": {
-                "GoldReward": 1.0,
-                "{f117ccd4}": 0.4000000059604645
-            },
-            "from": null,
-            "icon": "assets/maps/tft/icons/augments/hexcore/good-for-something-i.tex",
-            "id": null,
-            "incompatibleTraits": [],
-            "isAugment": true,
-            "name": "Good For Something I",
-            "tags": [
-                "{d11fd6d5}"
-            ],
-            "unique": false
-        },
-        {
             "apiName": "DA_SpiritOfRedemption",
             "associatedTraits": [],
             "composition": [],
             "desc": "Gain a Spirit Visage. Every @TimeIntervalSeconds@ seconds, Spirit Visage heals allies within @HexRange@ hex for @PercentMissingHealth*100@% of their missing Health.",
             "effects": {
                 "HexRange": 1.0,
-                "PercentMissingHealth": 0.07500000298023224,
+                "PercentMissingHealth": 0.09000000357627869,
                 "{0f5a682a}": 5.0
             },
             "from": null,
@@ -87968,7 +88049,7 @@
             "composition": [],
             "desc": "Gain a random Prismatic Augment and @Gold@ gold.",
             "effects": {
-                "Gold": 10.0
+                "Gold": 7.0
             },
             "from": null,
             "icon": "assets/maps/tft/icons/augments/hexcore/prismaticdestiny_iii.tex",
@@ -99823,10 +99904,7 @@
         },
         {
             "augments": [
-                "DA_18_BigGrabBag",
                 "DA_18_BlossomTraitAugment",
-                "DA_18_BranchingOut",
-                "DA_18_BranchingOutPlus",
                 "DA_18_CaretakersAlly",
                 "DA_18_CovenTraitAugment",
                 "DA_18_CovenTraitAugment_LootToAP",
@@ -99835,13 +99913,10 @@
                 "DA_18_FOURcing",
                 "DA_18_FaeTraitAugment",
                 "DA_18_FloraFatalisAugment",
-                "DA_18_FloraFatalisAugmentPlus",
-                "DA_18_GoodForSomethingI",
                 "DA_18_InfernoTraitAugment",
                 "DA_18_LunarTraitAugment",
                 "DA_18_LunarTraitAugmentPlus",
                 "DA_18_LuxAugmentII",
-                "DA_18_OneTwoFive",
                 "DA_18_OnesTwosThree",
                 "DA_18_PrimalAugmentPlus_Nidalee",
                 "DA_18_PrimalAugmentPlus_Sivir",
@@ -99870,6 +99945,7 @@
                 "DA_BandOfThievesIIPlusPlus",
                 "DA_BaronsLair",
                 "DA_BeltOverflow",
+                "DA_BigGrabBag",
                 "DA_BirthdayPresent",
                 "DA_BirthdayReunion",
                 "DA_BlackthornTraitAugment",
@@ -99880,6 +99956,8 @@
                 "DA_BoosterPackPlus",
                 "DA_BoosterPackPlusPlus",
                 "DA_BoxingLessons",
+                "DA_BranchingOut",
+                "DA_BranchingOutPlus",
                 "DA_BronzeForLifeI",
                 "DA_BronzeForLifeII",
                 "DA_BuildABud",
@@ -99914,12 +99992,10 @@
                 "DA_Corrosion",
                 "DA_CraftedCrafting",
                 "DA_CryMeARiver",
-                "DA_CursedCrown",
                 "DA_CyberneticImplants_Gold",
                 "DA_CyberneticUplink_Gold",
                 "DA_DeadlierBlades",
                 "DA_DeadlierCaps",
-                "DA_DoubleTrouble",
                 "DA_Dummify",
                 "DA_EarlyLearnings",
                 "DA_ElectrochargeI",
@@ -99928,6 +100004,7 @@
                 "DA_Epoch",
                 "DA_EpochPlus",
                 "DA_ExclusiveCustomization",
+                "DA_ExpectedUnexpectedness",
                 "DA_Expedition",
                 "DA_ExplosiveGrowth",
                 "DA_ExplosiveGrowthPlus",
@@ -99953,13 +100030,13 @@
                 "DA_GoldenGamble",
                 "DA_GoldenGamblePlus",
                 "DA_GoldenGamblePlusPlus",
+                "DA_GoodForSomethingI",
                 "DA_GroupHugI",
                 "DA_GroupHugII",
                 "DA_HardBargain",
                 "DA_HardCommit",
                 "DA_HealingOrbsI",
                 "DA_HealingOrbsII",
-                "DA_HeartOfSteel",
                 "DA_HedgeFund",
                 "DA_HeroicGrabBag",
                 "DA_HeroicGrabBagPlus",
@@ -99978,6 +100055,7 @@
                 "DA_JeweledLotus_II",
                 "DA_KickStart",
                 "DA_Kingslayer",
+                "DA_KnowYourEnemy",
                 "DA_LateGameScaling",
                 "DA_LateGameSpecialist",
                 "DA_LatentForge",
@@ -100000,14 +100078,15 @@
                 "DA_MoneyMonsoon",
                 "DA_NestingAnvils",
                 "DA_NestingAnvilsPlus",
-                "DA_NestingDollsPlus",
-                "DA_NestingDollsPlusPlus",
                 "DA_NoScoutNoPivot",
                 "DA_OneBuffTwoBuff",
+                "DA_OneTwoFive",
                 "DA_PandorasBench",
                 "DA_PandorasItemsI",
-                "DA_PandorasItemsII",
                 "DA_PandorasItemsIII",
+                "DA_PandorasItemsIIMinus",
+                "DA_PandorasItemsIIPlus",
+                "DA_PandorasItemsIIPlusPlus",
                 "DA_PartialAscension",
                 "DA_PatienceIsAVirtue",
                 "DA_PatientStudy",
@@ -100776,7 +100855,7 @@
                     "apiName": "DA_Gromp18_AP",
                     "characterName": "DA_Gromp18_AP",
                     "cost": 2,
-                    "icon": "None",
+                    "icon": "{f3b734c3102f71ed}",
                     "name": "Gromp",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_gromp/skins/base/images/t_18_gromp_teamplannersplash.tex",
@@ -100808,7 +100887,7 @@
                     "apiName": "DA_Murkwolf18",
                     "characterName": "DA_Murkwolf18",
                     "cost": 2,
-                    "icon": "None",
+                    "icon": "{0ea96b4d47691e31}",
                     "name": "Murkwolf",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_murkwolf/skins/base/images/t_18_murkwolf_teamplannersplash.tex",
@@ -100840,7 +100919,7 @@
                     "apiName": "DA_18_Sentry",
                     "characterName": "DA_18_Sentry",
                     "cost": 1,
-                    "icon": "None",
+                    "icon": "{e8a95eea9697c960}",
                     "name": "Pebbles",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_sentry/skins/base/images/t_18_sentry_teamplannersplash.tex",
@@ -100849,11 +100928,11 @@
                         "attackSpeed": 0.800000011920929,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
-                        "damage": 30.0,
+                        "damage": 35.0,
                         "hp": 500.0,
-                        "initialMana": 25.0,
+                        "initialMana": 30.0,
                         "magicResist": 25.0,
-                        "mana": 65.0,
+                        "mana": 70.0,
                         "range": 4.0
                     },
                     "tileIcon": "assets/characters/tft18_sentry/tft18_sentry_square.tex",
@@ -100872,7 +100951,7 @@
                     "apiName": "DA_Cinderling18",
                     "characterName": "DA_Cinderling18",
                     "cost": 1,
-                    "icon": "None",
+                    "icon": "{3bcbfdbd732c6323}",
                     "name": "Cinderling",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_cinderling/skins/base/images/t_18_cinderling_teamplannersplash.tex",
@@ -100904,7 +100983,7 @@
                     "apiName": "DA_Scuttlecrab18",
                     "characterName": "DA_Scuttlecrab18",
                     "cost": 2,
-                    "icon": "None",
+                    "icon": "{56c0d241812da38a}",
                     "name": "Scuttlecrab",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_scuttlecrab/skins/base/images/t_18_scuttlecrab_teamplannersplash.tex",
@@ -100936,7 +101015,7 @@
                     "apiName": "DA_Krug18",
                     "characterName": "DA_Krug18",
                     "cost": 3,
-                    "icon": "None",
+                    "icon": "{3d59606a1e414504}",
                     "name": "Krug",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_krug/skins/base/images/t_18_krug_teamplannersplash.tex",
@@ -100968,7 +101047,7 @@
                     "apiName": "DA_Sentinel18",
                     "characterName": "DA_Sentinel18",
                     "cost": 4,
-                    "icon": "None",
+                    "icon": "{94230c60604bffc1}",
                     "name": "Sentinel",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_sentinel/skins/base/images/t_18_sentinel_teamplannersplash.tex",
@@ -101001,7 +101080,7 @@
                     "apiName": "DA_Brambleback18",
                     "characterName": "DA_Brambleback18",
                     "cost": 4,
-                    "icon": "None",
+                    "icon": "{0c5a019370385aa2}",
                     "name": "Brambleback",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_brambleback/skins/base/images/t_18_brambleback_teamplannersplash.tex",
@@ -101010,7 +101089,7 @@
                         "attackSpeed": 0.550000011920929,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
-                        "damage": 110.0,
+                        "damage": 120.0,
                         "hp": 1100.0,
                         "initialMana": 0,
                         "magicResist": 65.0,
@@ -101058,7 +101137,7 @@
                 },
                 {
                     "ability": {
-                        "desc": "<Bright>Active:</Bright> Gain @ShieldCalc1@ %i:scaleAP% Shield for @ShieldDuration@ seconds and deal @MagicDamageCalc1@ %i:scaleAP% magic damage to enemies in a cone. \r\\n\r\\n<Bright>Quest:</Bright> Each player combat, Ornn stores damage blocked as Forge Power, doubled at 3-star. Gain an Artifact Anvil each time he gains enough Forge Power. <Rules>(Forge Power: </Rules>@Stack@<Rules> / </Rules>@GenericCalc1@<Rules>)</Rules>",
+                        "desc": "<Bright>Active:</Bright> Gain @ShieldCalc1@ %i:scaleAP% Shield for @ShieldDuration@ seconds and deal @MagicDamageCalc1@ %i:scaleAP% magic damage to enemies in a cone. \r\\n\r\\n<Bright>Quest:</Bright> Each player combat, Ornn stores damage blocked as Forge Power, increased by @DamageTaken3StarScalar@ at 3-star. Gain an Artifact Anvil each time he gains enough Forge Power. <Rules>(Forge Power: </Rules>@Stack@<Rules> / </Rules>@GenericCalc1@<Rules>)</Rules>",
                         "icon": "None",
                         "name": "Bellows Breath",
                         "variables": []
@@ -101111,7 +101190,7 @@
                         "hp": 850.0,
                         "initialMana": 0,
                         "magicResist": 30.0,
-                        "mana": 40.0,
+                        "mana": 45.0,
                         "range": 1.0
                     },
                     "tileIcon": "assets/characters/tft18_nidalee/tft18_nidalee_square.tex",
@@ -101141,7 +101220,7 @@
                         "critMultiplier": 1.399999976158142,
                         "damage": 50.0,
                         "hp": 1100.0,
-                        "initialMana": 30.0,
+                        "initialMana": 50.0,
                         "magicResist": 50.0,
                         "mana": 110.0,
                         "range": 1.0
@@ -101154,7 +101233,7 @@
                 },
                 {
                     "ability": {
-                        "desc": "Blink away from the current target, deal @PhysicalDamageCalc1@ %i:scaleAD% physical damage to them, and gain @AttackSpeedCalc1@ %i:scaleAP% Attack Speed. \r\\n\r\\nEvery 4th cast consumes the Attack Speed granted from Nature's Wrath and fires a blast through the largest group of enemies that deals @PhysicalDamageCalc2@ %i:scaleAD% physical damage, reduced by @DamageReductionPerHit@ for each enemy it passes through (minimum @MinDamagePercent@).",
+                        "desc": "Blink away from the current target, deal @PhysicalDamageCalc1@ %i:scaleAD% physical damage to them, and gain @AttackSpeedCalc1@ %i:scaleAP% Attack Speed. \r\\n\r\\nEvery 4th cast consumes the Attack Speed granted from Forest's Flurry and fires a blast through the largest group of enemies that deals @PhysicalDamageCalc2@ %i:scaleAD% physical damage, reduced by @DamageReductionPerHit@ for each enemy it passes through (minimum @MinDamagePercent@).",
                         "icon": "None",
                         "name": "Forest's Flurry",
                         "variables": []
@@ -101302,8 +101381,8 @@
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 80.0,
-                        "hp": 1100.0,
-                        "initialMana": 40.0,
+                        "hp": 1150.0,
+                        "initialMana": 30.0,
                         "magicResist": 60.0,
                         "mana": 100,
                         "range": 1.0
@@ -101477,7 +101556,7 @@
                 },
                 {
                     "ability": {
-                        "desc": "Fire an arrow through the most enemies in a line that deals @PhysicalDamageCalc1@ %i:scaleAD% physical damage, reduced by @DamageFalloffPerEnemy@ per enemy hit (minimum @MinDamagePercent@). \r\\n\r\\nThe arrow leaves a trail for @RiftDuration@ seconds that deals @PhysicalDamageCalc2@ %i:scaleAD%%i:scaleAP% + @MaxHealthDamagePerSecond@ max Health physical damage per second to enemies within and @ChillPercent@% <Keyword>Slows</Keyword> them.\r\\n\r\\n<Rules>Slow: Reduce Attack Speed</Rules>",
+                        "desc": "Fire an arrow through the most enemies in a line that deals @PhysicalDamageCalc1@ %i:scaleAD% physical damage, reduced by @DamageFalloffPerEnemy@ per enemy hit (minimum @MinDamagePercent@). If no enemies are hit refund @ManaRefund@ of mana spent.\r\\n\r\\nThe arrow leaves a trail for @RiftDuration@ seconds that deals @PhysicalDamageCalc2@ %i:scaleAD%%i:scaleAP% + @MaxHealthDamagePerSecond@ max Health physical damage per second to enemies within and @ChillPercent@% <Keyword>Slows</Keyword> them.\r\\n\r\\n<Rules>Slow: Reduce Attack Speed</Rules>",
                         "icon": "None",
                         "name": "Spirit Rift",
                         "variables": []
@@ -101496,7 +101575,7 @@
                         "critMultiplier": 1.399999976158142,
                         "damage": 75.0,
                         "hp": 900.0,
-                        "initialMana": 20.0,
+                        "initialMana": 0,
                         "magicResist": 45.0,
                         "mana": 80.0,
                         "range": 6.0
@@ -101626,7 +101705,7 @@
                         "hp": 1100.0,
                         "initialMana": 0,
                         "magicResist": 60.0,
-                        "mana": 60.0,
+                        "mana": 65.0,
                         "range": 2.0
                     },
                     "tileIcon": "assets/characters/tft18_morgana/tft18_morgana_square.tex",
@@ -101771,7 +101850,7 @@
                     "apiName": "DA_18_Kobuko",
                     "characterName": "DA_18_Kobuko",
                     "cost": 1,
-                    "icon": "assets/characters/tft18_kobuko/skins/base/images/tft18_kobuko_splash_centered_2.tex",
+                    "icon": "{7ae9d8870aed1489}",
                     "name": "Kobuko",
                     "role": "APTank",
                     "squareIcon": "assets/characters/tft18_kobuko/skins/base/images/tft18_kobuko_splash_tile_2.tex",
@@ -101803,7 +101882,7 @@
                     "apiName": "DA_18_Teemo",
                     "characterName": "DA_18_Teemo",
                     "cost": 2,
-                    "icon": "assets/characters/tft18_teemo/skins/base/images/tft18_teemo_splash_centered_0.tex",
+                    "icon": "{9d832f70c923aaf6}",
                     "name": "Teemo",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_teemo/skins/base/images/tft18_teemo_splash_tile_0.tex",
@@ -101913,7 +101992,7 @@
                         "hp": 650.0,
                         "initialMana": 0,
                         "magicResist": 35.0,
-                        "mana": 60.0,
+                        "mana": 50.0,
                         "range": 4.0
                     },
                     "tileIcon": "assets/characters/tft18_tristana/tft18_tristana_square.tex",
@@ -101957,7 +102036,7 @@
                 },
                 {
                     "ability": {
-                        "desc": "<bright>Passive:</bright> On attack, restore @HealthCalc1@ %i:scaleHealth% Health.\r\\n\r\\n<bright>Active:</bright> Unleash a primal roar, restoring @HealthCalc3@ %i:scaleAP% Health. Then gain @SpellAS@ Attack Speed, @SpellDurability@ Durability, and is Unstoppable for @SpellDuration@ seconds.",
+                        "desc": "<bright>Passive:</bright> On attack, restore @HealthCalc1@ %i:scaleHealth% Health.\r\\n\r\\n<bright>Active:</bright> Unleash a primal roar, restoring @HealthCalc3@ %i:scaleAP% Health. Then gain @SpellAS@ Attack Speed, @SpellDurability@ Durability, and is unstoppable for @SpellDuration@ seconds.",
                         "icon": "None",
                         "name": "Furious Fists",
                         "variables": []
@@ -102010,7 +102089,7 @@
                         "hp": 650.0,
                         "initialMana": 0,
                         "magicResist": 35.0,
-                        "mana": 30.0,
+                        "mana": 25.0,
                         "range": 1.0
                     },
                     "tileIcon": "assets/characters/tft18_akali/tft18_akali_square.tex",
@@ -102036,14 +102115,14 @@
                     "squareIcon": "assets/characters/tft18_varus/skins/base/images/tft18_varus_splash_tile_9.tex",
                     "stats": {
                         "armor": 25.0,
-                        "attackSpeed": 0.699999988079071,
+                        "attackSpeed": 0.75,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 40.0,
                         "hp": 500.0,
-                        "initialMana": 30.0,
+                        "initialMana": 20.0,
                         "magicResist": 25.0,
-                        "mana": 120.0,
+                        "mana": 110.0,
                         "range": 4.0
                     },
                     "tileIcon": "assets/characters/tft18_varus/tft18_varus_square.tex",
@@ -102075,7 +102154,7 @@
                         "hp": 1300.0,
                         "initialMana": 30.0,
                         "magicResist": 60.0,
-                        "mana": 140.0,
+                        "mana": 125.0,
                         "range": 1.0
                     },
                     "tileIcon": "assets/characters/tft18_amumu/tft18_amumu_square.tex",
@@ -102264,13 +102343,13 @@
                     "apiName": "DA_18_Alune",
                     "characterName": "DA_18_Alune",
                     "cost": 5,
-                    "icon": "assets/characters/tft18_alune/skins/base/images/tft18_alune_splash_centered_15.tex",
+                    "icon": "{8dc562676f27747d}",
                     "name": "Alune",
                     "role": "APCaster",
                     "squareIcon": "assets/characters/tft18_alune/skins/base/images/tft18_alune_splash_tile_15.tex",
                     "stats": {
                         "armor": 45.0,
-                        "attackSpeed": 0.800000011920929,
+                        "attackSpeed": 0.8500000238418579,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 40.0,
@@ -102307,10 +102386,10 @@
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 50.0,
-                        "hp": 700.0,
-                        "initialMana": 40.0,
+                        "hp": 750.0,
+                        "initialMana": 30.0,
                         "magicResist": 40.0,
-                        "mana": 100,
+                        "mana": 90.0,
                         "range": 1.0
                     },
                     "tileIcon": "assets/characters/tft18_leona/tft18_leona_square.tex",
@@ -102402,8 +102481,8 @@
                         "attackSpeed": 0.8500000238418579,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
-                        "damage": 30.0,
-                        "hp": 850.0,
+                        "damage": 40.0,
+                        "hp": 950.0,
                         "initialMana": 0,
                         "magicResist": 55.0,
                         "mana": 25.0,
@@ -102430,7 +102509,7 @@
                     "squareIcon": "assets/characters/tft18_rengar/skins/base/images/tft18_rengar_splash_tile_0.tex",
                     "stats": {
                         "armor": 55.0,
-                        "attackSpeed": 0.800000011920929,
+                        "attackSpeed": 0.75,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 60.0,
@@ -102590,14 +102669,14 @@
                     "role": null,
                     "squareIcon": "assets/characters/tft18_taric/skins/base/images/tft18_taric_splash_tile_1.tex",
                     "stats": {
-                        "armor": 65.0,
+                        "armor": 70.0,
                         "attackSpeed": 0.75,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 55.0,
                         "hp": 1300.0,
                         "initialMana": 0,
-                        "magicResist": 65.0,
+                        "magicResist": 70.0,
                         "mana": 65.0,
                         "range": 1.0
                     },
@@ -102703,7 +102782,7 @@
                 },
                 {
                     "ability": {
-                        "desc": "<bright>Passive:</bright> Attacks target random enemies in range and apply a bleed that deals @PhysicalDamageCalc1@ %i:scaleAD% physical damage over @BleedDuration@ seconds. Every attack has a @GenericCalc1@ %i:scaleAP% chance to deal @SpinningAxeDamageRatio@ bonus physical damage and apply @SpinningAxeBleedStacks@ bleeds instead. \r\\n\r\\n<bright>Active:</bright> Throw two giant axes towards the enemy with the most bleeds. Deal @PhysicalDamageCalc3@ %i:scaleAD% physical damage to enemies hit and consume their bleed, instantly dealing the remaining damage. The axes then return, dealing @GenericCalc2@ %i:scaleAD% physical damage to enemies hit. ",
+                        "desc": "<bright>Passive:</bright> Attacks target random enemies in range and apply a bleed that deals @PhysicalDamageCalc1@ %i:scaleAD% physical damage over @BleedDuration@ seconds. Every attack has a @GenericCalc1@ %i:scaleAP% chance to deal @SpinningAxeDamageRatio@ bonus physical damage and apply @SpinningAxeBleedStacks@ bleeds instead.\r\\n\r\\n<bright>Active:</bright> Throw two giant axes towards the enemy with the most bleeds. Deal @PhysicalDamageCalc3@ %i:scaleAD% physical damage to enemies hit and consume their bleed, instantly dealing the remaining damage. The axes then return, dealing @GenericCalc2@ %i:scaleAD% physical damage to enemies hit. If no enemies are hit refund @ManaRefund@ of mana spent.",
                         "icon": "None",
                         "name": "Whirling Death",
                         "variables": []
@@ -102717,14 +102796,14 @@
                     "squareIcon": "assets/characters/tft18_draven/skins/base/images/tft18_draven_splash_tile_5.tex",
                     "stats": {
                         "armor": 45.0,
-                        "attackSpeed": 0.800000011920929,
+                        "attackSpeed": 0.8500000238418579,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 48.0,
                         "hp": 900.0,
                         "initialMana": 0,
                         "magicResist": 45.0,
-                        "mana": 120.0,
+                        "mana": 110.0,
                         "range": 6.0
                     },
                     "tileIcon": "assets/characters/tft18_draven/tft18_draven_square.tex",
@@ -102742,19 +102821,19 @@
                     "apiName": "DA_18_ElderDragon",
                     "characterName": "DA_18_ElderDragon",
                     "cost": 5,
-                    "icon": "None",
+                    "icon": "{1ae0a111a91a05ab}",
                     "name": "Elder Dragon",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_elderdragon/skins/base/images/t_18_elderdragon_teamplannersplash.tex",
                     "stats": {
-                        "armor": 70.0,
+                        "armor": 75.0,
                         "attackSpeed": 0.5,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
-                        "damage": 110.0,
+                        "damage": 125.0,
                         "hp": 1800.0,
                         "initialMana": 20.0,
-                        "magicResist": 70.0,
+                        "magicResist": 75.0,
                         "mana": 60.0,
                         "range": 2.0
                     },
@@ -102843,14 +102922,14 @@
                     "role": null,
                     "squareIcon": "assets/characters/tft18_masteryi/skins/base/images/tft18_masteryi_splash_tile_52.tex",
                     "stats": {
-                        "armor": 60.0,
+                        "armor": 55.0,
                         "attackSpeed": 0.800000011920929,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
-                        "damage": 65.0,
+                        "damage": 63.0,
                         "hp": 850.0,
                         "initialMana": 0,
-                        "magicResist": 60.0,
+                        "magicResist": 55.0,
                         "mana": 3.0,
                         "range": 1.0
                     },
@@ -102911,7 +102990,7 @@
                         "attackSpeed": 0.75,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
-                        "damage": 40.0,
+                        "damage": 45.0,
                         "hp": 750.0,
                         "initialMana": 0,
                         "magicResist": 45.0,
@@ -103214,7 +103293,7 @@
                 },
                 {
                     "ability": {
-                        "desc": "<bright>Passive:</bright> On cast, all allies that share a trait with Lux gain @ManaCalc1@ %i:scaleAP% mana. \r\\n\r\\n<bright>Active:</bright> Fire a laser towards the most enemies in a line that deals @MagicDamageCalc1@ %i:scaleAP% magic damage, reduced by @DamageReductionPerUnit@ for each enemy hit (minimum @MinimumFalloffDamageRatio@).\r\\n\r\\n<bright>Solar Bonus:</bright> Deals @SolarBonusDamagePer3StarRadio@ bonus damage for each unique 3-star champion fielded.",
+                        "desc": "<bright>Passive:</bright> On cast, all allies that share a trait with Lux gain @ManaCalc1@ %i:scaleAP% mana. \r\\n\r\\n<bright>Active:</bright> Fire a laser towards the most enemies in a line that deals @MagicDamageCalc1@ %i:scaleAP% magic damage, reduced by @DamageReductionPerUnit@ for each enemy hit (minimum @MinimumFalloffDamageRatio@).\r\\n\r\\n<bright>Solar Bonus:</bright> Deal @SolarBonusDamageRatio@ bonus damage. For each unique 3-star champion fielded, deal an additional @SolarBonusDamagePer3StarRadio@ bonus damage.",
                         "icon": "None",
                         "name": "Final Spark",
                         "variables": []
@@ -103254,7 +103333,7 @@
                     "apiName": "DA_CrimsonRaptor18",
                     "characterName": "DA_CrimsonRaptor18",
                     "cost": 3,
-                    "icon": "None",
+                    "icon": "{e81b0dca177b4dbf}",
                     "name": "Mama Beak",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_raptor/skins/base/images/t_18_crimsonraptor_teamplannersplash.tex",
@@ -103556,6 +103635,8 @@
                 "DA_18_Counterspell",
                 "DA_18_Counterspell_Prismatic",
                 "DA_18_Counterspell_Upgrade",
+                "DA_18_Drizzle",
+                "DA_18_DrizzleUpgrade",
                 "DA_18_EarlyFix",
                 "DA_18_EarlyFix_Upgrade",
                 "DA_18_EmblemBlackthorn",
@@ -103585,14 +103666,14 @@
                 "DA_18_Fellowship_Upgrade",
                 "DA_18_Fertilize",
                 "DA_18_Fertilize_Upgrade",
-                "DA_18_FieldofMice",
-                "DA_18_FieldofMice_Upgrade",
                 "DA_18_ForestMage",
                 "DA_18_ForestMage_Upgrade",
                 "DA_18_Freeroller",
                 "DA_18_Freeroller_Upgrade",
                 "DA_18_GiantGrowth",
                 "DA_18_GiantGrowth_Upgrade",
+                "DA_18_GroveArmor",
+                "DA_18_GroveArmorUpgrade",
                 "DA_18_HeatedRivalry",
                 "DA_18_HeatedRivalry_Upgrade",
                 "DA_18_HeroicSacrifice",
@@ -103674,7 +103755,6 @@
                 "DA_Artifact_AegisOfDusk",
                 "DA_Artifact_BlightingJewel",
                 "DA_Artifact_Dawncore",
-                "DA_Artifact_DeathsDefiance",
                 "DA_Artifact_EternalPact",
                 "DA_Artifact_Fishbones",
                 "DA_Artifact_ForbiddenIdol",
@@ -103898,8 +103978,6 @@
                 "DA_MarksmensMarks18",
                 "DA_MarksmensMarks18_Upgrade",
                 "DA_MasterworkUpgrade",
-                "DA_MemorialDummy18",
-                "DA_MemorialDummy18_Upgrade",
                 "DA_MiddlePath18",
                 "DA_MiddlePath18_Upgrade",
                 "DA_MoonlightRitual18",
@@ -103955,6 +104033,8 @@
                 "DA_RefreshingLight18_Upgrade",
                 "DA_Regeneration18",
                 "DA_Regeneration18_Upgrade",
+                "DA_ReturningFriend",
+                "DA_ReturningFriendUpgrade",
                 "DA_Revenge18",
                 "DA_RevengeUpgrade18",
                 "DA_RideTheWave18",
@@ -103963,6 +104043,8 @@
                 "DA_RollingBones18_Upgrade",
                 "DA_RolyPolys18",
                 "DA_RolyPolysUpgrade18",
+                "DA_RoomForAShroom",
+                "DA_RoomForAShroomUpgrade",
                 "DA_Salvager18",
                 "DA_SalvagerUpgrade18",
                 "DA_Scrappy18",
@@ -104438,15 +104520,15 @@
                             "minUnits": 3,
                             "style": 5,
                             "variables": {
-                                "BonusMagicDamage": 0.07000000029802322,
+                                "BonusMagicDamage": 0.07999999821186066,
                                 "ShieldRatio": 0.05000000074505806,
                                 "{092e2b2b}": 3.0,
                                 "{0a2e2cbe}": 5.0,
                                 "{0b2e2e51}": 8.0,
-                                "{5cfe766f}": 0.5,
-                                "{617a160e}": 0.1799999475479126,
-                                "{7e77da03}": 15.0,
-                                "{a51b2ace}": 0.014999999664723873,
+                                "{5cfe766f}": 0.4000000059604645,
+                                "{617a160e}": 0.1499999761581421,
+                                "{7e77da03}": 12.0,
+                                "{a51b2ace}": 0.009999999776482582,
                                 "{d91f7c21}": 4.0
                             }
                         }
@@ -104482,8 +104564,8 @@
                             "minUnits": 7,
                             "style": 5,
                             "variables": {
-                                "AttackSpeedIncrease": 0.4500000476837158,
-                                "HealthIncrease": 0.4500000476837158,
+                                "AttackSpeedIncrease": 0.5499999523162842,
+                                "HealthIncrease": 0.5499999523162842,
                                 "{aa3fad66}": 1.0
                             }
                         }
@@ -104534,7 +104616,7 @@
                             "variables": {
                                 "{7a9d7f0e}": 2.0,
                                 "{d62ae6ae}": 40.0,
-                                "{de46577b}": 18.0
+                                "{de46577b}": 22.0
                             }
                         },
                         {
@@ -104544,7 +104626,7 @@
                             "variables": {
                                 "{7a9d7f0e}": 2.0,
                                 "{d62ae6ae}": 40.0,
-                                "{de46577b}": 25.0
+                                "{de46577b}": 28.0
                             }
                         },
                         {
@@ -104554,7 +104636,7 @@
                             "variables": {
                                 "{7a9d7f0e}": 3.0,
                                 "{d62ae6ae}": 40.0,
-                                "{de46577b}": 32.0
+                                "{de46577b}": 35.0
                             }
                         },
                         {
@@ -104580,7 +104662,7 @@
                             "minUnits": null,
                             "style": 1,
                             "variables": {
-                                "DelaySeconds": 10.0,
+                                "DelaySeconds": 8.0,
                                 "{53db05e8}": 3.5
                             }
                         }
@@ -104599,7 +104681,7 @@
                             "variables": {
                                 "DamageAmp": 0.10000000149011612,
                                 "{641254b6}": 0.20000000298023224,
-                                "{83011ee7}": 4.0
+                                "{83011ee7}": 3.0
                             }
                         },
                         {
@@ -104609,7 +104691,7 @@
                             "variables": {
                                 "DamageAmp": 0.10000000149011612,
                                 "{641254b6}": 0.30000001192092896,
-                                "{83011ee7}": 4.0
+                                "{83011ee7}": 3.0
                             }
                         },
                         {
@@ -104619,7 +104701,7 @@
                             "variables": {
                                 "DamageAmp": 0.10000000149011612,
                                 "{641254b6}": 0.44999998807907104,
-                                "{83011ee7}": 4.0
+                                "{83011ee7}": 3.0
                             }
                         },
                         {
@@ -104628,8 +104710,8 @@
                             "style": 5,
                             "variables": {
                                 "DamageAmp": 0.10000000149011612,
-                                "{641254b6}": 0.6499999761581421,
-                                "{83011ee7}": 4.0
+                                "{641254b6}": 0.6000000238418579,
+                                "{83011ee7}": 3.0
                             }
                         }
                     ],
@@ -104744,7 +104826,7 @@
                             "style": 5,
                             "variables": {
                                 "TeamManaRegen": 2.0,
-                                "{de27cb95}": 9.0
+                                "{de27cb95}": 8.0
                             }
                         }
                     ],
@@ -104780,7 +104862,7 @@
                             "minUnits": 4,
                             "style": 3,
                             "variables": {
-                                "ASperAttack": 0.09000003337860107,
+                                "ASperAttack": 0.0700000524520874,
                                 "MaxStacks": 10.0,
                                 "{1d98dcec}": 0.10000002384185791
                             }
@@ -104790,7 +104872,7 @@
                             "minUnits": 5,
                             "style": 5,
                             "variables": {
-                                "ASperAttack": 0.1499999761581421,
+                                "ASperAttack": 0.10000002384185791,
                                 "MaxStacks": 10.0,
                                 "{1d98dcec}": 0.10000002384185791
                             }
@@ -104826,7 +104908,7 @@
                             "minUnits": 6,
                             "style": 5,
                             "variables": {
-                                "{6eab9c5e}": 0.3999999761581421,
+                                "{6eab9c5e}": 0.42000001668930054,
                                 "{f8c73243}": 0.07999998331069946
                             }
                         }
@@ -104843,7 +104925,7 @@
                             "minUnits": 2,
                             "style": 1,
                             "variables": {
-                                "Duration": 4.0,
+                                "Duration": 3.0,
                                 "WoundPercent": 33.0,
                                 "{2c202877}": 1.0
                             }
@@ -104853,7 +104935,7 @@
                             "minUnits": 3,
                             "style": 3,
                             "variables": {
-                                "Duration": 4.0,
+                                "Duration": 3.0,
                                 "{c4c70a4e}": 1.0
                             }
                         },
@@ -104862,8 +104944,8 @@
                             "minUnits": 5,
                             "style": 5,
                             "variables": {
-                                "Duration": 4.0,
-                                "{2c202877}": 2.0,
+                                "Duration": 3.0,
+                                "{2c202877}": 3.0,
                                 "{c4c70a4e}": 2.0
                             }
                         },
@@ -104872,8 +104954,8 @@
                             "minUnits": 7,
                             "style": 5,
                             "variables": {
-                                "Duration": 4.0,
-                                "{2c202877}": 3.0,
+                                "Duration": 3.0,
+                                "{2c202877}": 4.0,
                                 "{c4c70a4e}": 4.0
                             }
                         }
@@ -104891,7 +104973,7 @@
                             "style": 4,
                             "variables": {
                                 "DamageAmp": 0.07000000029802322,
-                                "Durability": 0.06999999284744263
+                                "Durability": 0.050000011920928955
                             }
                         }
                     ],
@@ -104934,7 +105016,7 @@
                 },
                 {
                     "apiName": "DA_18_Vanguard",
-                    "desc": "At Combat Start and after dropping below @HealthThreshold*100@% <colorHealth>Health</colorHealth>, Vanguards gain a max Health Shield for @ShieldDuration@ seconds.<br><row>(@MinUnits@) @MaxHealthShield*100@% max Health</row><br><row>(@MinUnits@) @MaxHealthShield*100@% max Health</row><br><row>(@MinUnits@) @MaxHealthShield*100@% max Health. Gain @DurabilityIncrease*100@% Durability while Shielded.</row>",
+                    "desc": "At Combat Start and after dropping below @HealthThreshold*100@% Health, Vanguards gain a max Health Shield for @ShieldDuration@ seconds.<br><row>(@MinUnits@) @MaxHealthShield*100@% max Health</row><br><row>(@MinUnits@) @MaxHealthShield*100@% max Health</row><br><row>(@MinUnits@) @MaxHealthShield*100@% max Health. Gain @DurabilityIncrease*100@% Durability while Shielded.</row>",
                     "effects": [
                         {
                             "maxUnits": 3,
@@ -104952,7 +105034,7 @@
                             "style": 3,
                             "variables": {
                                 "HealthThreshold": 0.5,
-                                "MaxHealthShield": 0.3199999928474426,
+                                "MaxHealthShield": 0.30000001192092896,
                                 "ShieldDuration": 10.0
                             }
                         },
@@ -104962,7 +105044,7 @@
                             "style": 5,
                             "variables": {
                                 "HealthThreshold": 0.5,
-                                "MaxHealthShield": 0.41999998688697815,
+                                "MaxHealthShield": 0.4000000059604645,
                                 "ShieldDuration": 10.0,
                                 "{b58e0b6e}": 0.050000011920928955
                             }
@@ -105023,7 +105105,7 @@
                             "minUnits": 4,
                             "style": 3,
                             "variables": {
-                                "Health": 300.0,
+                                "Health": 350.0,
                                 "StatMultiplier": 0.2999999523162842
                             }
                         },
@@ -105032,8 +105114,8 @@
                             "minUnits": 6,
                             "style": 5,
                             "variables": {
-                                "Health": 550.0,
-                                "StatMultiplier": 0.6000000238418579
+                                "Health": 600.0,
+                                "StatMultiplier": 0.5
                             }
                         }
                     ],
@@ -105058,7 +105140,7 @@
                             "style": 3,
                             "variables": {
                                 "BleedDuration": 3.0,
-                                "{2c61751d}": 0.30000001192092896
+                                "{2c61751d}": 0.25
                             }
                         },
                         {
@@ -105066,7 +105148,7 @@
                             "minUnits": 4,
                             "style": 5,
                             "variables": {
-                                "{2c61751d}": 0.4000000059604645
+                                "{2c61751d}": 0.3499999940395355
                             }
                         }
                     ],
@@ -105110,10 +105192,10 @@
                             "minUnits": 7,
                             "style": 5,
                             "variables": {
-                                "{0776b071}": 0.05999999865889549,
+                                "{0776b071}": 0.05000000074505806,
                                 "{08cfb22e}": 50.0,
                                 "{0d6c2c87}": 5.0,
-                                "{1b76cfed}": 0.05999999865889549,
+                                "{1b76cfed}": 0.05000000074505806,
                                 "{3230276c}": 1.0,
                                 "{4e1998f4}": 0.059999942779541016,
                                 "{a8c6eeaf}": 5.0
@@ -105157,8 +105239,8 @@
                             "minUnits": 2,
                             "style": 1,
                             "variables": {
-                                "ADAP": 5.0,
-                                "Heal": 2.0,
+                                "ADAP": 4.5,
+                                "Heal": 3.0,
                                 "HealThreshold": 0.5
                             }
                         },
@@ -105167,8 +105249,8 @@
                             "minUnits": 4,
                             "style": 5,
                             "variables": {
-                                "ADAP": 8.0,
-                                "Heal": 4.0,
+                                "ADAP": 7.0,
+                                "Heal": 5.0,
                                 "HealThreshold": 0.5
                             }
                         }
@@ -105195,7 +105277,7 @@
                             "minUnits": 3,
                             "style": 3,
                             "variables": {
-                                "AbilityPower": 0.10000000149011612,
+                                "AbilityPower": 0.11999999731779099,
                                 "AttackSpeed": 0.10000002384185791,
                                 "{6d27fbd4}": 1.0
                             }
@@ -105205,7 +105287,7 @@
                             "minUnits": 4,
                             "style": 3,
                             "variables": {
-                                "AbilityPower": 0.14000000059604645,
+                                "AbilityPower": 0.1599999964237213,
                                 "AttackSpeed": 0.13999998569488525,
                                 "{6d27fbd4}": 1.0
                             }
@@ -105215,7 +105297,7 @@
                             "minUnits": 5,
                             "style": 5,
                             "variables": {
-                                "AbilityPower": 0.18000000715255737,
+                                "AbilityPower": 0.20000000298023224,
                                 "AttackSpeed": 0.1799999475479126,
                                 "{6d27fbd4}": 1.0
                             }
@@ -105252,7 +105334,7 @@
                             "style": 5,
                             "variables": {
                                 "{0eb6405e}": 12.0,
-                                "{8c16b281}": 120.0
+                                "{8c16b281}": 115.0
                             }
                         }
                     ],
@@ -105332,7 +105414,7 @@
                             "minUnits": 2,
                             "style": 5,
                             "variables": {
-                                "PercentHeal": 0.07999999821186066
+                                "PercentHeal": 0.07000000029802322
                             }
                         }
                     ],
@@ -105341,7 +105423,7 @@
                 },
                 {
                     "apiName": "DA_18_Summoner",
-                    "desc": "Summoners empower their summons in different ways.<br><br>Yorick: +@HealthMult*100@% Health<br>Azir: +@DamageMult*100@% Damage<br>Mama Beak: +@DamageMult*100@% Damage<br>Zyra: +@NumExtraAttacks@ Plant Attacks<br><row>(@MinUnits@) Empower Summons</row><br><row>(@MinUnits@) Improve each effect by 50%</row>",
+                    "desc": "Summoners empower their summons in different ways.<br><br>Yorick: +@HealthMult*100@% Health<br>Azir: +@AzirDamageMult*100@% Damage<br>Mama Beak: +@DamageMult*100@% Damage<br>Zyra: +@NumExtraAttacks@ Plant Attacks<br><row>(@MinUnits@) Empower Summons</row><br><row>(@MinUnits@) Improve each effect by 50%</row>",
                     "effects": [
                         {
                             "maxUnits": 2,
@@ -105350,7 +105432,8 @@
                             "variables": {
                                 "DamageMult": 0.4500000476837158,
                                 "{1cb64e3c}": 4.0,
-                                "{5311f791}": 0.2999999523162842
+                                "{5311f791}": 0.2999999523162842,
+                                "{6bba9a92}": 0.20000004768371582
                             }
                         },
                         {
@@ -105360,7 +105443,8 @@
                             "variables": {
                                 "DamageMult": 0.4500000476837158,
                                 "{1cb64e3c}": 4.0,
-                                "{5311f791}": 0.2999999523162842
+                                "{5311f791}": 0.2999999523162842,
+                                "{6bba9a92}": 0.20000004768371582
                             }
                         }
                     ],
@@ -105394,7 +105478,7 @@
                             "minUnits": 7,
                             "style": 5,
                             "variables": {
-                                "ADAP": 0.4000000059604645,
+                                "ADAP": 0.550000011920929,
                                 "BonusHealth": 0.10000002384185791,
                                 "{91925b8e}": 4.0
                             }
@@ -105404,7 +105488,7 @@
                             "minUnits": 9,
                             "style": 5,
                             "variables": {
-                                "ADAP": 0.44999998807907104,
+                                "ADAP": 0.6499999761581421,
                                 "BonusHealth": 0.10000002384185791
                             }
                         },
@@ -131893,10 +131977,10 @@
                             "minUnits": 1,
                             "style": 1,
                             "variables": {
+                                "DamageWindowSeconds": 2,
                                 "PercentDamageEcho": 0.2199999988079071,
                                 "{44d79b6f}": 8,
-                                "{e202a897}": 1,
-                                "{e9e2b861}": 2
+                                "{e202a897}": 1
                             }
                         },
                         {
@@ -131904,10 +131988,10 @@
                             "minUnits": 2,
                             "style": 1,
                             "variables": {
+                                "DamageWindowSeconds": 2,
                                 "PercentDamageEcho": 0.25,
                                 "{44d79b6f}": 10,
-                                "{e202a897}": 1,
-                                "{e9e2b861}": 2
+                                "{e202a897}": 1
                             }
                         }
                     ],
@@ -245466,10 +245550,10 @@
                             "minUnits": 1,
                             "style": 1,
                             "variables": {
+                                "DamageWindowSeconds": 2,
                                 "PercentDamageEcho": 0.2199999988079071,
                                 "{44d79b6f}": 8,
-                                "{e202a897}": 1,
-                                "{e9e2b861}": 2
+                                "{e202a897}": 1
                             }
                         },
                         {
@@ -245477,10 +245561,10 @@
                             "minUnits": 2,
                             "style": 1,
                             "variables": {
+                                "DamageWindowSeconds": 2,
                                 "PercentDamageEcho": 0.25,
                                 "{44d79b6f}": 10,
-                                "{e202a897}": 1,
-                                "{e9e2b861}": 2
+                                "{e202a897}": 1
                             }
                         }
                     ],
@@ -336677,10 +336761,10 @@
                             "minUnits": 1,
                             "style": 1,
                             "variables": {
+                                "DamageWindowSeconds": 2,
                                 "PercentDamageEcho": 0.2199999988079071,
                                 "{44d79b6f}": 8,
-                                "{e202a897}": 1,
-                                "{e9e2b861}": 2
+                                "{e202a897}": 1
                             }
                         },
                         {
@@ -336688,10 +336772,10 @@
                             "minUnits": 2,
                             "style": 1,
                             "variables": {
+                                "DamageWindowSeconds": 2,
                                 "PercentDamageEcho": 0.25,
                                 "{44d79b6f}": 10,
-                                "{e202a897}": 1,
-                                "{e9e2b861}": 2
+                                "{e202a897}": 1
                             }
                         }
                     ],
@@ -396193,10 +396277,10 @@
                             "minUnits": 1,
                             "style": 1,
                             "variables": {
+                                "DamageWindowSeconds": 2,
                                 "PercentDamageEcho": 0.2199999988079071,
                                 "{44d79b6f}": 8,
-                                "{e202a897}": 1,
-                                "{e9e2b861}": 2
+                                "{e202a897}": 1
                             }
                         },
                         {
@@ -396204,10 +396288,10 @@
                             "minUnits": 2,
                             "style": 1,
                             "variables": {
+                                "DamageWindowSeconds": 2,
                                 "PercentDamageEcho": 0.25,
                                 "{44d79b6f}": 10,
-                                "{e202a897}": 1,
-                                "{e9e2b861}": 2
+                                "{e202a897}": 1
                             }
                         }
                     ],
@@ -438226,10 +438310,10 @@
                             "minUnits": 1,
                             "style": 1,
                             "variables": {
+                                "DamageWindowSeconds": 2,
                                 "PercentDamageEcho": 0.2199999988079071,
                                 "{44d79b6f}": 8,
-                                "{e202a897}": 1,
-                                "{e9e2b861}": 2
+                                "{e202a897}": 1
                             }
                         },
                         {
@@ -438237,10 +438321,10 @@
                             "minUnits": 2,
                             "style": 1,
                             "variables": {
+                                "DamageWindowSeconds": 2,
                                 "PercentDamageEcho": 0.25,
                                 "{44d79b6f}": 10,
-                                "{e202a897}": 1,
-                                "{e9e2b861}": 2
+                                "{e202a897}": 1
                             }
                         }
                     ],
@@ -494339,10 +494423,10 @@
                             "minUnits": 1,
                             "style": 1,
                             "variables": {
+                                "DamageWindowSeconds": 2,
                                 "PercentDamageEcho": 0.2199999988079071,
                                 "{44d79b6f}": 8,
-                                "{e202a897}": 1,
-                                "{e9e2b861}": 2
+                                "{e202a897}": 1
                             }
                         },
                         {
@@ -494350,10 +494434,10 @@
                             "minUnits": 2,
                             "style": 1,
                             "variables": {
+                                "DamageWindowSeconds": 2,
                                 "PercentDamageEcho": 0.25,
                                 "{44d79b6f}": 10,
-                                "{e202a897}": 1,
-                                "{e9e2b861}": 2
+                                "{e202a897}": 1
                             }
                         }
                     ],
@@ -519387,7 +519471,7 @@
                     "apiName": "DA_Gromp18_AP",
                     "characterName": "DA_Gromp18_AP",
                     "cost": 2,
-                    "icon": "None",
+                    "icon": "{f3b734c3102f71ed}",
                     "name": "Gromp",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_gromp/skins/base/images/t_18_gromp_teamplannersplash.tex",
@@ -519419,7 +519503,7 @@
                     "apiName": "DA_Murkwolf18",
                     "characterName": "DA_Murkwolf18",
                     "cost": 2,
-                    "icon": "None",
+                    "icon": "{0ea96b4d47691e31}",
                     "name": "Murkwolf",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_murkwolf/skins/base/images/t_18_murkwolf_teamplannersplash.tex",
@@ -519451,7 +519535,7 @@
                     "apiName": "DA_18_Sentry",
                     "characterName": "DA_18_Sentry",
                     "cost": 1,
-                    "icon": "None",
+                    "icon": "{e8a95eea9697c960}",
                     "name": "Pebbles",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_sentry/skins/base/images/t_18_sentry_teamplannersplash.tex",
@@ -519460,11 +519544,11 @@
                         "attackSpeed": 0.800000011920929,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
-                        "damage": 30.0,
+                        "damage": 35.0,
                         "hp": 500.0,
-                        "initialMana": 25.0,
+                        "initialMana": 30.0,
                         "magicResist": 25.0,
-                        "mana": 65.0,
+                        "mana": 70.0,
                         "range": 4.0
                     },
                     "tileIcon": "assets/characters/tft18_sentry/tft18_sentry_square.tex",
@@ -519483,7 +519567,7 @@
                     "apiName": "DA_Cinderling18",
                     "characterName": "DA_Cinderling18",
                     "cost": 1,
-                    "icon": "None",
+                    "icon": "{3bcbfdbd732c6323}",
                     "name": "Cinderling",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_cinderling/skins/base/images/t_18_cinderling_teamplannersplash.tex",
@@ -519515,7 +519599,7 @@
                     "apiName": "DA_Scuttlecrab18",
                     "characterName": "DA_Scuttlecrab18",
                     "cost": 2,
-                    "icon": "None",
+                    "icon": "{56c0d241812da38a}",
                     "name": "Scuttlecrab",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_scuttlecrab/skins/base/images/t_18_scuttlecrab_teamplannersplash.tex",
@@ -519547,7 +519631,7 @@
                     "apiName": "DA_Krug18",
                     "characterName": "DA_Krug18",
                     "cost": 3,
-                    "icon": "None",
+                    "icon": "{3d59606a1e414504}",
                     "name": "Krug",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_krug/skins/base/images/t_18_krug_teamplannersplash.tex",
@@ -519579,7 +519663,7 @@
                     "apiName": "DA_Sentinel18",
                     "characterName": "DA_Sentinel18",
                     "cost": 4,
-                    "icon": "None",
+                    "icon": "{94230c60604bffc1}",
                     "name": "Sentinel",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_sentinel/skins/base/images/t_18_sentinel_teamplannersplash.tex",
@@ -519612,7 +519696,7 @@
                     "apiName": "DA_Brambleback18",
                     "characterName": "DA_Brambleback18",
                     "cost": 4,
-                    "icon": "None",
+                    "icon": "{0c5a019370385aa2}",
                     "name": "Brambleback",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_brambleback/skins/base/images/t_18_brambleback_teamplannersplash.tex",
@@ -519621,7 +519705,7 @@
                         "attackSpeed": 0.550000011920929,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
-                        "damage": 110.0,
+                        "damage": 120.0,
                         "hp": 1100.0,
                         "initialMana": 0,
                         "magicResist": 65.0,
@@ -519669,7 +519753,7 @@
                 },
                 {
                     "ability": {
-                        "desc": "<Bright>Active:</Bright> Gain @ShieldCalc1@ %i:scaleAP% Shield for @ShieldDuration@ seconds and deal @MagicDamageCalc1@ %i:scaleAP% magic damage to enemies in a cone. \r\\n\r\\n<Bright>Quest:</Bright> Each player combat, Ornn stores damage blocked as Forge Power, doubled at 3-star. Gain an Artifact Anvil each time he gains enough Forge Power. <Rules>(Forge Power: </Rules>@Stack@<Rules> / </Rules>@GenericCalc1@<Rules>)</Rules>",
+                        "desc": "<Bright>Active:</Bright> Gain @ShieldCalc1@ %i:scaleAP% Shield for @ShieldDuration@ seconds and deal @MagicDamageCalc1@ %i:scaleAP% magic damage to enemies in a cone. \r\\n\r\\n<Bright>Quest:</Bright> Each player combat, Ornn stores damage blocked as Forge Power, increased by @DamageTaken3StarScalar@ at 3-star. Gain an Artifact Anvil each time he gains enough Forge Power. <Rules>(Forge Power: </Rules>@Stack@<Rules> / </Rules>@GenericCalc1@<Rules>)</Rules>",
                         "icon": "None",
                         "name": "Bellows Breath",
                         "variables": []
@@ -519722,7 +519806,7 @@
                         "hp": 850.0,
                         "initialMana": 0,
                         "magicResist": 30.0,
-                        "mana": 40.0,
+                        "mana": 45.0,
                         "range": 1.0
                     },
                     "tileIcon": "assets/characters/tft18_nidalee/tft18_nidalee_square.tex",
@@ -519752,7 +519836,7 @@
                         "critMultiplier": 1.399999976158142,
                         "damage": 50.0,
                         "hp": 1100.0,
-                        "initialMana": 30.0,
+                        "initialMana": 50.0,
                         "magicResist": 50.0,
                         "mana": 110.0,
                         "range": 1.0
@@ -519765,7 +519849,7 @@
                 },
                 {
                     "ability": {
-                        "desc": "Blink away from the current target, deal @PhysicalDamageCalc1@ %i:scaleAD% physical damage to them, and gain @AttackSpeedCalc1@ %i:scaleAP% Attack Speed. \r\\n\r\\nEvery 4th cast consumes the Attack Speed granted from Nature's Wrath and fires a blast through the largest group of enemies that deals @PhysicalDamageCalc2@ %i:scaleAD% physical damage, reduced by @DamageReductionPerHit@ for each enemy it passes through (minimum @MinDamagePercent@).",
+                        "desc": "Blink away from the current target, deal @PhysicalDamageCalc1@ %i:scaleAD% physical damage to them, and gain @AttackSpeedCalc1@ %i:scaleAP% Attack Speed. \r\\n\r\\nEvery 4th cast consumes the Attack Speed granted from Forest's Flurry and fires a blast through the largest group of enemies that deals @PhysicalDamageCalc2@ %i:scaleAD% physical damage, reduced by @DamageReductionPerHit@ for each enemy it passes through (minimum @MinDamagePercent@).",
                         "icon": "None",
                         "name": "Forest's Flurry",
                         "variables": []
@@ -519913,8 +519997,8 @@
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 80.0,
-                        "hp": 1100.0,
-                        "initialMana": 40.0,
+                        "hp": 1150.0,
+                        "initialMana": 30.0,
                         "magicResist": 60.0,
                         "mana": 100,
                         "range": 1.0
@@ -520088,7 +520172,7 @@
                 },
                 {
                     "ability": {
-                        "desc": "Fire an arrow through the most enemies in a line that deals @PhysicalDamageCalc1@ %i:scaleAD% physical damage, reduced by @DamageFalloffPerEnemy@ per enemy hit (minimum @MinDamagePercent@). \r\\n\r\\nThe arrow leaves a trail for @RiftDuration@ seconds that deals @PhysicalDamageCalc2@ %i:scaleAD%%i:scaleAP% + @MaxHealthDamagePerSecond@ max Health physical damage per second to enemies within and @ChillPercent@% <Keyword>Slows</Keyword> them.\r\\n\r\\n<Rules>Slow: Reduce Attack Speed</Rules>",
+                        "desc": "Fire an arrow through the most enemies in a line that deals @PhysicalDamageCalc1@ %i:scaleAD% physical damage, reduced by @DamageFalloffPerEnemy@ per enemy hit (minimum @MinDamagePercent@). If no enemies are hit refund @ManaRefund@ of mana spent.\r\\n\r\\nThe arrow leaves a trail for @RiftDuration@ seconds that deals @PhysicalDamageCalc2@ %i:scaleAD%%i:scaleAP% + @MaxHealthDamagePerSecond@ max Health physical damage per second to enemies within and @ChillPercent@% <Keyword>Slows</Keyword> them.\r\\n\r\\n<Rules>Slow: Reduce Attack Speed</Rules>",
                         "icon": "None",
                         "name": "Spirit Rift",
                         "variables": []
@@ -520107,7 +520191,7 @@
                         "critMultiplier": 1.399999976158142,
                         "damage": 75.0,
                         "hp": 900.0,
-                        "initialMana": 20.0,
+                        "initialMana": 0,
                         "magicResist": 45.0,
                         "mana": 80.0,
                         "range": 6.0
@@ -520237,7 +520321,7 @@
                         "hp": 1100.0,
                         "initialMana": 0,
                         "magicResist": 60.0,
-                        "mana": 60.0,
+                        "mana": 65.0,
                         "range": 2.0
                     },
                     "tileIcon": "assets/characters/tft18_morgana/tft18_morgana_square.tex",
@@ -520382,7 +520466,7 @@
                     "apiName": "DA_18_Kobuko",
                     "characterName": "DA_18_Kobuko",
                     "cost": 1,
-                    "icon": "assets/characters/tft18_kobuko/skins/base/images/tft18_kobuko_splash_centered_2.tex",
+                    "icon": "{7ae9d8870aed1489}",
                     "name": "Kobuko",
                     "role": "APTank",
                     "squareIcon": "assets/characters/tft18_kobuko/skins/base/images/tft18_kobuko_splash_tile_2.tex",
@@ -520414,7 +520498,7 @@
                     "apiName": "DA_18_Teemo",
                     "characterName": "DA_18_Teemo",
                     "cost": 2,
-                    "icon": "assets/characters/tft18_teemo/skins/base/images/tft18_teemo_splash_centered_0.tex",
+                    "icon": "{9d832f70c923aaf6}",
                     "name": "Teemo",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_teemo/skins/base/images/tft18_teemo_splash_tile_0.tex",
@@ -520524,7 +520608,7 @@
                         "hp": 650.0,
                         "initialMana": 0,
                         "magicResist": 35.0,
-                        "mana": 60.0,
+                        "mana": 50.0,
                         "range": 4.0
                     },
                     "tileIcon": "assets/characters/tft18_tristana/tft18_tristana_square.tex",
@@ -520568,7 +520652,7 @@
                 },
                 {
                     "ability": {
-                        "desc": "<bright>Passive:</bright> On attack, restore @HealthCalc1@ %i:scaleHealth% Health.\r\\n\r\\n<bright>Active:</bright> Unleash a primal roar, restoring @HealthCalc3@ %i:scaleAP% Health. Then gain @SpellAS@ Attack Speed, @SpellDurability@ Durability, and is Unstoppable for @SpellDuration@ seconds.",
+                        "desc": "<bright>Passive:</bright> On attack, restore @HealthCalc1@ %i:scaleHealth% Health.\r\\n\r\\n<bright>Active:</bright> Unleash a primal roar, restoring @HealthCalc3@ %i:scaleAP% Health. Then gain @SpellAS@ Attack Speed, @SpellDurability@ Durability, and is unstoppable for @SpellDuration@ seconds.",
                         "icon": "None",
                         "name": "Furious Fists",
                         "variables": []
@@ -520621,7 +520705,7 @@
                         "hp": 650.0,
                         "initialMana": 0,
                         "magicResist": 35.0,
-                        "mana": 30.0,
+                        "mana": 25.0,
                         "range": 1.0
                     },
                     "tileIcon": "assets/characters/tft18_akali/tft18_akali_square.tex",
@@ -520647,14 +520731,14 @@
                     "squareIcon": "assets/characters/tft18_varus/skins/base/images/tft18_varus_splash_tile_9.tex",
                     "stats": {
                         "armor": 25.0,
-                        "attackSpeed": 0.699999988079071,
+                        "attackSpeed": 0.75,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 40.0,
                         "hp": 500.0,
-                        "initialMana": 30.0,
+                        "initialMana": 20.0,
                         "magicResist": 25.0,
-                        "mana": 120.0,
+                        "mana": 110.0,
                         "range": 4.0
                     },
                     "tileIcon": "assets/characters/tft18_varus/tft18_varus_square.tex",
@@ -520686,7 +520770,7 @@
                         "hp": 1300.0,
                         "initialMana": 30.0,
                         "magicResist": 60.0,
-                        "mana": 140.0,
+                        "mana": 125.0,
                         "range": 1.0
                     },
                     "tileIcon": "assets/characters/tft18_amumu/tft18_amumu_square.tex",
@@ -520875,13 +520959,13 @@
                     "apiName": "DA_18_Alune",
                     "characterName": "DA_18_Alune",
                     "cost": 5,
-                    "icon": "assets/characters/tft18_alune/skins/base/images/tft18_alune_splash_centered_15.tex",
+                    "icon": "{8dc562676f27747d}",
                     "name": "Alune",
                     "role": "APCaster",
                     "squareIcon": "assets/characters/tft18_alune/skins/base/images/tft18_alune_splash_tile_15.tex",
                     "stats": {
                         "armor": 45.0,
-                        "attackSpeed": 0.800000011920929,
+                        "attackSpeed": 0.8500000238418579,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 40.0,
@@ -520918,10 +521002,10 @@
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 50.0,
-                        "hp": 700.0,
-                        "initialMana": 40.0,
+                        "hp": 750.0,
+                        "initialMana": 30.0,
                         "magicResist": 40.0,
-                        "mana": 100,
+                        "mana": 90.0,
                         "range": 1.0
                     },
                     "tileIcon": "assets/characters/tft18_leona/tft18_leona_square.tex",
@@ -521013,8 +521097,8 @@
                         "attackSpeed": 0.8500000238418579,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
-                        "damage": 30.0,
-                        "hp": 850.0,
+                        "damage": 40.0,
+                        "hp": 950.0,
                         "initialMana": 0,
                         "magicResist": 55.0,
                         "mana": 25.0,
@@ -521041,7 +521125,7 @@
                     "squareIcon": "assets/characters/tft18_rengar/skins/base/images/tft18_rengar_splash_tile_0.tex",
                     "stats": {
                         "armor": 55.0,
-                        "attackSpeed": 0.800000011920929,
+                        "attackSpeed": 0.75,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 60.0,
@@ -521201,14 +521285,14 @@
                     "role": null,
                     "squareIcon": "assets/characters/tft18_taric/skins/base/images/tft18_taric_splash_tile_1.tex",
                     "stats": {
-                        "armor": 65.0,
+                        "armor": 70.0,
                         "attackSpeed": 0.75,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 55.0,
                         "hp": 1300.0,
                         "initialMana": 0,
-                        "magicResist": 65.0,
+                        "magicResist": 70.0,
                         "mana": 65.0,
                         "range": 1.0
                     },
@@ -521314,7 +521398,7 @@
                 },
                 {
                     "ability": {
-                        "desc": "<bright>Passive:</bright> Attacks target random enemies in range and apply a bleed that deals @PhysicalDamageCalc1@ %i:scaleAD% physical damage over @BleedDuration@ seconds. Every attack has a @GenericCalc1@ %i:scaleAP% chance to deal @SpinningAxeDamageRatio@ bonus physical damage and apply @SpinningAxeBleedStacks@ bleeds instead. \r\\n\r\\n<bright>Active:</bright> Throw two giant axes towards the enemy with the most bleeds. Deal @PhysicalDamageCalc3@ %i:scaleAD% physical damage to enemies hit and consume their bleed, instantly dealing the remaining damage. The axes then return, dealing @GenericCalc2@ %i:scaleAD% physical damage to enemies hit. ",
+                        "desc": "<bright>Passive:</bright> Attacks target random enemies in range and apply a bleed that deals @PhysicalDamageCalc1@ %i:scaleAD% physical damage over @BleedDuration@ seconds. Every attack has a @GenericCalc1@ %i:scaleAP% chance to deal @SpinningAxeDamageRatio@ bonus physical damage and apply @SpinningAxeBleedStacks@ bleeds instead.\r\\n\r\\n<bright>Active:</bright> Throw two giant axes towards the enemy with the most bleeds. Deal @PhysicalDamageCalc3@ %i:scaleAD% physical damage to enemies hit and consume their bleed, instantly dealing the remaining damage. The axes then return, dealing @GenericCalc2@ %i:scaleAD% physical damage to enemies hit. If no enemies are hit refund @ManaRefund@ of mana spent.",
                         "icon": "None",
                         "name": "Whirling Death",
                         "variables": []
@@ -521328,14 +521412,14 @@
                     "squareIcon": "assets/characters/tft18_draven/skins/base/images/tft18_draven_splash_tile_5.tex",
                     "stats": {
                         "armor": 45.0,
-                        "attackSpeed": 0.800000011920929,
+                        "attackSpeed": 0.8500000238418579,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
                         "damage": 48.0,
                         "hp": 900.0,
                         "initialMana": 0,
                         "magicResist": 45.0,
-                        "mana": 120.0,
+                        "mana": 110.0,
                         "range": 6.0
                     },
                     "tileIcon": "assets/characters/tft18_draven/tft18_draven_square.tex",
@@ -521353,19 +521437,19 @@
                     "apiName": "DA_18_ElderDragon",
                     "characterName": "DA_18_ElderDragon",
                     "cost": 5,
-                    "icon": "None",
+                    "icon": "{1ae0a111a91a05ab}",
                     "name": "Elder Dragon",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_elderdragon/skins/base/images/t_18_elderdragon_teamplannersplash.tex",
                     "stats": {
-                        "armor": 70.0,
+                        "armor": 75.0,
                         "attackSpeed": 0.5,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
-                        "damage": 110.0,
+                        "damage": 125.0,
                         "hp": 1800.0,
                         "initialMana": 20.0,
-                        "magicResist": 70.0,
+                        "magicResist": 75.0,
                         "mana": 60.0,
                         "range": 2.0
                     },
@@ -521454,14 +521538,14 @@
                     "role": null,
                     "squareIcon": "assets/characters/tft18_masteryi/skins/base/images/tft18_masteryi_splash_tile_52.tex",
                     "stats": {
-                        "armor": 60.0,
+                        "armor": 55.0,
                         "attackSpeed": 0.800000011920929,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
-                        "damage": 65.0,
+                        "damage": 63.0,
                         "hp": 850.0,
                         "initialMana": 0,
-                        "magicResist": 60.0,
+                        "magicResist": 55.0,
                         "mana": 3.0,
                         "range": 1.0
                     },
@@ -521522,7 +521606,7 @@
                         "attackSpeed": 0.75,
                         "critChance": 0.25,
                         "critMultiplier": 1.399999976158142,
-                        "damage": 40.0,
+                        "damage": 45.0,
                         "hp": 750.0,
                         "initialMana": 0,
                         "magicResist": 45.0,
@@ -521825,7 +521909,7 @@
                 },
                 {
                     "ability": {
-                        "desc": "<bright>Passive:</bright> On cast, all allies that share a trait with Lux gain @ManaCalc1@ %i:scaleAP% mana. \r\\n\r\\n<bright>Active:</bright> Fire a laser towards the most enemies in a line that deals @MagicDamageCalc1@ %i:scaleAP% magic damage, reduced by @DamageReductionPerUnit@ for each enemy hit (minimum @MinimumFalloffDamageRatio@).\r\\n\r\\n<bright>Solar Bonus:</bright> Deals @SolarBonusDamagePer3StarRadio@ bonus damage for each unique 3-star champion fielded.",
+                        "desc": "<bright>Passive:</bright> On cast, all allies that share a trait with Lux gain @ManaCalc1@ %i:scaleAP% mana. \r\\n\r\\n<bright>Active:</bright> Fire a laser towards the most enemies in a line that deals @MagicDamageCalc1@ %i:scaleAP% magic damage, reduced by @DamageReductionPerUnit@ for each enemy hit (minimum @MinimumFalloffDamageRatio@).\r\\n\r\\n<bright>Solar Bonus:</bright> Deal @SolarBonusDamageRatio@ bonus damage. For each unique 3-star champion fielded, deal an additional @SolarBonusDamagePer3StarRadio@ bonus damage.",
                         "icon": "None",
                         "name": "Final Spark",
                         "variables": []
@@ -521865,7 +521949,7 @@
                     "apiName": "DA_CrimsonRaptor18",
                     "characterName": "DA_CrimsonRaptor18",
                     "cost": 3,
-                    "icon": "None",
+                    "icon": "{e81b0dca177b4dbf}",
                     "name": "Mama Beak",
                     "role": null,
                     "squareIcon": "assets/characters/tft18_raptor/skins/base/images/t_18_crimsonraptor_teamplannersplash.tex",
@@ -522272,15 +522356,15 @@
                             "minUnits": 3,
                             "style": 5,
                             "variables": {
-                                "BonusMagicDamage": 0.07000000029802322,
+                                "BonusMagicDamage": 0.07999999821186066,
                                 "ShieldRatio": 0.05000000074505806,
                                 "{092e2b2b}": 3.0,
                                 "{0a2e2cbe}": 5.0,
                                 "{0b2e2e51}": 8.0,
-                                "{5cfe766f}": 0.5,
-                                "{617a160e}": 0.1799999475479126,
-                                "{7e77da03}": 15.0,
-                                "{a51b2ace}": 0.014999999664723873,
+                                "{5cfe766f}": 0.4000000059604645,
+                                "{617a160e}": 0.1499999761581421,
+                                "{7e77da03}": 12.0,
+                                "{a51b2ace}": 0.009999999776482582,
                                 "{d91f7c21}": 4.0
                             }
                         }
@@ -522316,8 +522400,8 @@
                             "minUnits": 7,
                             "style": 5,
                             "variables": {
-                                "AttackSpeedIncrease": 0.4500000476837158,
-                                "HealthIncrease": 0.4500000476837158,
+                                "AttackSpeedIncrease": 0.5499999523162842,
+                                "HealthIncrease": 0.5499999523162842,
                                 "{aa3fad66}": 1.0
                             }
                         }
@@ -522368,7 +522452,7 @@
                             "variables": {
                                 "{7a9d7f0e}": 2.0,
                                 "{d62ae6ae}": 40.0,
-                                "{de46577b}": 18.0
+                                "{de46577b}": 22.0
                             }
                         },
                         {
@@ -522378,7 +522462,7 @@
                             "variables": {
                                 "{7a9d7f0e}": 2.0,
                                 "{d62ae6ae}": 40.0,
-                                "{de46577b}": 25.0
+                                "{de46577b}": 28.0
                             }
                         },
                         {
@@ -522388,7 +522472,7 @@
                             "variables": {
                                 "{7a9d7f0e}": 3.0,
                                 "{d62ae6ae}": 40.0,
-                                "{de46577b}": 32.0
+                                "{de46577b}": 35.0
                             }
                         },
                         {
@@ -522414,7 +522498,7 @@
                             "minUnits": null,
                             "style": 1,
                             "variables": {
-                                "DelaySeconds": 10.0,
+                                "DelaySeconds": 8.0,
                                 "{53db05e8}": 3.5
                             }
                         }
@@ -522433,7 +522517,7 @@
                             "variables": {
                                 "DamageAmp": 0.10000000149011612,
                                 "{641254b6}": 0.20000000298023224,
-                                "{83011ee7}": 4.0
+                                "{83011ee7}": 3.0
                             }
                         },
                         {
@@ -522443,7 +522527,7 @@
                             "variables": {
                                 "DamageAmp": 0.10000000149011612,
                                 "{641254b6}": 0.30000001192092896,
-                                "{83011ee7}": 4.0
+                                "{83011ee7}": 3.0
                             }
                         },
                         {
@@ -522453,7 +522537,7 @@
                             "variables": {
                                 "DamageAmp": 0.10000000149011612,
                                 "{641254b6}": 0.44999998807907104,
-                                "{83011ee7}": 4.0
+                                "{83011ee7}": 3.0
                             }
                         },
                         {
@@ -522462,8 +522546,8 @@
                             "style": 5,
                             "variables": {
                                 "DamageAmp": 0.10000000149011612,
-                                "{641254b6}": 0.6499999761581421,
-                                "{83011ee7}": 4.0
+                                "{641254b6}": 0.6000000238418579,
+                                "{83011ee7}": 3.0
                             }
                         }
                     ],
@@ -522578,7 +522662,7 @@
                             "style": 5,
                             "variables": {
                                 "TeamManaRegen": 2.0,
-                                "{de27cb95}": 9.0
+                                "{de27cb95}": 8.0
                             }
                         }
                     ],
@@ -522614,7 +522698,7 @@
                             "minUnits": 4,
                             "style": 3,
                             "variables": {
-                                "ASperAttack": 0.09000003337860107,
+                                "ASperAttack": 0.0700000524520874,
                                 "MaxStacks": 10.0,
                                 "{1d98dcec}": 0.10000002384185791
                             }
@@ -522624,7 +522708,7 @@
                             "minUnits": 5,
                             "style": 5,
                             "variables": {
-                                "ASperAttack": 0.1499999761581421,
+                                "ASperAttack": 0.10000002384185791,
                                 "MaxStacks": 10.0,
                                 "{1d98dcec}": 0.10000002384185791
                             }
@@ -522660,7 +522744,7 @@
                             "minUnits": 6,
                             "style": 5,
                             "variables": {
-                                "{6eab9c5e}": 0.3999999761581421,
+                                "{6eab9c5e}": 0.42000001668930054,
                                 "{f8c73243}": 0.07999998331069946
                             }
                         }
@@ -522677,7 +522761,7 @@
                             "minUnits": 2,
                             "style": 1,
                             "variables": {
-                                "Duration": 4.0,
+                                "Duration": 3.0,
                                 "WoundPercent": 33.0,
                                 "{2c202877}": 1.0
                             }
@@ -522687,7 +522771,7 @@
                             "minUnits": 3,
                             "style": 3,
                             "variables": {
-                                "Duration": 4.0,
+                                "Duration": 3.0,
                                 "{c4c70a4e}": 1.0
                             }
                         },
@@ -522696,8 +522780,8 @@
                             "minUnits": 5,
                             "style": 5,
                             "variables": {
-                                "Duration": 4.0,
-                                "{2c202877}": 2.0,
+                                "Duration": 3.0,
+                                "{2c202877}": 3.0,
                                 "{c4c70a4e}": 2.0
                             }
                         },
@@ -522706,8 +522790,8 @@
                             "minUnits": 7,
                             "style": 5,
                             "variables": {
-                                "Duration": 4.0,
-                                "{2c202877}": 3.0,
+                                "Duration": 3.0,
+                                "{2c202877}": 4.0,
                                 "{c4c70a4e}": 4.0
                             }
                         }
@@ -522725,7 +522809,7 @@
                             "style": 4,
                             "variables": {
                                 "DamageAmp": 0.07000000029802322,
-                                "Durability": 0.06999999284744263
+                                "Durability": 0.050000011920928955
                             }
                         }
                     ],
@@ -522768,7 +522852,7 @@
                 },
                 {
                     "apiName": "DA_18_Vanguard",
-                    "desc": "At Combat Start and after dropping below @HealthThreshold*100@% <colorHealth>Health</colorHealth>, Vanguards gain a max Health Shield for @ShieldDuration@ seconds.<br><row>(@MinUnits@) @MaxHealthShield*100@% max Health</row><br><row>(@MinUnits@) @MaxHealthShield*100@% max Health</row><br><row>(@MinUnits@) @MaxHealthShield*100@% max Health. Gain @DurabilityIncrease*100@% Durability while Shielded.</row>",
+                    "desc": "At Combat Start and after dropping below @HealthThreshold*100@% Health, Vanguards gain a max Health Shield for @ShieldDuration@ seconds.<br><row>(@MinUnits@) @MaxHealthShield*100@% max Health</row><br><row>(@MinUnits@) @MaxHealthShield*100@% max Health</row><br><row>(@MinUnits@) @MaxHealthShield*100@% max Health. Gain @DurabilityIncrease*100@% Durability while Shielded.</row>",
                     "effects": [
                         {
                             "maxUnits": 3,
@@ -522786,7 +522870,7 @@
                             "style": 3,
                             "variables": {
                                 "HealthThreshold": 0.5,
-                                "MaxHealthShield": 0.3199999928474426,
+                                "MaxHealthShield": 0.30000001192092896,
                                 "ShieldDuration": 10.0
                             }
                         },
@@ -522796,7 +522880,7 @@
                             "style": 5,
                             "variables": {
                                 "HealthThreshold": 0.5,
-                                "MaxHealthShield": 0.41999998688697815,
+                                "MaxHealthShield": 0.4000000059604645,
                                 "ShieldDuration": 10.0,
                                 "{b58e0b6e}": 0.050000011920928955
                             }
@@ -522857,7 +522941,7 @@
                             "minUnits": 4,
                             "style": 3,
                             "variables": {
-                                "Health": 300.0,
+                                "Health": 350.0,
                                 "StatMultiplier": 0.2999999523162842
                             }
                         },
@@ -522866,8 +522950,8 @@
                             "minUnits": 6,
                             "style": 5,
                             "variables": {
-                                "Health": 550.0,
-                                "StatMultiplier": 0.6000000238418579
+                                "Health": 600.0,
+                                "StatMultiplier": 0.5
                             }
                         }
                     ],
@@ -522892,7 +522976,7 @@
                             "style": 3,
                             "variables": {
                                 "BleedDuration": 3.0,
-                                "{2c61751d}": 0.30000001192092896
+                                "{2c61751d}": 0.25
                             }
                         },
                         {
@@ -522900,7 +522984,7 @@
                             "minUnits": 4,
                             "style": 5,
                             "variables": {
-                                "{2c61751d}": 0.4000000059604645
+                                "{2c61751d}": 0.3499999940395355
                             }
                         }
                     ],
@@ -522944,10 +523028,10 @@
                             "minUnits": 7,
                             "style": 5,
                             "variables": {
-                                "{0776b071}": 0.05999999865889549,
+                                "{0776b071}": 0.05000000074505806,
                                 "{08cfb22e}": 50.0,
                                 "{0d6c2c87}": 5.0,
-                                "{1b76cfed}": 0.05999999865889549,
+                                "{1b76cfed}": 0.05000000074505806,
                                 "{3230276c}": 1.0,
                                 "{4e1998f4}": 0.059999942779541016,
                                 "{a8c6eeaf}": 5.0
@@ -522991,8 +523075,8 @@
                             "minUnits": 2,
                             "style": 1,
                             "variables": {
-                                "ADAP": 5.0,
-                                "Heal": 2.0,
+                                "ADAP": 4.5,
+                                "Heal": 3.0,
                                 "HealThreshold": 0.5
                             }
                         },
@@ -523001,8 +523085,8 @@
                             "minUnits": 4,
                             "style": 5,
                             "variables": {
-                                "ADAP": 8.0,
-                                "Heal": 4.0,
+                                "ADAP": 7.0,
+                                "Heal": 5.0,
                                 "HealThreshold": 0.5
                             }
                         }
@@ -523029,7 +523113,7 @@
                             "minUnits": 3,
                             "style": 3,
                             "variables": {
-                                "AbilityPower": 0.10000000149011612,
+                                "AbilityPower": 0.11999999731779099,
                                 "AttackSpeed": 0.10000002384185791,
                                 "{6d27fbd4}": 1.0
                             }
@@ -523039,7 +523123,7 @@
                             "minUnits": 4,
                             "style": 3,
                             "variables": {
-                                "AbilityPower": 0.14000000059604645,
+                                "AbilityPower": 0.1599999964237213,
                                 "AttackSpeed": 0.13999998569488525,
                                 "{6d27fbd4}": 1.0
                             }
@@ -523049,7 +523133,7 @@
                             "minUnits": 5,
                             "style": 5,
                             "variables": {
-                                "AbilityPower": 0.18000000715255737,
+                                "AbilityPower": 0.20000000298023224,
                                 "AttackSpeed": 0.1799999475479126,
                                 "{6d27fbd4}": 1.0
                             }
@@ -523086,7 +523170,7 @@
                             "style": 5,
                             "variables": {
                                 "{0eb6405e}": 12.0,
-                                "{8c16b281}": 120.0
+                                "{8c16b281}": 115.0
                             }
                         }
                     ],
@@ -523166,7 +523250,7 @@
                             "minUnits": 2,
                             "style": 5,
                             "variables": {
-                                "PercentHeal": 0.07999999821186066
+                                "PercentHeal": 0.07000000029802322
                             }
                         }
                     ],
@@ -523175,7 +523259,7 @@
                 },
                 {
                     "apiName": "DA_18_Summoner",
-                    "desc": "Summoners empower their summons in different ways.<br><br>Yorick: +@HealthMult*100@% Health<br>Azir: +@DamageMult*100@% Damage<br>Mama Beak: +@DamageMult*100@% Damage<br>Zyra: +@NumExtraAttacks@ Plant Attacks<br><row>(@MinUnits@) Empower Summons</row><br><row>(@MinUnits@) Improve each effect by 50%</row>",
+                    "desc": "Summoners empower their summons in different ways.<br><br>Yorick: +@HealthMult*100@% Health<br>Azir: +@AzirDamageMult*100@% Damage<br>Mama Beak: +@DamageMult*100@% Damage<br>Zyra: +@NumExtraAttacks@ Plant Attacks<br><row>(@MinUnits@) Empower Summons</row><br><row>(@MinUnits@) Improve each effect by 50%</row>",
                     "effects": [
                         {
                             "maxUnits": 2,
@@ -523184,7 +523268,8 @@
                             "variables": {
                                 "DamageMult": 0.4500000476837158,
                                 "{1cb64e3c}": 4.0,
-                                "{5311f791}": 0.2999999523162842
+                                "{5311f791}": 0.2999999523162842,
+                                "{6bba9a92}": 0.20000004768371582
                             }
                         },
                         {
@@ -523194,7 +523279,8 @@
                             "variables": {
                                 "DamageMult": 0.4500000476837158,
                                 "{1cb64e3c}": 4.0,
-                                "{5311f791}": 0.2999999523162842
+                                "{5311f791}": 0.2999999523162842,
+                                "{6bba9a92}": 0.20000004768371582
                             }
                         }
                     ],
@@ -523228,7 +523314,7 @@
                             "minUnits": 7,
                             "style": 5,
                             "variables": {
-                                "ADAP": 0.4000000059604645,
+                                "ADAP": 0.550000011920929,
                                 "BonusHealth": 0.10000002384185791,
                                 "{91925b8e}": 4.0
                             }
@@ -523238,7 +523324,7 @@
                             "minUnits": 9,
                             "style": 5,
                             "variables": {
-                                "ADAP": 0.44999998807907104,
+                                "ADAP": 0.6499999761581421,
                                 "BonusHealth": 0.10000002384185791
                             }
                         },
