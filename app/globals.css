@@ -12,7 +12,7 @@ body {
   background: #111827;
 }
 
-/* ── Metallic hexagon badges (traits & augments) ─────────────────────────
+/* ── Metallic hexagon badges (traits) ─────────────────────────
    .hex-badge is the clipped metallic plate; it is a sibling layer behind the
    icon so overlays (e.g. the unit-count chip) can sit outside the clip. */
 .hex-badge {

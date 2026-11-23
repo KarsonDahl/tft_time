@@ -23,9 +23,6 @@ type MatchSummary = {
     chosen?: string;
   }>;
   traits?: Array<{ name?: string; icon?: string | null; num_units?: number; style?: number; tier_current?: number; tier_total?: number }>;
-  augments?: string[];
-  augmentIcons?: (string | null)[];
-  augmentTiers?: number[];
   level?: number;
   goldLeft?: number;
   lastRound?: number;
@@ -114,7 +111,7 @@ function traitStyleClass(style?: number): string {
   return 'bg-base-200 text-base-content/70';
 }
 
-// Observed trait style numbering (shared with augment tiers): 1=bronze, 2=silver, 3=prismatic, 4=gold.
+// Observed trait style numbering : 1=bronze, 2=silver, 3=prismatic, 4=gold.
 // This differs from Riot's docs (3=gold, 4=chromatic) but matches what the live data shows.
 function hexMetalClass(style?: number, unique?: boolean): string {
   if (unique) return 'hex-metal-unique';
@@ -872,30 +869,6 @@ export default function Home() {
                             );
                           })}
                       </div>
-                      {match.augments && match.augments.length > 0 ? (
-                        <div className="mt-2 flex flex-wrap gap-1">
-                          {match.augments.map((augment, idx) => {
-                            const iconSrc = match.augmentIcons?.[idx];
-                            const tier = match.augmentTiers?.[idx];
-                            if (iconSrc) {
-                              return (
-                                <HexBadge
-                                  key={`${augment}-${idx}`}
-                                  style={tier}
-                                  title={fixName('augments', augment)}
-                                  src={iconSrc}
-                                  alt={fixName('augments', augment)}
-                                />
-                              );
-                            }
-                            return (
-                              <span key={`${augment}-${idx}`} className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${traitStyleClass(tier)}`}>
-                                {fixName('augments', augment)}
-                              </span>
-                            );
-                          })}
-                        </div>
-                      ) : null}
                       {match.traits && match.traits.some((t) => (t.tier_current ?? 0) > 0) ? (
                         <div className="mt-2 flex flex-wrap gap-1">
                           {[...match.traits]

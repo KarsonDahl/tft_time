@@ -1,6 +1,6 @@
 /**
  * Best-effort regex-based display-name formatters for Riot's TFT apiName
- * ids (e.g. "TFT17_ShieldTank", "TFT13_Augment_BruiserCrown").
+ * ids (e.g. "TFT17_ShieldTank").
  *
  * These are only a FALLBACK for when the real name isn't available from
  * CommunityDragon (see lib/tftData.ts) — many apiNames have no textual
@@ -22,15 +22,6 @@ export function formatItemName(itemId?: string) {
     if (!itemId) return 'Unknown Item';
     return itemId
         .replace(/^(?:TFT[0-9]*_Item_|DA_(?:[0-9]+_)?)/, '')
-        .replace(/_/g, ' ')
-        .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-        .trim();
-}
-
-export function formatAugmentName(augmentId?: string) {
-    if (!augmentId) return 'Unknown Augment';
-    return augmentId
-        .replace(/^(?:TFT[0-9]*_Augment_|DA_(?:[0-9]+_)?)/, '')
         .replace(/_/g, ' ')
         .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
         .trim();

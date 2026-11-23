@@ -1,8 +1,8 @@
 /**
- * Display-name lookup tables for TFT traits, items/augments, and champions.
+ * Display-name lookup tables for TFT traits, items, and champions.
  *
  * Riot's match-v1 API only returns internal `apiName`-style identifiers
- * (e.g. "TFT17_ShieldTank", "TFT13_Augment_BruiserCrown") — NOT the
+ * (e.g. "TFT17_ShieldTank") — NOT the
  * human-readable names shown in-client (e.g. "Vanguard", "Bruiser Crown").
  * Those two are frequently unrelated strings, so no amount of regex/casing
  * cleanup on the apiName can recover the real display name.
@@ -17,8 +17,7 @@
 import { readFile } from 'fs/promises';
 import path from 'path';
 import { getRawCache, setRawCache } from './matchCache';
-import { extractAugmentTier } from './augmentTier.js';
-import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from './tftFormat';
+import { formatChampionName, formatItemName, formatTraitName } from './tftFormat';
 
 const CDRAGON_URL = 'https://raw.communitydragon.org/latest/cdragon/tft/en_us.json';
 const LOCAL_CDRAGON_PATH = path.join(process.cwd(), 'data', 'riot', 'communitydragon-tft-en_us.json');
@@ -28,8 +27,7 @@ const FETCH_TIMEOUT_MS = 10_000;
 
 export type TftNameMaps = {
     traits: Record<string, string>;
-    // Covers both regular items and augments (team-up augments included) —
-    // CommunityDragon lists them all in the same flat top-level `items` array.
+    // CommunityDragon lists every item-like entry in one flat top-level `items` array.
     items: Record<string, string>;
     champions: Record<string, string>;
     // apiName -> fully-qualified CDN image URL, converted from CommunityDragon's
@@ -45,12 +43,6 @@ export type TftNameMaps = {
     // apiName -> fully-qualified CDN image URL for the trait's icon, same
     // convertIconPath conversion as items/champions.
     traitIcons: Record<string, string>;
-    // apiName -> trait-style number (2=silver, 4=gold, 3=prismatic/chromatic,
-    // 0=unknown) derived from the augment icon filename's trailing Roman
-    // numeral (I/II/III), which corresponds to the augment's actual in-game
-    // tier. Reuses the same style numbers as trait styling so augments render
-    // with the identical bronze/silver/gold/chromatic color scheme.
-    augmentTiers: Record<string, number>;
     builtAt: number;
 };
 
@@ -78,7 +70,7 @@ function addEntries(target: Record<string, string>, entries?: RawApiNameEntry[])
 // CommunityDragon exposes raw game asset paths like
 // "ASSETS/Maps/TFT/Icons/Items/Hexcore/TFT_Item_InfinityEdge.tex". The CDN
 // serves these back at the same path, lowercased, with the extension swapped
-// to .png — this holds for every asset category we use here (items, augments,
+// to .png — this holds for every asset category we use here (items,
 // champion tile/square icons).
 function convertIconPath(path?: string): string | undefined {
     if (!path) return undefined;
@@ -91,13 +83,6 @@ function addIconEntries(target: Record<string, string>, entries?: RawApiNameEntr
     for (const entry of entries ?? []) {
         const url = convertIconPath(entry.icon);
         if (entry.apiName && url) target[entry.apiName] = url;
-    }
-}
-
-function addAugmentTierEntries(target: Record<string, number>, entries?: RawApiNameEntry[]) {
-    for (const entry of entries ?? []) {
-        const tier = extractAugmentTier(entry.icon);
-        if (entry.apiName && tier > 0) target[entry.apiName] = tier;
     }
 }
 
@@ -127,8 +112,6 @@ function buildNameMaps(data: RawCDragonTft): TftNameMaps {
     addEntries(items, data.items);
     const itemIcons: Record<string, string> = {};
     addIconEntries(itemIcons, data.items);
-    const augmentTiers: Record<string, number> = {};
-    addAugmentTierEntries(augmentTiers, data.items);
 
     const traits: Record<string, string> = {};
     const champions: Record<string, string> = {};
@@ -144,7 +127,7 @@ function buildNameMaps(data: RawCDragonTft): TftNameMaps {
         }
     }
 
-    return { traits, items, champions, itemIcons, championIcons, traitIcons, augmentTiers, builtAt: Date.now() };
+    return { traits, items, champions, itemIcons, championIcons, traitIcons, builtAt: Date.now() };
 }
 
 async function readLocalMaps(): Promise<RawCDragonTft | null> {
@@ -275,29 +258,4 @@ export function lookupIconUrl(
     }
 
     return undefined;
-}
-
-// Resolves an augment apiName to its trait-style tier number (see
-// TftNameMaps.augmentTiers). Returns 0 (unstyled) when unknown.
-export function lookupAugmentTier(maps: TftNameMaps | null, apiName: string | undefined): number {
-    if (!apiName || !maps) return 0;
-
-    const entries = maps.augmentTiers;
-    const direct = entries[apiName];
-    if (direct) return direct;
-
-    const normalizedInput = normalizeLookupKey(apiName);
-    const guess = guessDisplayName('items', apiName);
-    const normalizedGuess = normalizeLookupKey(guess);
-
-    for (const [key, resolved] of Object.entries(entries)) {
-        if (key === apiName || key === guess) return resolved;
-
-        const normalizedKey = normalizeLookupKey(key);
-        if (normalizedKey && (normalizedKey === normalizedInput || normalizedKey === normalizedGuess)) {
-            return resolved;
-        }
-    }
-
-    return 0;
 }
