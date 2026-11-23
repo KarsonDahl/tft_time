@@ -46,3 +46,4 @@ body {
     linear-gradient(145deg, #ff7ab8, #ffd36b 22%, #7dffb0 44%, #6bc9ff 66%, #b48bff 88%, #ff7ab8);
 }
 .hex-metal-none { --metal-hi: #6b7280; --metal-mid: #4b5563; --metal-lo: #1f2937; }
+.hex-metal-unique { --metal-hi: #ffb3a8; --metal-mid: #d6322a; --metal-lo: #6b0f0b; }

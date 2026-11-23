@@ -115,7 +115,8 @@ function traitStyleClass(style?: number): string {
 }
 
 // Riot trait style numbering (shared with augment tiers): 1=bronze, 2=silver, 3=gold, 4=prismatic.
-function hexMetalClass(style?: number): string {
+function hexMetalClass(style?: number, unique?: boolean): string {
+  if (unique) return 'hex-metal-unique';
   if (style === 4) return 'hex-metal-prismatic';
   if (style === 3) return 'hex-metal-gold';
   if (style === 2) return 'hex-metal-silver';
@@ -125,10 +126,10 @@ function hexMetalClass(style?: number): string {
 
 // Metallic hexagon plate with an icon on top. The plate is a separate clipped
 // layer so the optional count chip can overhang the edge without being cut off.
-function HexBadge({ style, title, src, alt, count }: { style?: number; title: string; src: string; alt: string; count?: number }) {
+function HexBadge({ style, unique, title, src, alt, count }: { style?: number; unique?: boolean; title: string; src: string; alt: string; count?: number }) {
   return (
     <span title={title} className="relative inline-flex h-7 w-7 items-center justify-center">
-      <span aria-hidden className={`hex-badge ${hexMetalClass(style)}`} />
+      <span aria-hidden className={`hex-badge ${hexMetalClass(style, unique)}`} />
       <img
         src={src}
         alt={alt}
@@ -913,11 +914,15 @@ export default function Home() {
                             })
                             .map((t) => {
                               const fixedTraitName = fixName('traits', t.name);
+                              // Single-tier ("unique") traits get their own red look instead of
+                              // whatever bronze/silver/gold style Riot reports for them.
+                              const isUnique = typeof t.tier_total === 'number' && t.tier_total <= 1;
                               if (t.icon) {
                                 return (
                                   <HexBadge
                                     key={t.name}
                                     style={t.style}
+                                    unique={isUnique}
                                     title={`${fixedTraitName}${t.num_units ? ` (${t.num_units})` : ''}`}
                                     src={t.icon}
                                     alt={fixedTraitName}
@@ -926,7 +931,7 @@ export default function Home() {
                                 );
                               }
                               return (
-                                <span key={t.name} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${traitStyleClass(t.style)}`}>
+                                <span key={t.name} className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${isUnique ? 'bg-red-600 text-red-50' : traitStyleClass(t.style)}`}>
                                   {fixedTraitName}{t.num_units ? ` ${t.num_units}` : ''}
                                 </span>
                               );
