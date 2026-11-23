@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getCache, setCache, getPuuidMapping, setPuuidMapping, getRankHistory, appendRankSnapshot, type CachedMatch, type PlayerCache, type RankSnapshot } from '@/lib/matchCache';
-import { getTftNameMaps, lookupDisplayName, lookupIconUrl, lookupAugmentTier, type TftNameMaps } from '@/lib/tftData';
-import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from '@/lib/tftFormat';
+import { getTftNameMaps, lookupDisplayName, lookupIconUrl, type TftNameMaps } from '@/lib/tftData';
+import { formatChampionName, formatItemName, formatTraitName } from '@/lib/tftFormat';
 import { resolveRankSnapshotForMatch } from '@/lib/rankTrend';
-import { normalizeAugmentApiNames } from '@/lib/augmentParsing';
 
 type RiotLeagueEntry = {
   queueType?: string;
@@ -33,14 +32,11 @@ type RiotUnit = {
   chosen?: string;
 };
 
-type RiotAugment = string | { apiName?: string; name?: string; id?: string; augmentId?: string; augmentName?: string; displayName?: string; fullName?: string };
-
 type RiotParticipant = {
   puuid: string;
   placement: number;
   units?: RiotUnit[];
   traits?: RiotTrait[];
-  augments?: RiotAugment[];
   gold_left?: number;
   last_round?: number;
   level?: number;
@@ -114,15 +110,15 @@ async function fetchRankedSnapshot(region: string, puuid: string, apiKey: string
 
 // Shared mapping from a raw Riot match + the tracked player's puuid into the
 // CachedMatch shape we persist. Pulls in everything the public match-v1
-// response actually exposes: itemization, augments picked, traits (with
+// response actually exposes: itemization, traits (with
 // tier progress), and end-of-game round stats (level, gold left, last round
 // survived, damage dealt, players eliminated, time eliminated). Riot's public
 // API does not expose a round-by-round event/combat log — only these
 // end-of-match aggregates are available.
 //
-// Riot's apiName ids (e.g. "TFT17_ShieldTank", "TFT13_Augment_BruiserCrown")
+// Riot's apiName ids (e.g. "TFT17_ShieldTank")
 // frequently have NO textual relationship to their in-client display name
-// ("Vanguard", "Bruiser Crown") — regex cleanup can't recover that. When
+// ("Vanguard") — regex cleanup can't recover that. When
 // `nameMaps` (from CommunityDragon, see lib/tftData.ts) has an entry we use
 // the real display name; otherwise we fall back to the best-effort regex
 // formatter so the app still works if that lookup is unavailable.
@@ -182,22 +178,6 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
     tier_total: t.tier_total,
   }));
 
-  // Read ONLY participant.augments. Walking the whole participant object (as
-  // this used to) also swept up any "TFT..." string — champion ids, trait
-  // names, item names — and listed them as augments.
-  const augmentApiNames = normalizeAugmentApiNames(participant?.augments, 'augments');
-  if (augmentApiNames.length === 0) {
-    console.warn('[riot-route] match has no augments in participant payload', {
-      matchId: match.metadata.match_id,
-      set: match.info.tft_set_core_name,
-      hasAugmentsField: Array.isArray(participant?.augments),
-      participantKeys: participant ? Object.keys(participant) : null,
-    });
-  }
-  const augmentDisplayNames = augmentApiNames.map((a) => lookupDisplayName(nameMaps, 'items', a, formatAugmentName(a)));
-  const augmentIcons = augmentApiNames.map((a) => lookupIconUrl(nameMaps, 'items', a) ?? null);
-  const augmentTiers = augmentApiNames.map((a) => lookupAugmentTier(nameMaps, a));
-
   const baseMatch: CachedMatch = {
     id: match.metadata.match_id,
     durationMinutes: match.info.game_length / 60,
@@ -206,9 +186,6 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
     patch: match.info.tft_set_core_name ?? 'Unknown set',
     champions,
     traits,
-    augments: augmentDisplayNames,
-    augmentIcons,
-    augmentTiers,
     level: participant?.level,
     goldLeft: participant?.gold_left,
     lastRound: participant?.last_round,

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getTftNameMaps } from '@/lib/tftData';
-import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from '@/lib/tftFormat';
+import { formatChampionName, formatItemName, formatTraitName } from '@/lib/tftFormat';
 
 // Always dynamic: this depends on a live (or Redis-cached) fetch to
 // CommunityDragon, which Next.js can't statically prerender.
@@ -9,7 +9,6 @@ export const dynamic = 'force-dynamic';
 export type NameFixMap = {
     champions: Record<string, string>;
     items: Record<string, string>;
-    augments: Record<string, string>;
     traits: Record<string, string>;
 };
 
@@ -49,7 +48,7 @@ function buildReverseMap(
 export async function GET() {
     const maps = await getTftNameMaps().catch(() => null);
 
-    const empty: NameFixMap = { champions: {}, items: {}, augments: {}, traits: {} };
+    const empty: NameFixMap = { champions: {}, items: {}, traits: {} };
     if (!maps) {
         return NextResponse.json(empty, { headers: { 'Cache-Control': 'public, max-age=300' } });
     }
@@ -57,7 +56,6 @@ export async function GET() {
     const fixMap: NameFixMap = {
         champions: buildReverseMap(maps.champions, (id) => formatChampionName(id)),
         items: buildReverseMap(maps.items, (id) => formatItemName(id)),
-        augments: buildReverseMap(maps.items, (id) => formatAugmentName(id)),
         traits: buildReverseMap(maps.traits, (id) => formatTraitName(id)),
     };
 

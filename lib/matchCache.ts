@@ -29,13 +29,6 @@ export type CachedMatch = {
     chosen?: string;
   }>;
   traits?: Array<{ name?: string; icon?: string | null; style?: number; num_units?: number; tier_current?: number; tier_total?: number }>;
-  augments?: string[];
-  // Parallel arrays to `augments`, matched by index (same pattern as
-  // champions[].itemIcons) — icon URL (or null if unresolved) and trait-style
-  // tier number (2=silver, 4=gold, 3=prismatic, 0=unknown) so augments render
-  // as images with the same bronze/silver/gold/chromatic color scheme traits use.
-  augmentIcons?: (string | null)[];
-  augmentTiers?: number[];
   level?: number;
   goldLeft?: number;
   lastRound?: number;
