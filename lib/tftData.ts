@@ -22,7 +22,7 @@ import { formatChampionName, formatItemName, formatAugmentName, formatTraitName 
 
 const CDRAGON_URL = 'https://raw.communitydragon.org/latest/cdragon/tft/en_us.json';
 const LOCAL_CDRAGON_PATH = path.join(process.cwd(), 'data', 'riot', 'communitydragon-tft-en_us.json');
-const CACHE_KEY = 'tft:cdragon:namemaps:v6';
+const CACHE_KEY = 'tft:cdragon:namemaps:v7';
 const CACHE_TTL_SECONDS = 60 * 60 * 24; // 24h — the dump only changes when a patch ships
 const FETCH_TIMEOUT_MS = 10_000;
 
@@ -45,7 +45,7 @@ export type TftNameMaps = {
     // apiName -> fully-qualified CDN image URL for the trait's icon, same
     // convertIconPath conversion as items/champions.
     traitIcons: Record<string, string>;
-    // apiName -> trait-style number (2=silver, 3=gold, 4=prismatic/chromatic,
+    // apiName -> trait-style number (2=silver, 4=gold, 3=prismatic/chromatic,
     // 0=unknown) derived from the augment icon filename's trailing Roman
     // numeral (I/II/III), which corresponds to the augment's actual in-game
     // tier. Reuses the same style numbers as trait styling so augments render

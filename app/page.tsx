@@ -107,18 +107,19 @@ function formatPlayedAt(timestamp: number): string {
 }
 
 function traitStyleClass(style?: number): string {
-  if (style === 4) return 'bg-rose-500 text-rose-950'; // prismatic
-  if (style === 3) return 'bg-amber-400 text-amber-950'; // gold
+  if (style === 4) return 'bg-amber-400 text-amber-950'; // gold
+  if (style === 3) return 'bg-rose-500 text-rose-950'; // prismatic
   if (style === 2) return 'bg-slate-300 text-slate-800';
   if (style === 1) return 'bg-amber-700 text-amber-100';
   return 'bg-base-200 text-base-content/70';
 }
 
-// Riot trait style numbering (shared with augment tiers): 1=bronze, 2=silver, 3=gold, 4=prismatic.
+// Observed trait style numbering (shared with augment tiers): 1=bronze, 2=silver, 3=prismatic, 4=gold.
+// This differs from Riot's docs (3=gold, 4=chromatic) but matches what the live data shows.
 function hexMetalClass(style?: number, unique?: boolean): string {
   if (unique) return 'hex-metal-unique';
-  if (style === 4) return 'hex-metal-prismatic';
-  if (style === 3) return 'hex-metal-gold';
+  if (style === 4) return 'hex-metal-gold';
+  if (style === 3) return 'hex-metal-prismatic';
   if (style === 2) return 'hex-metal-silver';
   if (style === 1) return 'hex-metal-bronze';
   return 'hex-metal-none';
