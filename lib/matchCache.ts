@@ -32,12 +32,10 @@ export type CachedMatch = {
   augments?: string[];
   // Parallel arrays to `augments`, matched by index (same pattern as
   // champions[].itemIcons) — icon URL (or null if unresolved) and trait-style
-  // tier number (2=silver, 3=gold, 4=prismatic, 0=unknown) so augments render
+  // tier number (2=silver, 4=gold, 3=prismatic, 0=unknown) so augments render
   // as images with the same bronze/silver/gold/chromatic color scheme traits use.
   augmentIcons?: (string | null)[];
   augmentTiers?: number[];
-  // See AUGMENTS_VERSION in lib/augmentParsing.js.
-  augmentsVersion?: number;
   level?: number;
   goldLeft?: number;
   lastRound?: number;

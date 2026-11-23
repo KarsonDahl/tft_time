@@ -3,7 +3,7 @@ import { getCache, setCache, getPuuidMapping, setPuuidMapping, getRankHistory, a
 import { getTftNameMaps, lookupDisplayName, lookupIconUrl, lookupAugmentTier, type TftNameMaps } from '@/lib/tftData';
 import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from '@/lib/tftFormat';
 import { resolveRankSnapshotForMatch } from '@/lib/rankTrend';
-import { AUGMENTS_VERSION, normalizeAugmentApiNames, shouldBackfillAugments } from '@/lib/augmentParsing';
+import { normalizeAugmentApiNames } from '@/lib/augmentParsing';
 
 type RiotLeagueEntry = {
   queueType?: string;
@@ -209,7 +209,6 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
     augments: augmentDisplayNames,
     augmentIcons,
     augmentTiers,
-    augmentsVersion: AUGMENTS_VERSION,
     level: participant?.level,
     goldLeft: participant?.gold_left,
     lastRound: participant?.last_round,
@@ -300,18 +299,10 @@ export async function GET(request: Request) {
   const hasCachedData = Boolean(
     fallbackCache && (fallbackCache.matches.length > 0 || fallbackCache.cachedMatchIds.length > 0),
   );
-  const needsAugmentBackfill = Boolean(
-    apiKey &&
-    fallbackCache &&
-    hasCachedData &&
-    fallbackCache.matches.some((match) => shouldBackfillAugments(match)),
-  );
-
-  // The default action (mode=auto) normally serves cached data straight from
-  // Redis, but older cached rows can be missing augment fields entirely. In
-  // that case we should refresh once from Riot so the UI can render augment
-  // images/text for those existing matches instead of leaving them blank.
-  if (mode === 'auto' && fallbackCache && hasCachedData && !needsAugmentBackfill) {
+  // The default action (mode=auto) ONLY reads from the cache and never calls
+  // Riot when cached data exists. Pulling from Riot is an explicit user action
+  // (the "fetch-missing" and "refresh" buttons).
+  if (mode === 'auto' && fallbackCache && hasCachedData) {
     console.info('[riot-route] auto mode: serving cached data, skipping Riot API', { summoner, region });
     return cacheFallbackResponse(region, mapping!.puuid, fallbackCache);
   }
