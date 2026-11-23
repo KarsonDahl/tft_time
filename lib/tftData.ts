@@ -17,11 +17,12 @@
 import { readFile } from 'fs/promises';
 import path from 'path';
 import { getRawCache, setRawCache } from './matchCache';
+import { extractAugmentTier } from './augmentTier.js';
 import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from './tftFormat';
 
 const CDRAGON_URL = 'https://raw.communitydragon.org/latest/cdragon/tft/en_us.json';
 const LOCAL_CDRAGON_PATH = path.join(process.cwd(), 'data', 'riot', 'communitydragon-tft-en_us.json');
-const CACHE_KEY = 'tft:cdragon:namemaps:v4';
+const CACHE_KEY = 'tft:cdragon:namemaps:v6';
 const CACHE_TTL_SECONDS = 60 * 60 * 24; // 24h — the dump only changes when a patch ships
 const FETCH_TIMEOUT_MS = 10_000;
 
@@ -44,7 +45,7 @@ export type TftNameMaps = {
     // apiName -> fully-qualified CDN image URL for the trait's icon, same
     // convertIconPath conversion as items/champions.
     traitIcons: Record<string, string>;
-    // apiName -> trait-style number (2=silver, 4=gold, 3=prismatic/chromatic,
+    // apiName -> trait-style number (2=silver, 3=gold, 4=prismatic/chromatic,
     // 0=unknown) derived from the augment icon filename's trailing Roman
     // numeral (I/II/III), which corresponds to the augment's actual in-game
     // tier. Reuses the same style numbers as trait styling so augments render
@@ -91,21 +92,6 @@ function addIconEntries(target: Record<string, string>, entries?: RawApiNameEntr
         const url = convertIconPath(entry.icon);
         if (entry.apiName && url) target[entry.apiName] = url;
     }
-}
-
-// Augment icon filenames end with a Roman numeral matching their actual
-// in-game tier, e.g. "AcademicCitation_II.tex" (Gold), "Crown_Bruiser_III.tex"
-// (Prismatic — "Crown" augments are always Prismatic tier). This must run on
-// the RAW (non-lowercased) icon path since the numeral casing matters.
-function extractAugmentTier(rawIconPath?: string): number {
-    if (!rawIconPath) return 0;
-    const fileName = rawIconPath.split('/').pop() ?? '';
-    const base = fileName.split('.')[0] ?? '';
-    const match = base.match(/_(I{1,3})$/);
-    if (!match) return 0;
-    if (match[1] === 'III') return 3; // prismatic/chromatic
-    if (match[1] === 'II') return 4; // gold
-    return 2; // silver
 }
 
 function addAugmentTierEntries(target: Record<string, number>, entries?: RawApiNameEntry[]) {

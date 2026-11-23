@@ -11,3 +11,38 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   background: #111827;
 }
+
+/* ── Metallic hexagon badges (traits & augments) ─────────────────────────
+   .hex-badge is the clipped metallic plate; it is a sibling layer behind the
+   icon so overlays (e.g. the unit-count chip) can sit outside the clip. */
+.hex-badge {
+  --hex: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  --metal-hi: #e5e7eb;
+  --metal-mid: #9ca3af;
+  --metal-lo: #4b5563;
+  position: absolute;
+  inset: 0;
+  clip-path: var(--hex);
+  background:
+    linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.55) 48%, transparent 60%),
+    linear-gradient(145deg, var(--metal-hi) 0%, var(--metal-mid) 38%, var(--metal-lo) 62%, var(--metal-mid) 82%, var(--metal-hi) 100%);
+}
+
+/* Dark recessed face inside the bright rim gives the plate a bevelled look. */
+.hex-badge::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  clip-path: var(--hex);
+  background: linear-gradient(160deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.78));
+}
+
+.hex-metal-bronze { --metal-hi: #f3c59b; --metal-mid: #b8733b; --metal-lo: #5e3315; }
+.hex-metal-silver { --metal-hi: #f8fafc; --metal-mid: #a8b3c2; --metal-lo: #4d5868; }
+.hex-metal-gold { --metal-hi: #fff2a8; --metal-mid: #e0a526; --metal-lo: #7a4d07; }
+.hex-metal-prismatic {
+  background:
+    linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.6) 48%, transparent 60%),
+    linear-gradient(145deg, #ff7ab8, #ffd36b 22%, #7dffb0 44%, #6bc9ff 66%, #b48bff 88%, #ff7ab8);
+}
+.hex-metal-none { --metal-hi: #6b7280; --metal-mid: #4b5563; --metal-lo: #1f2937; }

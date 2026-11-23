@@ -21,7 +21,7 @@ export function formatChampionName(characterId?: string) {
 export function formatItemName(itemId?: string) {
     if (!itemId) return 'Unknown Item';
     return itemId
-        .replace(/^TFT[0-9]*_Item_/, '')
+        .replace(/^(?:TFT[0-9]*_Item_|DA_(?:[0-9]+_)?)/, '')
         .replace(/_/g, ' ')
         .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
         .trim();
@@ -30,7 +30,7 @@ export function formatItemName(itemId?: string) {
 export function formatAugmentName(augmentId?: string) {
     if (!augmentId) return 'Unknown Augment';
     return augmentId
-        .replace(/^TFT[0-9]*_Augment_/, '')
+        .replace(/^(?:TFT[0-9]*_Augment_|DA_(?:[0-9]+_)?)/, '')
         .replace(/_/g, ' ')
         .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
         .trim();
@@ -39,7 +39,7 @@ export function formatAugmentName(augmentId?: string) {
 export function formatTraitName(traitId?: string) {
     if (!traitId) return 'Unknown Trait';
     return traitId
-        .replace(/^TFT[0-9]*_/, '')
+        .replace(/^(?:TFT[0-9]*_|DA_(?:[0-9]+_)?)/, '')
         .replace(/_/g, ' ')
         .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
         .trim();

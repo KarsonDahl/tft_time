@@ -3,7 +3,7 @@ import { getCache, setCache, getPuuidMapping, setPuuidMapping, getRankHistory, a
 import { getTftNameMaps, lookupDisplayName, lookupIconUrl, lookupAugmentTier, type TftNameMaps } from '@/lib/tftData';
 import { formatChampionName, formatItemName, formatAugmentName, formatTraitName } from '@/lib/tftFormat';
 import { resolveRankSnapshotForMatch } from '@/lib/rankTrend';
-import { normalizeAugmentApiNames, shouldBackfillAugments } from '@/lib/augmentParsing';
+import { AUGMENTS_VERSION, normalizeAugmentApiNames, shouldBackfillAugments } from '@/lib/augmentParsing';
 
 type RiotLeagueEntry = {
   queueType?: string;
@@ -182,7 +182,18 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
     tier_total: t.tier_total,
   }));
 
-  const augmentApiNames = normalizeAugmentApiNames(participant);
+  // Read ONLY participant.augments. Walking the whole participant object (as
+  // this used to) also swept up any "TFT..." string — champion ids, trait
+  // names, item names — and listed them as augments.
+  const augmentApiNames = normalizeAugmentApiNames(participant?.augments, 'augments');
+  if (augmentApiNames.length === 0) {
+    console.warn('[riot-route] match has no augments in participant payload', {
+      matchId: match.metadata.match_id,
+      set: match.info.tft_set_core_name,
+      hasAugmentsField: Array.isArray(participant?.augments),
+      participantKeys: participant ? Object.keys(participant) : null,
+    });
+  }
   const augmentDisplayNames = augmentApiNames.map((a) => lookupDisplayName(nameMaps, 'items', a, formatAugmentName(a)));
   const augmentIcons = augmentApiNames.map((a) => lookupIconUrl(nameMaps, 'items', a) ?? null);
   const augmentTiers = augmentApiNames.map((a) => lookupAugmentTier(nameMaps, a));
@@ -198,6 +209,7 @@ function toCachedMatch(match: RiotMatch, puuid: string, nameMaps: TftNameMaps | 
     augments: augmentDisplayNames,
     augmentIcons,
     augmentTiers,
+    augmentsVersion: AUGMENTS_VERSION,
     level: participant?.level,
     goldLeft: participant?.gold_left,
     lastRound: participant?.last_round,
